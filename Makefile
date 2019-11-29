@@ -5,7 +5,7 @@ PHPUNIT =  ./vendor/bin/phpunit -c ./phpunit.xml
 PHPDBG =  phpdbg -qrr ./vendor/bin/phpunit -c ./phpunit.xml
 PHPSTAN  = ./vendor/bin/phpstan
 PHPCS = ./vendor/bin/phpcs --extensions=php -v
-PHPCBF = ./vendor/bin/phpcbf ./app --standard=./vendor/jobcloud/unity-coding-standards/ruleset.xml
+PHPCBF = ./vendor/bin/phpcbf ./app --standard=PSR2
 INFECTION = ./vendor/bin/infection
 
 clean:
@@ -15,7 +15,7 @@ fix-code-style:
 	${PHPCBF}
 
 code-style:
-	${PHPCS} --report-full --report-gitblame --standard=./vendor/jobcloud/unity-coding-standards/ruleset.xml ./app
+	${PHPCS} --report-full --report-gitblame --standard=PSR2 ./app
 
 coverage:
 	${PHPDBG} && ./vendor/bin/coverage-check build/logs/coverage/coverage.xml 100

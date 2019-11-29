@@ -4,6 +4,7 @@ namespace Jobcloud\KafkaSchemaRegistryClient;
 
 use Exception;
 use Jobcloud\KafkaSchemaRegistryClient\Interfaces\SchemaRegistryClientInterface;
+use JsonSchema\Exception\ResourceNotFoundException;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
@@ -114,18 +115,13 @@ class SchemaRegistryHttpClient implements SchemaRegistryClientInterface
      */
     public function call(string $method, string $uri, ?array $body = null, array $queryParams = []): ?array
     {
-        try{
-            $response = $this->client->sendRequest($this->createRequest($method, $uri, $body, $queryParams));
+        $response = $this->client->sendRequest($this->createRequest($method, $uri, $body, $queryParams));
+        $parsedResponse = $this->parseJsonResponse($response);
 
-            echo (string) $response->getBody();
-
-            return $this->parseJsonResponse($response);
-        } catch (Exception $e) {
-            if ($e->getCode() === 40403) {
-                return null;
-            }
-
-            throw $e;
+        if(($parsedResponse['error_code'] ?? null) === 40402) {
+            throw new ResourceNotFoundException($parsedResponse['message'] ?? '');
         }
+
+        return $parsedResponse;
     }
 }
