@@ -1,0 +1,16 @@
+version: '3.2'
+services:
+  php:
+    build:
+      context: ./
+      dockerfile: dev/php/Dockerfile
+      args:
+        HOST_USER: ${USER}
+        HOST_USER_ID: ${USER_ID}
+    tty: true
+    hostname: kafka-schema-registry-client-php
+    container_name: kafka-schema-registry-client-php
+    volumes:
+      - ../:/var/www/html
+      - ~/.bash_aliases:/home/${USER}/.bash_aliases:rw
+      - ~/.bash_history:/home/${USER}/.bash_history:rw

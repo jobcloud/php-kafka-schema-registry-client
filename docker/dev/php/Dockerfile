@@ -1,0 +1,57 @@
+FROM php:7.4.0-cli-alpine3.10
+
+# PHP: Copy configuration files & remove dist files
+COPY dev/php/files/php/ /phpIni
+COPY dev/php/files/bin/ /usr/local/bin/
+
+# SYS: Install required packages
+RUN apk --no-cache upgrade && \
+    apk --no-cache add bash git sudo openssh autoconf gcc g++ make gettext make
+
+RUN apk add librdkafka librdkafka-dev \
+        --update-cache --repository http://dl-3.alpinelinux.org/alpine/edge/community
+
+ARG HOST_USER_ID
+ARG HOST_USER
+
+#sadly apple users run into a problem since the AD user has a higher ID than 65k :(
+#RUN adduser -u $HOST_USER_ID -D -H $HOST_USER
+#so we do it oldschool
+RUN echo "$HOST_USER:x:$HOST_USER_ID:82:Linux User,,,:/home/$HOST_USER:" >> /etc/passwd && \
+    echo "$HOST_USER:!:$(($(date +%s) / 60 / 60 / 24)):0:99999:7:::" >> /etc/shadow && \
+    echo "$HOST_USER:x:$HOST_USER_ID:" >> /etc/group && \
+    mkdir /home/$HOST_USER && \
+    chown $HOST_USER:$HOST_USER /home/$HOST_USER && \
+    echo "ALL ALL=NOPASSWD: ALL" >> /etc/sudoers && \
+    addgroup $HOST_USER www-data
+
+COPY dev/php/files/user-home /home/$HOST_USER
+
+# SYS: add ssh config (for GitHub)
+COPY dev/php/files/.ssh/config /root/.ssh/config
+COPY dev/php/files/.ssh/config /home/$HOST_USER/.ssh/config
+RUN ln -s /run/secrets/ssh_host_key /home/$HOST_USER/.ssh/id_rsa && \
+    chown -R $HOST_USER:www-data /home/$HOST_USER && \
+    chmod 700 /home/$HOST_USER/.ssh && \
+    chmod 400 /home/$HOST_USER/.ssh/config /root/.ssh/config
+
+# COMPOSER: install binary
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer
+
+# COMPOSER: install dependencies
+RUN composer global require hirak/prestissimo
+
+# PHP: Install php extensions
+RUN pecl channel-update pecl.php.net && \
+    pecl install xdebug rdkafka && \
+    php-ext-enable xdebug jobcloud rdkafka
+
+# LOG && Permissions
+RUN mkdir -p /var/log/php && \
+    chown -R www-data:www-data /var/log/* && \
+    chmod g+w /var/log/php && \
+    chmod 777 /tmp
+
+USER $HOST_USER
+
+WORKDIR /var/www/html
