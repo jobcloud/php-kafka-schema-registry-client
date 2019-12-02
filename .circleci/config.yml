@@ -1,13 +1,5 @@
 version: 2.1
 
-parameters:
-  dockerComposeFile:
-    type: string
-    default: "./docker/docker-compose.yml"
-  dependencyCheckSumFile:
-    type: string
-    default: "./composer.json"
-
 orbs:
   ci-caching: jobcloud/ci-caching@0.5
   ci-php: jobcloud/ci-php@0.3
@@ -16,29 +8,29 @@ workflows:
   php-kafka-schema-registry-client:
     jobs:
       - ci-caching/build-docker-images:
-          dockerComposeFile: << pipeline.parameters.dockerComposeFile >>
+          dockerComposeFile: "./docker/docker-compose.yml"
       - ci-php/install-dependencies:
-          dockerComposeFile: << pipeline.parameters.dockerComposeFile >>
-          dependencyCheckSumFile: << pipeline.parameters.dependencyCheckSumFile >>
+          dockerComposeFile: "./docker/docker-compose.yml"
+          dependencyCheckSumFile: "./composer.json"
           requires:
             - ci-caching/build-docker-images
       - ci-php/coverage:
-          dockerComposeFile: << pipeline.parameters.dockerComposeFile >>
-          dependencyCheckSumFile: << pipeline.parameters.dependencyCheckSumFile >>
+          dockerComposeFile: "./docker/docker-compose.yml"
+          dependencyCheckSumFile: "./composer.json"
           requires:
             - ci-php/install-dependencies
       - ci-php/code-style:
-          dockerComposeFile: << pipeline.parameters.dockerComposeFile >>
-          dependencyCheckSumFile: << pipeline.parameters.dependencyCheckSumFile >>
+          dockerComposeFile: "./docker/docker-compose.yml"
+          dependencyCheckSumFile: "./composer.json"
           requires:
             - ci-php/install-dependencies
       - ci-php/static-analysis:
-          dockerComposeFile: << pipeline.parameters.dockerComposeFile >>
-          dependencyCheckSumFile: << pipeline.parameters.dependencyCheckSumFile >>
+          dockerComposeFile: "./docker/docker-compose.yml"
+          dependencyCheckSumFile: "./composer.json"
           requires:
             - ci-php/install-dependencies
       - ci-php/infection-testing:
-          dockerComposeFile: << pipeline.parameters.dockerComposeFile >>
-          dependencyCheckSumFile: << pipeline.parameters.dependencyCheckSumFile >>
+          dockerComposeFile: "./docker/docker-compose.yml"
+          dependencyCheckSumFile: "./composer.json"
           requires:
             - ci-php/install-dependencies
