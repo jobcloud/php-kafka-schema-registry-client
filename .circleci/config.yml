@@ -16,29 +16,29 @@ workflows:
   php-kafka-schema-registry-client:
     jobs:
       - ci-caching/build-docker-images:
-          dockerComposeFile: << parameters.dockerComposeFile >>
+          dockerComposeFile: << pipeline.parameters.dockerComposeFile >>
       - ci-php/install-dependencies:
-          dockerComposeFile: << parameters.dockerComposeFile >>
-          dependencyCheckSumFile: << parameters.dependencyCheckSumFile >>
+          dockerComposeFile: << pipeline.parameters.dockerComposeFile >>
+          dependencyCheckSumFile: << pipeline.parameters.dependencyCheckSumFile >>
           requires:
             - ci-caching/build-docker-images
       - ci-php/coverage:
-          dockerComposeFile: << parameters.dockerComposeFile >>
-          dependencyCheckSumFile: << parameters.dependencyCheckSumFile >>
+          dockerComposeFile: << pipeline.parameters.dockerComposeFile >>
+          dependencyCheckSumFile: << pipeline.parameters.dependencyCheckSumFile >>
           requires:
             - ci-php/install-dependencies
       - ci-php/code-style:
-          dockerComposeFile: << parameters.dockerComposeFile >>
-          dependencyCheckSumFile: << parameters.dependencyCheckSumFile >>
+          dockerComposeFile: << pipeline.parameters.dockerComposeFile >>
+          dependencyCheckSumFile: << pipeline.parameters.dependencyCheckSumFile >>
           requires:
             - ci-php/install-dependencies
       - ci-php/static-analysis:
-          dockerComposeFile: << parameters.dockerComposeFile >>
-          dependencyCheckSumFile: << parameters.dependencyCheckSumFile >>
+          dockerComposeFile: << pipeline.parameters.dockerComposeFile >>
+          dependencyCheckSumFile: << pipeline.parameters.dependencyCheckSumFile >>
           requires:
             - ci-php/install-dependencies
       - ci-php/infection-testing:
-          dockerComposeFile: << parameters.dockerComposeFile >>
-          dependencyCheckSumFile: << parameters.dependencyCheckSumFile >>
+          dockerComposeFile: << pipeline.parameters.dockerComposeFile >>
+          dependencyCheckSumFile: << pipeline.parameters.dependencyCheckSumFile >>
           requires:
             - ci-php/install-dependencies
