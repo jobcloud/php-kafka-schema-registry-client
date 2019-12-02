@@ -13,7 +13,7 @@ orbs:
   ci-php: jobcloud/ci-php@0.3
 
 workflows:
-  test-jobcloud-kafka-lib:
+  php-kafka-schema-registry-client:
     jobs:
       - ci-caching/build-docker-images:
           dockerComposeFile: << parameters.dockerComposeFile >>
