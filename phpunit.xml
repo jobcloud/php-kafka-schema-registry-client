@@ -22,28 +22,17 @@
         <ini name="xdebug.show_mem_delta" value="0" />
 
         <env name="ENVIRONMENT" value="test" />
-        <env name="ERECRUITER_API_TOKEN" value="12345abcd" />
-        <env name="ERECRUITER_API_CLIENT_ID" value="clientId123" />
-        <env name="KAFKA_SCHEMA_REGISTRY_USERNAME" value="username" />
-        <env name="KAFKA_SCHEMA_REGISTRY_PASSWORD" value="password" />
     </php>
 
     <testsuites>
-        <testsuite name="Integration">
-            <directory>./tests/Integration</directory>
-        </testsuite>
         <testsuite name="Unit">
-            <directory>./tests/Unit</directory>
+            <directory>./tests</directory>
         </testsuite>
     </testsuites>
 
     <filter>
         <whitelist>
-            <directory>app</directory>
-            <exclude>
-                <directory>app/console.php</directory>
-                <directory>app/app.php</directory>
-            </exclude>
+            <directory>src</directory>
         </whitelist>
     </filter>
 

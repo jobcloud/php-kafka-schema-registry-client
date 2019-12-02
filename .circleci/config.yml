@@ -1,5 +1,13 @@
 version: 2.1
 
+parameters:
+  dockerComposeFile:
+    type: string
+    default: "./docker/docker-compose.yml"
+  dependencyCheckSumFile:
+    type: string
+    default: "./composer.json"
+
 orbs:
   ci-caching: jobcloud/ci-caching@0.5
   ci-php: jobcloud/ci-php@0.3
@@ -8,29 +16,29 @@ workflows:
   test-jobcloud-kafka-lib:
     jobs:
       - ci-caching/build-docker-images:
-          dockerComposeFile: "./docker/docker-compose.yml"
+          dockerComposeFile: << parameters.dockerComposeFile >>
       - ci-php/install-dependencies:
-          dockerComposeFile: "./docker/docker-compose.yml"
-          dependencyCheckSumFile: "./composer.json"
+          dockerComposeFile: << parameters.dockerComposeFile >>
+          dependencyCheckSumFile: << parameters.dependencyCheckSumFile >>
           requires:
             - ci-caching/build-docker-images
       - ci-php/coverage:
-          dockerComposeFile: "./docker/docker-compose.yml"
-          dependencyCheckSumFile: "./composer.json"
+          dockerComposeFile: << parameters.dockerComposeFile >>
+          dependencyCheckSumFile: << parameters.dependencyCheckSumFile >>
           requires:
             - ci-php/install-dependencies
       - ci-php/code-style:
-          dockerComposeFile: "./docker/docker-compose.yml"
-          dependencyCheckSumFile: "./composer.json"
+          dockerComposeFile: << parameters.dockerComposeFile >>
+          dependencyCheckSumFile: << parameters.dependencyCheckSumFile >>
           requires:
             - ci-php/install-dependencies
       - ci-php/static-analysis:
-          dockerComposeFile: "./docker/docker-compose.yml"
-          dependencyCheckSumFile: "./composer.json"
+          dockerComposeFile: << parameters.dockerComposeFile >>
+          dependencyCheckSumFile: << parameters.dependencyCheckSumFile >>
           requires:
             - ci-php/install-dependencies
       - ci-php/infection-testing:
-          dockerComposeFile: "./docker/docker-compose.yml"
-          dependencyCheckSumFile: "./composer.json"
+          dockerComposeFile: << parameters.dockerComposeFile >>
+          dependencyCheckSumFile: << parameters.dependencyCheckSumFile >>
           requires:
             - ci-php/install-dependencies
