@@ -2,22 +2,23 @@
 
 namespace Jobcloud\KafkaSchemaRegistryClient;
 
+use Buzz\Exception\RequestException;
 use Exception;
-use Jobcloud\KafkaSchemaRegistryClient\Interfaces\SchemaRegistryClientInterface;
+use Jobcloud\KafkaSchemaRegistryClient\Interfaces\SchemaRegistryHttpClientInterface;
 use ResourceNotFoundException;
 
 class SchemaRegistryApi
 {
     /**
-     * @var SchemaRegistryClientInterface
+     * @var SchemaRegistryHttpClientInterface
      */
     private $registryClient;
 
     /**
      * SchemaRegistryApi constructor.
-     * @param SchemaRegistryClientInterface $schemaRegistryClient
+     * @param SchemaRegistryHttpClientInterface $schemaRegistryClient
      */
-    public function __construct(SchemaRegistryClientInterface $schemaRegistryClient)
+    public function __construct(SchemaRegistryHttpClientInterface $schemaRegistryClient)
     {
         $this->registryClient = $schemaRegistryClient;
     }
@@ -96,6 +97,36 @@ class SchemaRegistryApi
 
     /**
      * @param string $subjectName
+     * @return string
+     * @throws Exception
+     */
+    public function getSubjectCompatibilityForVersion(string $subjectName): string
+    {
+        $results = $this->registryClient->call('POST', sprintf('/config/%s', $subjectName));
+        return $results['compatibilityLevel'];
+    }
+
+    /**
+     * @param string $schema
+     * @param string $subjectName
+     * @param string $version
+     * @return string
+     * @throws Exception
+     */
+    public function getDefaultCompatibilityLevel(
+        string $schema,
+        string $subjectName,
+        string $version = 'latest'
+    ): string
+    {
+
+        $results = $this->registryClient->call('GET', 'config');
+
+        return $results['compatibilityLevel'];
+    }
+
+    /**
+     * @param string $subjectName
      * @param string $schema
      * @return string|null
      */
@@ -126,6 +157,26 @@ class SchemaRegistryApi
                 'DELETE',
                 sprintf('/subjects/%s/', $subjectName)
             ) ?? [];
+    }
+
+    /**
+     * @param string $subjectName
+     * @return string|null
+     * @throws RequestException
+     */
+    public function getLatestSubjectVersion(string $subjectName): ?string
+    {
+        try {
+            $schemaVersions = $this->getAllSubjectVersions($subjectName);
+            $lastKey = array_key_last($schemaVersions);
+            return $schemaVersions[$lastKey];
+        } catch (RequestException $e) {
+            if (404 === $e->getCode()) {
+                return null;
+            }
+
+            throw $e;
+        }
     }
 
     /**

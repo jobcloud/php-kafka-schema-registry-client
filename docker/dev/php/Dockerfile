@@ -1,12 +1,8 @@
 FROM php:7.4.0-cli-alpine3.10
 
-# PHP: Copy configuration files & remove dist files
-COPY dev/php/files/php/ /phpIni
-COPY dev/php/files/bin/ /usr/local/bin/
-
 # SYS: Install required packages
 RUN apk --no-cache upgrade && \
-    apk --no-cache add bash git sudo openssh autoconf gcc g++ make gettext make
+    apk --no-cache add bash git sudo make
 
 RUN apk add librdkafka librdkafka-dev \
         --update-cache --repository http://dl-3.alpinelinux.org/alpine/edge/community
@@ -25,8 +21,6 @@ RUN echo "$HOST_USER:x:$HOST_USER_ID:82:Linux User,,,:/home/$HOST_USER:" >> /etc
     echo "ALL ALL=NOPASSWD: ALL" >> /etc/sudoers && \
     addgroup $HOST_USER www-data
 
-COPY dev/php/files/user-home /home/$HOST_USER
-
 # SYS: add ssh config (for GitHub)
 COPY dev/php/files/.ssh/config /root/.ssh/config
 COPY dev/php/files/.ssh/config /home/$HOST_USER/.ssh/config
@@ -44,7 +38,7 @@ RUN composer global require hirak/prestissimo
 # PHP: Install php extensions
 RUN pecl channel-update pecl.php.net && \
     pecl install xdebug rdkafka && \
-    php-ext-enable xdebug jobcloud rdkafka
+    php-ext-enable jobcloud rdkafka
 
 # LOG && Permissions
 RUN mkdir -p /var/log/php && \

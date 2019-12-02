@@ -18,6 +18,7 @@ code-style:
 	${PHPCS} --report-full --report-gitblame --standard=PSR2 ./app
 
 coverage:
+	mkdir -p build/logs/phpunit
 	${PHPDBG} && ./vendor/bin/coverage-check build/logs/coverage/coverage.xml 100
 
 test:
@@ -30,9 +31,11 @@ test-integration:
 	${PHPUNIT} --testsuite=Integration
 
 static-analysis:
+	mkdir -p build/logs/phpstan
 	${PHPSTAN} analyse app --no-progress --level=7
 
 infection-testing:
+	mkdir -p build/logs/infection
 	make coverage
 	cp -f build/logs/coverage/junit.xml build/logs/coverage/phpunit.junit.xml
 	${INFECTION} --coverage=build/logs/coverage --min-msi=65 --threads=`nproc`

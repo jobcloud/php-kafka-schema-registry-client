@@ -2,7 +2,7 @@
 
 namespace Jobcloud\KafkaSchemaRegistryClient\Interfaces;
 
-interface SchemaRegistryClientInterface
+interface SchemaRegistryHttpClientInterface
 {
     /**
      * @param string $method

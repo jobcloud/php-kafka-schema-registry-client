@@ -2,7 +2,7 @@
     "name": "jobcloud/php-kafka-schema-registry-client",
     "license": "MIT",
     "description": "Kafka Schema Registry API Client",
-    "keywords": ["kafka", "schema registry", "kafka registry"],
+    "keywords": ["kafka", "schema", "registry", "php"],
     "autoload": {
         "psr-4": {
             "Jobcloud\\KafkaSchemaRegistryClient\\": "src/",
@@ -11,10 +11,8 @@
     },
     "authors": [
         {
-            "name": "Milan Radovic"
-        },
-        {
-            "name": "Nick Chiu"
+            "name": "Jobcloud AG",
+            "homepage": "https://www.jobcloud.ch/c/en/about/team/?team=13"
         }
     ],
     "config": {
@@ -23,7 +21,6 @@
     "require": {
         "php": ">7.3",
         "ext-json": "*",
-        "ext-rdkafka": "^4.0",
         "pimple/pimple": "^3.2",
         "symfony/cache": "^5.0",
         "nyholm/psr7": "^1.2",

@@ -3,15 +3,17 @@
 namespace Jobcloud\KafkaSchemaRegistryClient;
 
 use Exception;
-use Jobcloud\KafkaSchemaRegistryClient\Interfaces\SchemaRegistryClientInterface;
+use Jobcloud\KafkaSchemaRegistryClient\Interfaces\SchemaRegistryHttpClientInterface;
 use JsonSchema\Exception\ResourceNotFoundException;
+use ClientException;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use UnauthorizedException;
 
-class SchemaRegistryHttpClient implements SchemaRegistryClientInterface
+class SchemaRegistryHttpHttpClient implements SchemaRegistryHttpClientInterface
 {
     /**
      * @var ClientInterface
@@ -116,12 +118,37 @@ class SchemaRegistryHttpClient implements SchemaRegistryClientInterface
     public function call(string $method, string $uri, ?array $body = null, array $queryParams = []): ?array
     {
         $response = $this->client->sendRequest($this->createRequest($method, $uri, $body, $queryParams));
-        $parsedResponse = $this->parseJsonResponse($response);
+        $responseData = $this->parseJsonResponse($response);
 
-        if(($parsedResponse['error_code'] ?? null) === 40402) {
-            throw new ResourceNotFoundException($parsedResponse['message'] ?? '');
+        $this->parseForErrors($responseData);
+
+        return $responseData;
+
+    }
+
+    /**
+     * @param array $responseData
+     * @return array
+     * @throws ClientException
+     * @throws UnauthorizedException
+     * @throws ResourceNotFoundException
+     */
+    protected function parseForErrors(array $responseData) {
+        if (false === isset($responseData['error_code'])){
+            return $responseData;
         }
 
-        return $parsedResponse;
+        $errorCode = $responseData['error_code'];
+        $errorMessage = $responseData['message'] ?? '';
+
+        switch ($errorCode){
+            case 40402:
+            case 404:
+                throw new ResourceNotFoundException($errorMessage);
+            case 401:
+                throw new UnauthorizedException($errorMessage);
+            default:
+                throw new ClientException($errorMessage);
+        }
     }
 }
