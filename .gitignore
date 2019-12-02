@@ -1,0 +1,10 @@
+# Editor(s)
+.idea
+
+# Packaes
+vendor/
+composer.lock
+composer.symlink
+
+# Builds
+/build/
