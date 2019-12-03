@@ -78,5 +78,4 @@ interface KafkaSchemaRegistryClientInterface
      * @return string|null
      */
     public function getLatestSubjectVersion(string $subjectName): ?string;
-
 }
