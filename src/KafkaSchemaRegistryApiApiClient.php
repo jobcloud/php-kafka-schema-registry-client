@@ -6,9 +6,9 @@ use Buzz\Exception\RequestException;
 use Exception;
 use Jobcloud\KafkaSchemaRegistryClient\Exceptions\ResourceNotFoundException;
 use Jobcloud\KafkaSchemaRegistryClient\Interfaces\HttpClientInterface;
-use Jobcloud\KafkaSchemaRegistryClient\Interfaces\KafkaSchemaRegistryClientInterface;
+use Jobcloud\KafkaSchemaRegistryClient\Interfaces\KafkaSchemaRegistryApiClientInterface;
 
-class KafkaSchemaRegistryClient implements KafkaSchemaRegistryClientInterface
+class KafkaSchemaRegistryApiApiClient implements KafkaSchemaRegistryApiClientInterface
 {
     public const VERSION_LATEST = 'latest';
 

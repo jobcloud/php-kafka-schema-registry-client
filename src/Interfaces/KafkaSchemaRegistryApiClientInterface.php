@@ -2,7 +2,7 @@
 
 namespace Jobcloud\KafkaSchemaRegistryClient\Interfaces;
 
-interface KafkaSchemaRegistryClientInterface
+interface KafkaSchemaRegistryApiClientInterface
 {
 
     /**

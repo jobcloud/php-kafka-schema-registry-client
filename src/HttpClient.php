@@ -25,14 +25,15 @@ class HttpClient implements HttpClientInterface
     private $baseUrl;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $username;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $password;
+
     /**
      * @var RequestFactoryInterface
      */
@@ -42,15 +43,15 @@ class HttpClient implements HttpClientInterface
      * @param ClientInterface $client
      * @param RequestFactoryInterface $requestFactory
      * @param string $baseUrl
-     * @param string $username
-     * @param string $password
+     * @param string|null $username
+     * @param string|null $password
      */
     public function __construct(
         ClientInterface $client,
         RequestFactoryInterface $requestFactory,
         string $baseUrl,
-        string $username,
-        string $password
+        ?string $username = null,
+        ?string $password = null
     ) {
         $this->client = $client;
         $this->baseUrl = $baseUrl;
@@ -96,13 +97,16 @@ class HttpClient implements HttpClientInterface
             $request->getBody()->write($jsonData);
         }
 
-        return $request
-            ->withHeader('Content-Type', 'application/json')
-            ->withHeader('Accept', 'application/vnd.schemaregistry.v1+json')
-            ->withHeader(
+        if (null !== $this->username && null !== $this->password) {
+            $request = $request->withHeader(
                 'Authorization',
                 sprintf('Basic %s', base64_encode(sprintf('%s:%s', $this->username, $this->password)))
             );
+        }
+
+        return $request
+            ->withHeader('Content-Type', 'application/json')
+            ->withHeader('Accept', 'application/vnd.schemaregistry.v1+json');
     }
 
     /**
@@ -128,15 +132,15 @@ class HttpClient implements HttpClientInterface
 
     /**
      * @param array $responseData
-     * @return array
+     * @return void
      * @throws ClientException
-     * @throws UnauthorizedException
      * @throws ResourceNotFoundException
+     * @throws UnauthorizedException
      */
-    protected function parseForErrors(array $responseData)
+    protected function parseForErrors(array $responseData): void
     {
         if (false === isset($responseData['error_code'])) {
-            return $responseData;
+            return;
         }
 
         $errorCode = $responseData['error_code'];
