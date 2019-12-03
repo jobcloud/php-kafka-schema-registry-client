@@ -169,12 +169,8 @@ class KafkaSchemaRegistryApiApiClient implements KafkaSchemaRegistryApiClientInt
             $schemaVersions = $this->getAllSubjectVersions($subjectName);
             $lastKey = array_key_last($schemaVersions);
             return $schemaVersions[$lastKey];
-        } catch (RequestException $e) {
-            if (404 === $e->getCode()) {
-                return null;
-            }
-
-            throw $e;
+        } catch (ResourceNotFoundException $e) {
+            return null;
         }
     }
 
