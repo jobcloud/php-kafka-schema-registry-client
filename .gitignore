@@ -1,10 +1,12 @@
 # Editor(s)
 .idea
 
-# Packaes
+# Packages
 vendor/
 composer.lock
 composer.symlink
 
-# Builds
+# Builds & caches
 /build/
+.phpunit.result.cache
+

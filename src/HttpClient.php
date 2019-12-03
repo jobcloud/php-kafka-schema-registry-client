@@ -2,18 +2,17 @@
 
 namespace Jobcloud\KafkaSchemaRegistryClient;
 
-use Exception;
-use Jobcloud\KafkaSchemaRegistryClient\Interfaces\SchemaRegistryHttpClientInterface;
-use JsonSchema\Exception\ResourceNotFoundException;
-use ClientException;
+use Jobcloud\KafkaSchemaRegistryClient\Exceptions\ClientException;
+use Jobcloud\KafkaSchemaRegistryClient\Exceptions\ResourceNotFoundException;
+use Jobcloud\KafkaSchemaRegistryClient\Exceptions\UnauthorizedException;
+use Jobcloud\KafkaSchemaRegistryClient\Interfaces\HttpClientInterface;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-use UnauthorizedException;
 
-class SchemaRegistryHttpHttpClient implements SchemaRegistryHttpClientInterface
+class HttpClient implements HttpClientInterface
 {
     /**
      * @var ClientInterface
@@ -52,8 +51,7 @@ class SchemaRegistryHttpHttpClient implements SchemaRegistryHttpClientInterface
         string $baseUrl,
         string $username,
         string $password
-    )
-    {
+    ) {
         $this->client = $client;
         $this->baseUrl = $baseUrl;
         $this->username = $username;
@@ -113,7 +111,10 @@ class SchemaRegistryHttpHttpClient implements SchemaRegistryHttpClientInterface
      * @param array|null $body
      * @param array $queryParams
      * @return array|null
+     * @throws ClientException
      * @throws ClientExceptionInterface
+     * @throws ResourceNotFoundException
+     * @throws UnauthorizedException
      */
     public function call(string $method, string $uri, ?array $body = null, array $queryParams = []): ?array
     {
@@ -123,7 +124,6 @@ class SchemaRegistryHttpHttpClient implements SchemaRegistryHttpClientInterface
         $this->parseForErrors($responseData);
 
         return $responseData;
-
     }
 
     /**
@@ -133,15 +133,16 @@ class SchemaRegistryHttpHttpClient implements SchemaRegistryHttpClientInterface
      * @throws UnauthorizedException
      * @throws ResourceNotFoundException
      */
-    protected function parseForErrors(array $responseData) {
-        if (false === isset($responseData['error_code'])){
+    protected function parseForErrors(array $responseData)
+    {
+        if (false === isset($responseData['error_code'])) {
             return $responseData;
         }
 
         $errorCode = $responseData['error_code'];
         $errorMessage = $responseData['message'] ?? '';
 
-        switch ($errorCode){
+        switch ($errorCode) {
             case 40402:
             case 404:
                 throw new ResourceNotFoundException($errorMessage);

@@ -4,21 +4,24 @@ namespace Jobcloud\KafkaSchemaRegistryClient;
 
 use Buzz\Exception\RequestException;
 use Exception;
-use Jobcloud\KafkaSchemaRegistryClient\Interfaces\SchemaRegistryHttpClientInterface;
-use ResourceNotFoundException;
+use Jobcloud\KafkaSchemaRegistryClient\Exceptions\ResourceNotFoundException;
+use Jobcloud\KafkaSchemaRegistryClient\Interfaces\HttpClientInterface;
+use Jobcloud\KafkaSchemaRegistryClient\Interfaces\KafkaSchemaRegistryClientInterface;
 
-class SchemaRegistryApi
+class KafkaSchemaRegistryClient implements KafkaSchemaRegistryClientInterface
 {
+    public const VERSION_LATEST = 'latest';
+
     /**
-     * @var SchemaRegistryHttpClientInterface
+     * @var HttpClientInterface
      */
     private $registryClient;
 
     /**
-     * SchemaRegistryApi constructor.
-     * @param SchemaRegistryHttpClientInterface $schemaRegistryClient
+     * KafkaSchemaRegistryApi constructor.
+     * @param HttpClientInterface $schemaRegistryClient
      */
-    public function __construct(SchemaRegistryHttpClientInterface $schemaRegistryClient)
+    public function __construct(HttpClientInterface $schemaRegistryClient)
     {
         $this->registryClient = $schemaRegistryClient;
     }
@@ -26,7 +29,7 @@ class SchemaRegistryApi
     /**
      * @return array
      */
-    public function getAllSchemas(): array
+    public function getAllSubjects(): array
     {
         return $this->registryClient->call('GET', 'subjects') ?? [];
     }
@@ -47,7 +50,7 @@ class SchemaRegistryApi
      * @param string $version
      * @return array
      */
-    public function getSchemaByVersion(string $subjectName, string $version = 'latest'): array
+    public function getSchemaByVersion(string $subjectName, string $version = self::VERSION_LATEST): array
     {
         return $this
                 ->registryClient
@@ -59,11 +62,15 @@ class SchemaRegistryApi
      * @param string $subjectName
      * @return array
      */
-    public function registerNewSchemaVersion(string $schema, string $subjectName): array
+    public function registerNewSchemaVersion(string $subjectName, string $schema): array
     {
         return $this
                 ->registryClient
-                ->call('POST', sprintf('/subjects/%s/versions/', $subjectName));
+                ->call(
+                    'POST',
+                    sprintf('/subjects/%s/versions/', $subjectName),
+                    $this->prepareSchemaData($schema)
+                ) ?? [];
     }
 
     /**
@@ -74,23 +81,22 @@ class SchemaRegistryApi
      * @throws Exception
      */
     public function checkSchemaCompatibilityForVersion(
-        string $schema,
         string $subjectName,
-        string $version = 'latest'
-    ): bool
-    {
+        string $schema,
+        string $version = self::VERSION_LATEST
+    ): bool {
 
-       try{
-           $results = $this
+        try {
+            $results = $this
                    ->registryClient
                    ->call(
                        'POST',
                        sprintf('/compatibility/subjects/%s/versions/%s', $subjectName, $version),
                        $this->prepareSchemaData($schema)
                    ) ?? [];
-       } catch (ResourceNotFoundException $e) {
-           return true;
-       }
+        } catch (ResourceNotFoundException $e) {
+            return true;
+        }
 
         return (bool) $results['is_compatible'];
     }
@@ -116,9 +122,8 @@ class SchemaRegistryApi
     public function getDefaultCompatibilityLevel(
         string $schema,
         string $subjectName,
-        string $version = 'latest'
-    ): string
-    {
+        string $version = self::VERSION_LATEST
+    ): string {
 
         $results = $this->registryClient->call('GET', 'config');
 
@@ -130,8 +135,9 @@ class SchemaRegistryApi
      * @param string $schema
      * @return string|null
      */
-    public function getVersionForSchema(string $subjectName, string $schema): ?string {
-        try{
+    public function getVersionForSchema(string $subjectName, string $schema): ?string
+    {
+        try {
             $results = $this
                     ->registryClient
                     ->call(
@@ -150,7 +156,8 @@ class SchemaRegistryApi
      * @param string $subjectName
      * @return array
      */
-    public function deleteSchema(string $subjectName): array {
+    public function deleteSubject(string $subjectName): array
+    {
         return $this
             ->registryClient
             ->call(
@@ -185,13 +192,6 @@ class SchemaRegistryApi
      */
     private function prepareSchemaData(string $schema): array
     {
-        $decoded = json_decode($schema, true);
-
-        if (is_array($decoded) && array_key_exists('schema', $decoded)) {
-            return json_encode($decoded);
-        }
-
-        return ['schema' => json_encode($decoded)];
+        return ['schema' => json_encode(json_decode($schema, true))];
     }
-
 }

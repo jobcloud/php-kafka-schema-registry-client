@@ -5,7 +5,7 @@ PHPUNIT =  ./vendor/bin/phpunit -c ./phpunit.xml
 PHPDBG =  phpdbg -qrr ./vendor/bin/phpunit -c ./phpunit.xml
 PHPSTAN  = ./vendor/bin/phpstan
 PHPCS = ./vendor/bin/phpcs --extensions=php -v
-PHPCBF = ./vendor/bin/phpcbf ./app --standard=PSR2
+PHPCBF = ./vendor/bin/phpcbf ./src --standard=PSR2
 INFECTION = ./vendor/bin/infection
 
 clean:
@@ -15,7 +15,7 @@ fix-code-style:
 	${PHPCBF}
 
 code-style:
-	${PHPCS} --report-full --report-gitblame --standard=PSR2 ./app
+	${PHPCS} --report-full --report-gitblame --standard=PSR2 ./src
 
 coverage:
 	mkdir -p build/logs/phpunit
@@ -32,7 +32,7 @@ test-integration:
 
 static-analysis:
 	mkdir -p build/logs/phpstan
-	${PHPSTAN} analyse app --no-progress --level=7
+	${PHPSTAN} analyse --no-progress
 
 infection-testing:
 	mkdir -p build/logs/infection

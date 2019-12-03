@@ -1,1 +1,1 @@
-
+# Kafka Schema Registry API Client

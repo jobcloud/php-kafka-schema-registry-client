@@ -8,7 +8,7 @@
         convertWarningsToExceptions = "true"
         processIsolation            = "false"
         stopOnFailure               = "false"
-        bootstrap                   = "tests/bootstrap.php" >
+        bootstrap                   = "vendor/autoload.php" >
     <php>
         <ini name="max_execution_time" value="-1"/>
         <ini name="html_errors" value="false"/>
