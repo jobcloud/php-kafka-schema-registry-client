@@ -113,17 +113,9 @@ class KafkaSchemaRegistryApiApiClient implements KafkaSchemaRegistryApiClientInt
     }
 
     /**
-     * @param string $schema
-     * @param string $subjectName
-     * @param string $version
      * @return string
-     * @throws Exception
      */
-    public function getDefaultCompatibilityLevel(
-        string $schema,
-        string $subjectName,
-        string $version = self::VERSION_LATEST
-    ): string {
+    public function getDefaultCompatibilityLevel(): string {
 
         $results = $this->registryClient->call('GET', 'config');
 

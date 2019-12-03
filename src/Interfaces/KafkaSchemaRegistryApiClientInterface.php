@@ -49,16 +49,9 @@ interface KafkaSchemaRegistryApiClientInterface
     public function getSubjectCompatibilityForVersion(string $subjectName): string;
 
     /**
-     * @param string $schema
-     * @param string $subjectName
-     * @param string $version
      * @return string
      */
-    public function getDefaultCompatibilityLevel(
-        string $schema,
-        string $subjectName,
-        string $version = 'latest'
-    ): string;
+    public function getDefaultCompatibilityLevel(): string;
 
     /**
      * @param string $subjectName
