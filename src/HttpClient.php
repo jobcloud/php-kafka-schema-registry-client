@@ -3,8 +3,10 @@
 namespace Jobcloud\KafkaSchemaRegistryClient;
 
 use Jobcloud\KafkaSchemaRegistryClient\Exceptions\ClientException;
+use Jobcloud\KafkaSchemaRegistryClient\Exceptions\PathNotFoundException;
 use Jobcloud\KafkaSchemaRegistryClient\Exceptions\ResourceNotFoundException;
 use Jobcloud\KafkaSchemaRegistryClient\Exceptions\UnauthorizedException;
+use Jobcloud\KafkaSchemaRegistryClient\Exceptions\UnknownPartitionException;
 use Jobcloud\KafkaSchemaRegistryClient\Interfaces\HttpClientInterface;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
@@ -134,8 +136,10 @@ class HttpClient implements HttpClientInterface
      * @param array $responseData
      * @return void
      * @throws ClientException
+     * @throws PathNotFoundException
      * @throws ResourceNotFoundException
      * @throws UnauthorizedException
+     * @throws UnknownPartitionException
      */
     protected function parseForErrors(array $responseData): void
     {
@@ -147,9 +151,12 @@ class HttpClient implements HttpClientInterface
         $errorMessage = $responseData['message'] ?? '';
 
         switch ($errorCode) {
-            case 40402:
-            case 404:
+            case 40401:
                 throw new ResourceNotFoundException($errorMessage);
+            case 40402:
+                throw new UnknownPartitionException($errorMessage);
+            case 404:
+                throw new PathNotFoundException($errorMessage);
             case 401:
                 throw new UnauthorizedException($errorMessage);
             default:
