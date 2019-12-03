@@ -46,7 +46,7 @@ interface KafkaSchemaRegistryApiClientInterface
      * @param string $subjectName
      * @return string
      */
-    public function getSubjectCompatibilityForVersion(string $subjectName): string;
+    public function getSubjectCompatibilityLevel(string $subjectName): string;
 
     /**
      * @return string

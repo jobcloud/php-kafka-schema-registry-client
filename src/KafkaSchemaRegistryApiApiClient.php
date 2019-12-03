@@ -106,7 +106,7 @@ class KafkaSchemaRegistryApiApiClient implements KafkaSchemaRegistryApiClientInt
      * @return string
      * @throws Exception
      */
-    public function getSubjectCompatibilityForVersion(string $subjectName): string
+    public function getSubjectCompatibilityLevel(string $subjectName): string
     {
         $results = $this->registryClient->call('POST', sprintf('/config/%s', $subjectName));
         return $results['compatibilityLevel'];
