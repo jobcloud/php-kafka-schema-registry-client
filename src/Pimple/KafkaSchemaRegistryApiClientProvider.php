@@ -3,6 +3,7 @@
 namespace Jobcloud\KafkaSchemaRegistryClient\Pimple;
 
 use Buzz\Client\Curl;
+use Jobcloud\KafkaSchemaRegistryClient\ErrorHandler;
 use Jobcloud\KafkaSchemaRegistryClient\HttpClient;
 use Jobcloud\KafkaSchemaRegistryClient\KafkaSchemaRegistryApiApiClient;
 use LogicException;
@@ -47,6 +48,7 @@ class KafkaSchemaRegistryApiClientProvider implements ServiceProviderInterface
                 return new HttpClient(
                     $client,
                     $requestFactory,
+                    new ErrorHandler(),
                     $container[self::BASE_URL],
                     $container[self::USERNAME] ?? null,
                     $container[self::PASSWORD] ?? null

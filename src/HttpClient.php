@@ -2,12 +2,21 @@
 
 namespace Jobcloud\KafkaSchemaRegistryClient;
 
+use Jobcloud\KafkaSchemaRegistryClient\Exceptions\BackendDatastoreException;
 use Jobcloud\KafkaSchemaRegistryClient\Exceptions\ClientException;
+use Jobcloud\KafkaSchemaRegistryClient\Exceptions\CompatibilityException;
+use Jobcloud\KafkaSchemaRegistryClient\Exceptions\InvalidAvroSchemaException;
+use Jobcloud\KafkaSchemaRegistryClient\Exceptions\InvalidVersionException;
+use Jobcloud\KafkaSchemaRegistryClient\Exceptions\OperationTimeoutException;
 use Jobcloud\KafkaSchemaRegistryClient\Exceptions\PathNotFoundException;
+use Jobcloud\KafkaSchemaRegistryClient\Exceptions\RequestForwardException;
 use Jobcloud\KafkaSchemaRegistryClient\Exceptions\SubjectNotFoundException;
 use Jobcloud\KafkaSchemaRegistryClient\Exceptions\UnauthorizedException;
-use Jobcloud\KafkaSchemaRegistryClient\Exceptions\UnknownPartitionException;
+use Jobcloud\KafkaSchemaRegistryClient\Exceptions\UnprocessableEntityException;
+use Jobcloud\KafkaSchemaRegistryClient\Exceptions\VersionNotFoundException;
+use Jobcloud\KafkaSchemaRegistryClient\Interfaces\ErrorHandlerInterface;
 use Jobcloud\KafkaSchemaRegistryClient\Interfaces\HttpClientInterface;
+use PHPUnit\Framework\MockObject\IncompatibleReturnValueException;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
@@ -42,8 +51,14 @@ class HttpClient implements HttpClientInterface
     private $requestFactory;
 
     /**
+     * @var ErrorHandlerInterface
+     */
+    private $errorHandler;
+
+    /**
      * @param ClientInterface $client
      * @param RequestFactoryInterface $requestFactory
+     * @param ErrorHandlerInterface $errorHandler
      * @param string $baseUrl
      * @param string|null $username
      * @param string|null $password
@@ -51,15 +66,17 @@ class HttpClient implements HttpClientInterface
     public function __construct(
         ClientInterface $client,
         RequestFactoryInterface $requestFactory,
+        ErrorHandlerInterface $errorHandler,
         string $baseUrl,
         ?string $username = null,
         ?string $password = null
     ) {
         $this->client = $client;
-        $this->baseUrl = $baseUrl;
+        $this->baseUrl = trim($baseUrl, '/');
         $this->username = $username;
         $this->password = $password;
         $this->requestFactory = $requestFactory;
+        $this->errorHandler = $errorHandler;
     }
 
     /**
@@ -74,8 +91,8 @@ class HttpClient implements HttpClientInterface
     /**
      * @param string $method
      * @param string $uri
-     * @param array  $body
-     * @param array  $queryParams
+     * @param array $body
+     * @param array $queryParams
      * @return RequestInterface
      */
     protected function createRequest(
@@ -88,7 +105,7 @@ class HttpClient implements HttpClientInterface
         $queryString = 0 !== count($queryParams) ? '?' . http_build_query($queryParams) : null;
 
         // Ensures that there is no trailing slashes or double slashes in endpoint URL
-        $url = trim($this->baseUrl, '/') . '/' . trim($uri, '/') . $queryString;
+        $url = $this->baseUrl . '/' . trim($uri, '/') . $queryString;
 
         $request = $this->requestFactory->createRequest($method, $url);
 
@@ -107,7 +124,7 @@ class HttpClient implements HttpClientInterface
         }
 
         return $request
-            ->withHeader('Content-Type', 'application/json')
+            ->withHeader('Content-Type', 'application/vnd.schemaregistry.v1+json')
             ->withHeader('Accept', 'application/vnd.schemaregistry.v1+json');
     }
 
@@ -117,52 +134,17 @@ class HttpClient implements HttpClientInterface
      * @param array $body
      * @param array $queryParams
      * @return array|null
-     * @throws ClientException
      * @throws ClientExceptionInterface
-     * @throws PathNotFoundException
-     * @throws SubjectNotFoundException
-     * @throws UnauthorizedException
-     * @throws UnknownPartitionException
      */
     public function call(string $method, string $uri, array $body = [], array $queryParams = []): ?array
     {
         $response = $this->client->sendRequest($this->createRequest($method, $uri, $body, $queryParams));
         $responseData = $this->parseJsonResponse($response);
 
-        $this->parseForErrors($responseData);
+        if (false === isset($responseData['error_code'])) {
+            $this->errorHandler->handleResponseData($responseData['error_code'], $responseData['message']);
+        }
 
         return $responseData;
-    }
-
-    /**
-     * @param array $responseData
-     * @return void
-     * @throws ClientException
-     * @throws PathNotFoundException
-     * @throws SubjectNotFoundException
-     * @throws UnauthorizedException
-     * @throws UnknownPartitionException
-     */
-    protected function parseForErrors(array $responseData): void
-    {
-        if (false === isset($responseData['error_code'])) {
-            return;
-        }
-
-        $errorCode = $responseData['error_code'];
-        $errorMessage = $responseData['message'] ?? '';
-
-        switch ($errorCode) {
-            case 40401:
-                throw new SubjectNotFoundException($errorMessage);
-            case 40402:
-                throw new UnknownPartitionException($errorMessage);
-            case 404:
-                throw new PathNotFoundException($errorMessage);
-            case 401:
-                throw new UnauthorizedException($errorMessage);
-            default:
-                throw new ClientException($errorMessage);
-        }
     }
 }
