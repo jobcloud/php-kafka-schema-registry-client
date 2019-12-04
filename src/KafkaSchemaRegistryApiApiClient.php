@@ -4,7 +4,7 @@ namespace Jobcloud\KafkaSchemaRegistryClient;
 
 use Buzz\Exception\RequestException;
 use Exception;
-use Jobcloud\KafkaSchemaRegistryClient\Exceptions\ResourceNotFoundException;
+use Jobcloud\KafkaSchemaRegistryClient\Exceptions\SubjectNotFoundException;
 use Jobcloud\KafkaSchemaRegistryClient\Interfaces\HttpClientInterface;
 use Jobcloud\KafkaSchemaRegistryClient\Interfaces\KafkaSchemaRegistryApiClientInterface;
 
@@ -92,7 +92,7 @@ class KafkaSchemaRegistryApiApiClient implements KafkaSchemaRegistryApiClientInt
                        sprintf('/compatibility/subjects/%s/versions/%s', $subjectName, $version),
                        $this->prepareSchemaData($schema)
                    ) ?? [];
-        } catch (ResourceNotFoundException $e) {
+        } catch (SubjectNotFoundException $e) {
             return true;
         }
 
@@ -109,7 +109,7 @@ class KafkaSchemaRegistryApiApiClient implements KafkaSchemaRegistryApiClientInt
         try {
             $results = $this->registryClient->call('GET', sprintf('/config/%s', $subjectName));
             return $results['compatibilityLevel'];
-        } catch (ResourceNotFoundException $e) {
+        } catch (SubjectNotFoundException $e) {
             return $this->getDefaultCompatibilityLevel();
         }
     }
@@ -166,7 +166,7 @@ class KafkaSchemaRegistryApiApiClient implements KafkaSchemaRegistryApiClientInt
                     ) ?? [];
 
             return (string) $results['version'];
-        } catch (ResourceNotFoundException $e) {
+        } catch (SubjectNotFoundException $e) {
             return null;
         }
     }
@@ -196,7 +196,7 @@ class KafkaSchemaRegistryApiApiClient implements KafkaSchemaRegistryApiClientInt
             $schemaVersions = $this->getAllSubjectVersions($subjectName);
             $lastKey = array_key_last($schemaVersions);
             return $schemaVersions[$lastKey];
-        } catch (ResourceNotFoundException $e) {
+        } catch (SubjectNotFoundException $e) {
             return null;
         }
     }

@@ -5,7 +5,7 @@ PHPUNIT =  ./vendor/bin/phpunit -c ./phpunit.xml
 PHPDBG =  phpdbg -qrr ./vendor/bin/phpunit -c ./phpunit.xml
 PHPSTAN  = ./vendor/bin/phpstan
 PHPCS = ./vendor/bin/phpcs --extensions=php -v
-PHPCBF = ./vendor/bin/phpcbf ./src --standard=PSR2
+PHPCBF = ./vendor/bin/phpcbf ./src --standard=PSR12
 INFECTION = ./vendor/bin/infection
 
 clean:
@@ -15,7 +15,7 @@ fix-code-style:
 	${PHPCBF}
 
 code-style:
-	${PHPCS} --report-full --report-gitblame --standard=PSR2 ./src
+	${PHPCS} --report-full --report-gitblame --standard=PSR12 ./src
 
 coverage:
 	mkdir -p build/logs/phpunit

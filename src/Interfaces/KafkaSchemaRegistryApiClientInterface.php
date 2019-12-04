@@ -6,6 +6,7 @@ interface KafkaSchemaRegistryApiClientInterface
 {
     public const VERSION_LATEST = 'latest';
 
+    public const LEVEL_BACKWARD = 'BACKWARD';
     public const LEVEL_BACKWARD_TRANSITIVE = 'BACKWARD_TRANSITIVE';
     public const LEVEL_FORWARD = 'FORWARD';
     public const LEVEL_FORWARD_TRANSITIVE = 'FORWARD_TRANSITIVE';

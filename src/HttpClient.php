@@ -4,7 +4,7 @@ namespace Jobcloud\KafkaSchemaRegistryClient;
 
 use Jobcloud\KafkaSchemaRegistryClient\Exceptions\ClientException;
 use Jobcloud\KafkaSchemaRegistryClient\Exceptions\PathNotFoundException;
-use Jobcloud\KafkaSchemaRegistryClient\Exceptions\ResourceNotFoundException;
+use Jobcloud\KafkaSchemaRegistryClient\Exceptions\SubjectNotFoundException;
 use Jobcloud\KafkaSchemaRegistryClient\Exceptions\UnauthorizedException;
 use Jobcloud\KafkaSchemaRegistryClient\Exceptions\UnknownPartitionException;
 use Jobcloud\KafkaSchemaRegistryClient\Interfaces\HttpClientInterface;
@@ -81,7 +81,7 @@ class HttpClient implements HttpClientInterface
     protected function createRequest(
         string $method,
         string $uri,
-        ?array $body = [],
+        array $body = [],
         array $queryParams = []
     ): RequestInterface {
 
@@ -92,7 +92,7 @@ class HttpClient implements HttpClientInterface
 
         $request = $this->requestFactory->createRequest($method, $url);
 
-        if (null !== $body && [] !== $body) {
+        if ([] !== $body) {
             $jsonData = json_encode($body, JSON_THROW_ON_ERROR);
 
             $request = $request->withAddedHeader('Content-Length', (string) strlen($jsonData));
@@ -114,15 +114,17 @@ class HttpClient implements HttpClientInterface
     /**
      * @param string $method
      * @param string $uri
-     * @param array|null $body
+     * @param array $body
      * @param array $queryParams
      * @return array|null
      * @throws ClientException
      * @throws ClientExceptionInterface
-     * @throws ResourceNotFoundException
+     * @throws PathNotFoundException
+     * @throws SubjectNotFoundException
      * @throws UnauthorizedException
+     * @throws UnknownPartitionException
      */
-    public function call(string $method, string $uri, ?array $body = null, array $queryParams = []): ?array
+    public function call(string $method, string $uri, array $body = [], array $queryParams = []): ?array
     {
         $response = $this->client->sendRequest($this->createRequest($method, $uri, $body, $queryParams));
         $responseData = $this->parseJsonResponse($response);
@@ -137,7 +139,7 @@ class HttpClient implements HttpClientInterface
      * @return void
      * @throws ClientException
      * @throws PathNotFoundException
-     * @throws ResourceNotFoundException
+     * @throws SubjectNotFoundException
      * @throws UnauthorizedException
      * @throws UnknownPartitionException
      */
@@ -152,7 +154,7 @@ class HttpClient implements HttpClientInterface
 
         switch ($errorCode) {
             case 40401:
-                throw new ResourceNotFoundException($errorMessage);
+                throw new SubjectNotFoundException($errorMessage);
             case 40402:
                 throw new UnknownPartitionException($errorMessage);
             case 404:

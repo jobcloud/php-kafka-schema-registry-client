@@ -2,7 +2,7 @@ FROM php:7.4.0-cli-alpine3.10
 
 # SYS: Install required packages
 RUN apk --no-cache upgrade && \
-    apk --no-cache add bash git sudo autoconf gcc g++ make gettext
+    apk --no-cache add bash git sudo make
 
 RUN apk add librdkafka librdkafka-dev \
         --update-cache --repository http://dl-3.alpinelinux.org/alpine/edge/community
@@ -37,7 +37,7 @@ RUN composer global require hirak/prestissimo
 
 # PHP: Install php extensions
 RUN pecl channel-update pecl.php.net && \
-    pecl install xdebug phpize
+    pecl install xdebug
 
 # LOG && Permissions
 RUN mkdir -p /var/log/php && \
