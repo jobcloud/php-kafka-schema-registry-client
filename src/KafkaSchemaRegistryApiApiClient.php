@@ -66,7 +66,7 @@ class KafkaSchemaRegistryApiApiClient implements KafkaSchemaRegistryApiClientInt
                 ->registryClient
                 ->call(
                     'POST',
-                    sprintf('/subjects/%s/versions/', $subjectName),
+                    sprintf('/subjects/%s/versions', $subjectName),
                     $this->prepareSchemaData($schema)
                 ) ?? [];
     }
@@ -161,7 +161,7 @@ class KafkaSchemaRegistryApiApiClient implements KafkaSchemaRegistryApiClientInt
                     ->registryClient
                     ->call(
                         'POST',
-                        sprintf('/subjects/%s/', $subjectName),
+                        sprintf('/subjects/%s', $subjectName),
                         $this->prepareSchemaData($schema)
                     ) ?? [];
 
@@ -181,7 +181,7 @@ class KafkaSchemaRegistryApiApiClient implements KafkaSchemaRegistryApiClientInt
             ->registryClient
             ->call(
                 'DELETE',
-                sprintf('/subjects/%s/', $subjectName)
+                sprintf('/subjects/%s', $subjectName)
             ) ?? [];
     }
 
@@ -207,6 +207,6 @@ class KafkaSchemaRegistryApiApiClient implements KafkaSchemaRegistryApiClientInt
      */
     private function prepareSchemaData(string $schema): array
     {
-        return ['schema' => json_encode(json_decode($schema, true))];
+        return ['schema' => $schema];
     }
 }
