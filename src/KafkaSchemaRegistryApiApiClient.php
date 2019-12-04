@@ -10,8 +10,6 @@ use Jobcloud\KafkaSchemaRegistryClient\Interfaces\KafkaSchemaRegistryApiClientIn
 
 class KafkaSchemaRegistryApiApiClient implements KafkaSchemaRegistryApiClientInterface
 {
-    public const VERSION_LATEST = 'latest';
-
     /**
      * @var HttpClientInterface
      */
@@ -117,6 +115,22 @@ class KafkaSchemaRegistryApiApiClient implements KafkaSchemaRegistryApiClientInt
     }
 
     /**
+     * @param string $subjectName
+     * @param string $level
+     * @return bool
+     */
+    public function setSubjectCompatibilityLevel(string $subjectName, string $level = self::LEVEL_FULL): bool {
+
+        $this->registryClient->call(
+            'PUT',
+            sprintf('config/%s', $subjectName),
+            ['compatibility' => $level]
+        );
+
+        return true;
+    }
+
+    /**
      * @return string
      */
     public function getDefaultCompatibilityLevel(): string {
@@ -124,6 +138,15 @@ class KafkaSchemaRegistryApiApiClient implements KafkaSchemaRegistryApiClientInt
         $results = $this->registryClient->call('GET', 'config');
 
         return $results['compatibilityLevel'];
+    }
+
+    /**
+     * @param string $level
+     * @return bool
+     */
+    public function setDefaultCompatibilityLevel(string $level = self::LEVEL_FULL): bool {
+        $this->registryClient->call('PUT', 'config', ['compatibility' => $level]);
+        return true;
     }
 
     /**

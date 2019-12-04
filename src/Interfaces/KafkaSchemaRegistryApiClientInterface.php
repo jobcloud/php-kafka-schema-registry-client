@@ -4,6 +4,14 @@ namespace Jobcloud\KafkaSchemaRegistryClient\Interfaces;
 
 interface KafkaSchemaRegistryApiClientInterface
 {
+    public const VERSION_LATEST = 'latest';
+
+    public const LEVEL_BACKWARD_TRANSITIVE = 'BACKWARD_TRANSITIVE';
+    public const LEVEL_FORWARD = 'FORWARD';
+    public const LEVEL_FORWARD_TRANSITIVE = 'FORWARD_TRANSITIVE';
+    public const LEVEL_FULL = 'FULL';
+    public const LEVEL_FULL_TRANSITIVE = 'FULL_TRANSITIVE';
+    public const LEVEL_NONE = 'NONE';
 
     /**
      * @return array
@@ -49,9 +57,22 @@ interface KafkaSchemaRegistryApiClientInterface
     public function getSubjectCompatibilityLevel(string $subjectName): ?string;
 
     /**
+     * @param string $subjectName
+     * @param string $level
+     * @return bool
+     */
+    public function setSubjectCompatibilityLevel(string $subjectName, string $level = self::LEVEL_FULL): bool;
+
+    /**
      * @return string
      */
     public function getDefaultCompatibilityLevel(): string;
+
+    /**
+     * @param string $level
+     * @return bool
+     */
+    public function setDefaultCompatibilityLevel(string $level = self::LEVEL_FULL): bool;
 
     /**
      * @param string $subjectName
