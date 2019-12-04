@@ -112,7 +112,7 @@ class KafkaSchemaRegistryApiApiClient implements KafkaSchemaRegistryApiClientInt
             $results = $this->registryClient->call('GET', sprintf('/config/%s', $subjectName));
             return $results['compatibilityLevel'];
         } catch (ResourceNotFoundException $e) {
-            return null;
+            return $this->getDefaultCompatibilityLevel();
         }
     }
 
