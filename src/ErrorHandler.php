@@ -5,6 +5,7 @@ namespace Jobcloud\KafkaSchemaRegistryClient;
 use Jobcloud\KafkaSchemaRegistryClient\Exception\BackendDatastoreException;
 use Jobcloud\KafkaSchemaRegistryClient\Exception\ClientException;
 use Jobcloud\KafkaSchemaRegistryClient\Exception\CompatibilityException;
+use Jobcloud\KafkaSchemaRegistryClient\Exception\IncoompatibileAvroSchemaException;
 use Jobcloud\KafkaSchemaRegistryClient\Exception\InvalidAvroSchemaException;
 use Jobcloud\KafkaSchemaRegistryClient\Exception\InvalidVersionException;
 use Jobcloud\KafkaSchemaRegistryClient\Exception\OperationTimeoutException;
@@ -14,7 +15,6 @@ use Jobcloud\KafkaSchemaRegistryClient\Exception\SubjectNotFoundException;
 use Jobcloud\KafkaSchemaRegistryClient\Exception\UnauthorizedException;
 use Jobcloud\KafkaSchemaRegistryClient\Exception\UnprocessableEntityException;
 use Jobcloud\KafkaSchemaRegistryClient\Exception\VersionNotFoundException;
-use PHPUnit\Framework\MockObject\IncompatibleReturnValueException;
 use Psr\Http\Message\ResponseInterface;
 
 class ErrorHandler implements ErrorHandlerInterface
@@ -34,6 +34,7 @@ class ErrorHandler implements ErrorHandlerInterface
      * @throws UnauthorizedException
      * @throws UnprocessableEntityException
      * @throws VersionNotFoundException
+     * @throws IncoompatibileAvroSchemaException
      */
     public function handleError(ResponseInterface $response): void
     {
@@ -65,7 +66,7 @@ class ErrorHandler implements ErrorHandlerInterface
             case 40402:
                 throw new VersionNotFoundException($message);
             case 409:
-                throw new IncompatibleReturnValueException($message);
+                throw new IncoompatibileAvroSchemaException($message);
             case 422:
                 throw new UnprocessableEntityException($message);
             case 404:
