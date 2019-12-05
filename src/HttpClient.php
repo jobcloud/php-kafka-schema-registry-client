@@ -8,7 +8,6 @@ use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
 
 class HttpClient implements HttpClientInterface
 {
@@ -67,15 +66,6 @@ class HttpClient implements HttpClientInterface
     }
 
     /**
-     * @param ResponseInterface $response
-     * @return array
-     */
-    protected function parseJsonResponse(ResponseInterface $response): array
-    {
-        return json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
-    }
-
-    /**
      * @param string $method
      * @param string $uri
      * @param array $body
@@ -126,10 +116,9 @@ class HttpClient implements HttpClientInterface
     public function call(string $method, string $uri, array $body = [], array $queryParams = []): ?array
     {
         $response = $this->client->sendRequest($this->createRequest($method, $uri, $body, $queryParams));
-        $responseData = $this->parseJsonResponse($response);
 
-        $this->errorHandler->handleError($responseData);
+        $this->errorHandler->handleError($response);
 
-        return $responseData;
+        return json_decode((string) $response->getBody(), true, 512, JSON_THROW_ON_ERROR);
     }
 }

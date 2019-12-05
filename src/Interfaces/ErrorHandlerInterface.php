@@ -2,10 +2,12 @@
 
 namespace Jobcloud\KafkaSchemaRegistryClient\Interfaces;
 
+use Psr\Http\Message\ResponseInterface;
+
 interface ErrorHandlerInterface
 {
     /**
-     * @param array $data
+     * @param ResponseInterface $response
      */
-    public function handleError(array $data): void;
+    public function handleError(ResponseInterface $response): void;
 }

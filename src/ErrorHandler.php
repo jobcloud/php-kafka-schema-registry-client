@@ -16,11 +16,12 @@ use Jobcloud\KafkaSchemaRegistryClient\Exceptions\UnprocessableEntityException;
 use Jobcloud\KafkaSchemaRegistryClient\Exceptions\VersionNotFoundException;
 use Jobcloud\KafkaSchemaRegistryClient\Interfaces\ErrorHandlerInterface;
 use PHPUnit\Framework\MockObject\IncompatibleReturnValueException;
+use Psr\Http\Message\ResponseInterface;
 
 class ErrorHandler implements ErrorHandlerInterface
 {
     /**
-     * @param array $data
+     * @param ResponseInterface $response
      * @return void
      * @throws BackendDatastoreException
      * @throws ClientException
@@ -35,15 +36,17 @@ class ErrorHandler implements ErrorHandlerInterface
      * @throws UnprocessableEntityException
      * @throws VersionNotFoundException
      */
-    public function handleError(array $data): void
+    public function handleError(ResponseInterface $response): void
     {
 
-        if (false === isset($data['error_code'])) {
+        $responseContent = json_decode((string) $response->getBody(), true, 512, JSON_THROW_ON_ERROR);
+
+        if (false === isset($responseContent['error_code'])) {
             return;
         }
 
-        $code = $data['error_code'];
-        $message = $data['message'] ?? '';
+        $code = $responseContent['error_code'];
+        $message = $responseContent['message'] ?? '';
 
         switch ($code) {
             case 50001:
