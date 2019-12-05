@@ -101,7 +101,6 @@ class KafkaSchemaRegistryApiApiClient implements KafkaSchemaRegistryApiClientInt
         string $schema,
         string $version = self::VERSION_LATEST
     ): bool {
-
         try {
             $results = $this
                    ->httpClient
