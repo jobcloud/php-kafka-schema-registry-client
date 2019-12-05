@@ -4,9 +4,7 @@ namespace Jobcloud\KafkaSchemaRegistryClient;
 
 use Buzz\Exception\RequestException;
 use Exception;
-use Jobcloud\KafkaSchemaRegistryClient\Exceptions\SubjectNotFoundException;
-use Jobcloud\KafkaSchemaRegistryClient\Interfaces\HttpClientInterface;
-use Jobcloud\KafkaSchemaRegistryClient\Interfaces\KafkaSchemaRegistryApiClientInterface;
+use Jobcloud\KafkaSchemaRegistryClient\Exception\SubjectNotFoundException;
 
 class KafkaSchemaRegistryApiApiClient implements KafkaSchemaRegistryApiClientInterface
 {

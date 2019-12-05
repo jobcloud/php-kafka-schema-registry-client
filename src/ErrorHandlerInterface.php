@@ -1,6 +1,6 @@
 <?php
 
-namespace Jobcloud\KafkaSchemaRegistryClient\Interfaces;
+namespace Jobcloud\KafkaSchemaRegistryClient;
 
 use Psr\Http\Message\ResponseInterface;
 

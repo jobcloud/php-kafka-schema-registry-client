@@ -2,19 +2,18 @@
 
 namespace Jobcloud\KafkaSchemaRegistryClient;
 
-use Jobcloud\KafkaSchemaRegistryClient\Exceptions\BackendDatastoreException;
-use Jobcloud\KafkaSchemaRegistryClient\Exceptions\ClientException;
-use Jobcloud\KafkaSchemaRegistryClient\Exceptions\CompatibilityException;
-use Jobcloud\KafkaSchemaRegistryClient\Exceptions\InvalidAvroSchemaException;
-use Jobcloud\KafkaSchemaRegistryClient\Exceptions\InvalidVersionException;
-use Jobcloud\KafkaSchemaRegistryClient\Exceptions\OperationTimeoutException;
-use Jobcloud\KafkaSchemaRegistryClient\Exceptions\PathNotFoundException;
-use Jobcloud\KafkaSchemaRegistryClient\Exceptions\RequestForwardException;
-use Jobcloud\KafkaSchemaRegistryClient\Exceptions\SubjectNotFoundException;
-use Jobcloud\KafkaSchemaRegistryClient\Exceptions\UnauthorizedException;
-use Jobcloud\KafkaSchemaRegistryClient\Exceptions\UnprocessableEntityException;
-use Jobcloud\KafkaSchemaRegistryClient\Exceptions\VersionNotFoundException;
-use Jobcloud\KafkaSchemaRegistryClient\Interfaces\ErrorHandlerInterface;
+use Jobcloud\KafkaSchemaRegistryClient\Exception\BackendDatastoreException;
+use Jobcloud\KafkaSchemaRegistryClient\Exception\ClientException;
+use Jobcloud\KafkaSchemaRegistryClient\Exception\CompatibilityException;
+use Jobcloud\KafkaSchemaRegistryClient\Exception\InvalidAvroSchemaException;
+use Jobcloud\KafkaSchemaRegistryClient\Exception\InvalidVersionException;
+use Jobcloud\KafkaSchemaRegistryClient\Exception\OperationTimeoutException;
+use Jobcloud\KafkaSchemaRegistryClient\Exception\PathNotFoundException;
+use Jobcloud\KafkaSchemaRegistryClient\Exception\RequestForwardException;
+use Jobcloud\KafkaSchemaRegistryClient\Exception\SubjectNotFoundException;
+use Jobcloud\KafkaSchemaRegistryClient\Exception\UnauthorizedException;
+use Jobcloud\KafkaSchemaRegistryClient\Exception\UnprocessableEntityException;
+use Jobcloud\KafkaSchemaRegistryClient\Exception\VersionNotFoundException;
 use PHPUnit\Framework\MockObject\IncompatibleReturnValueException;
 use Psr\Http\Message\ResponseInterface;
 

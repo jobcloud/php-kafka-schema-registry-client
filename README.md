@@ -63,7 +63,7 @@ $results = $registryClientApi->getVersionForSchema($subjectName, $schema);
 
 If you are using Pimple Container in you App, you can use Service Provider:
 ```php
-use Jobcloud\KafkaSchemaRegistryClient\Pimple\KafkaSchemaRegistryApiClientProvider;
+use Jobcloud\KafkaSchemaRegistryClient\ServiceProvider\KafkaSchemaRegistryApiClientProvider;
 use Pimple\Container;
 
 $container = new Container();

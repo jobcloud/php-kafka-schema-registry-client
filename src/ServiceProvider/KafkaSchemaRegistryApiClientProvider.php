@@ -1,6 +1,6 @@
 <?php
 
-namespace Jobcloud\KafkaSchemaRegistryClient\Pimple;
+namespace Jobcloud\KafkaSchemaRegistryClient\ServiceProvider;
 
 use Buzz\Client\Curl;
 use Jobcloud\KafkaSchemaRegistryClient\ErrorHandler;

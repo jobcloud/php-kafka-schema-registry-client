@@ -2,8 +2,6 @@
 
 namespace Jobcloud\KafkaSchemaRegistryClient;
 
-use Jobcloud\KafkaSchemaRegistryClient\Interfaces\ErrorHandlerInterface;
-use Jobcloud\KafkaSchemaRegistryClient\Interfaces\HttpClientInterface;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
