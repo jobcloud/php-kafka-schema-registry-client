@@ -77,7 +77,7 @@ class HttpClient implements HttpClientInterface
         array $queryParams = []
     ): RequestInterface {
 
-        $queryString = 0 !== count($queryParams) ? '?' . http_build_query($queryParams) : null;
+        $queryString = 0 !== count($queryParams) ? '?' . http_build_query($queryParams) : '';
 
         // Ensures that there is no trailing slashes or double slashes in endpoint URL
         $url = $this->baseUrl . '/' . $uri . $queryString;
