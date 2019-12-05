@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Jobcloud\KafkaSchemaRegistryClient;
 
 use Jobcloud\KafkaSchemaRegistryClient\Exceptions\BackendDatastoreException;
@@ -21,8 +20,7 @@ use PHPUnit\Framework\MockObject\IncompatibleReturnValueException;
 class ErrorHandler implements ErrorHandlerInterface
 {
     /**
-     * @param string $errorCode
-     * @param string $errorMessage
+     * @param array $data
      * @return void
      * @throws BackendDatastoreException
      * @throws ClientException
@@ -37,37 +35,43 @@ class ErrorHandler implements ErrorHandlerInterface
      * @throws UnprocessableEntityException
      * @throws VersionNotFoundException
      */
-    public function handleResponseData(string $errorCode, string $errorMessage): void
+    public function handleFromResponseData(array $data): void
     {
 
-        switch ($errorCode) {
+        if (false === isset($data['error_code'])) {
+            return;
+        }
 
+        $code = $data['error_code'];
+        $message = $data['message'] ?? '';
+
+        switch ($code) {
             case 50001:
-                throw new BackendDatastoreException($errorMessage);
+                throw new BackendDatastoreException($message);
             case 50002:
-                throw new OperationTimeoutException($errorMessage);
+                throw new OperationTimeoutException($message);
             case 50003:
-                throw new RequestForwardException($errorMessage);
+                throw new RequestForwardException($message);
             case 42201:
-                throw new InvalidAvroSchemaException($errorMessage);
+                throw new InvalidAvroSchemaException($message);
             case 42202:
-                throw new InvalidVersionException($errorMessage);
+                throw new InvalidVersionException($message);
             case 42203:
-                throw new CompatibilityException($errorMessage);
+                throw new CompatibilityException($message);
             case 40401:
-                throw new SubjectNotFoundException($errorMessage);
+                throw new SubjectNotFoundException($message);
             case 40402:
-                throw new VersionNotFoundException($errorMessage);
+                throw new VersionNotFoundException($message);
             case 409:
-                throw new IncompatibleReturnValueException($errorMessage);
+                throw new IncompatibleReturnValueException($message);
             case 422:
-                throw new UnprocessableEntityException($errorMessage);
+                throw new UnprocessableEntityException($message);
             case 404:
-                throw new PathNotFoundException($errorMessage);
+                throw new PathNotFoundException($message);
             case 401:
-                throw new UnauthorizedException($errorMessage);
+                throw new UnauthorizedException($message);
             default:
-                throw new ClientException($errorMessage);
+                throw new ClientException($message);
         }
     }
 }

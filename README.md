@@ -9,6 +9,7 @@ Currently it supports:
 * Get list of subjects
 * Get list of schema versions for a subject
 * Delete Subject
+* Delete Schema version
 * Get Subject's Schema by version
 * Get Schema by ID 
 * Register new Schema Version for a subject

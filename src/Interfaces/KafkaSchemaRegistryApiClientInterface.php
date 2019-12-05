@@ -17,7 +17,7 @@ interface KafkaSchemaRegistryApiClientInterface
     /**
      * @return array
      */
-    public function getAllSubjects(): array;
+    public function getSubjects(): array;
 
     /**
      * @param string $subjectName
@@ -28,9 +28,22 @@ interface KafkaSchemaRegistryApiClientInterface
     /**
      * @param string $subjectName
      * @param string $version
-     * @return array
+     * @return string
      */
-    public function getSchemaByVersion(string $subjectName, string $version = 'latest'): array;
+    public function getSchemaByVersion(string $subjectName, string $version = 'latest'): string;
+
+    /**
+     * @param string $subjectName
+     * @param string $version
+     * @return bool
+     */
+    public function deleteSchemaVersion(string $subjectName, string $version = self::VERSION_LATEST): bool;
+
+    /**
+     * @param int $id
+     * @return string
+     */
+    public function getSchemaById(int $id): string;
 
     /**
      * @param string $subjectName

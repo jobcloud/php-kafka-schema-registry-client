@@ -27,7 +27,7 @@ class KafkaSchemaRegistryApiApiClient implements KafkaSchemaRegistryApiClientInt
     /**
      * @return array
      */
-    public function getAllSubjects(): array
+    public function getSubjects(): array
     {
         return $this->registryClient->call('GET', 'subjects') ?? [];
     }
@@ -44,11 +44,13 @@ class KafkaSchemaRegistryApiApiClient implements KafkaSchemaRegistryApiClientInt
     /**
      * @param string $subjectName
      * @param string $version
-     * @return array
+     * @return string
      */
-    public function getSchemaByVersion(string $subjectName, string $version = self::VERSION_LATEST): array
+    public function getSchemaByVersion(string $subjectName, string $version = self::VERSION_LATEST): string
     {
-        return $this->registryClient->call('GET', sprintf('/subjects/%s/versions/%s', $subjectName, $version)) ?? [];
+        return $this
+                ->registryClient
+                ->call('GET', sprintf('/subjects/%s/versions/%s', $subjectName, $version))['schema'] ?? [];
     }
 
     /**
@@ -56,7 +58,7 @@ class KafkaSchemaRegistryApiApiClient implements KafkaSchemaRegistryApiClientInt
      * @param string $version
      * @return bool
      */
-    public function deleteSchema(string $subjectName, string $version = self::VERSION_LATEST): bool
+    public function deleteSchemaVersion(string $subjectName, string $version = self::VERSION_LATEST): bool
     {
         $this->registryClient->call('DELETE', sprintf('/subjects/%s/versions/%s', $subjectName, $version));
         return true;
@@ -64,11 +66,11 @@ class KafkaSchemaRegistryApiApiClient implements KafkaSchemaRegistryApiClientInt
 
     /**
      * @param int $id
-     * @return array
+     * @return string
      */
-    public function getSchemaById(int $id): array
+    public function getSchemaById(int $id): string
     {
-        return $this->registryClient->call('GET', sprintf('/schemas/ids/%s', $id)) ?? [];
+        return $this->registryClient->call('GET', sprintf('/schemas/ids/%s', $id))['schema'] ?? [];
     }
 
     /**
@@ -135,7 +137,8 @@ class KafkaSchemaRegistryApiApiClient implements KafkaSchemaRegistryApiClientInt
      * @param string $level
      * @return bool
      */
-    public function setSubjectCompatibilityLevel(string $subjectName, string $level = self::LEVEL_FULL): bool {
+    public function setSubjectCompatibilityLevel(string $subjectName, string $level = self::LEVEL_FULL): bool
+    {
 
         $this->registryClient->call('PUT', sprintf('config/%s', $subjectName), ['compatibility' => $level]);
         return true;
@@ -144,7 +147,8 @@ class KafkaSchemaRegistryApiApiClient implements KafkaSchemaRegistryApiClientInt
     /**
      * @return string
      */
-    public function getDefaultCompatibilityLevel(): string {
+    public function getDefaultCompatibilityLevel(): string
+    {
 
         $results = $this->registryClient->call('GET', 'config');
         return $results['compatibilityLevel'];
@@ -154,7 +158,8 @@ class KafkaSchemaRegistryApiApiClient implements KafkaSchemaRegistryApiClientInt
      * @param string $level
      * @return bool
      */
-    public function setDefaultCompatibilityLevel(string $level = self::LEVEL_FULL): bool {
+    public function setDefaultCompatibilityLevel(string $level = self::LEVEL_FULL): bool
+    {
         $this->registryClient->call('PUT', 'config', ['compatibility' => $level]);
         return true;
     }

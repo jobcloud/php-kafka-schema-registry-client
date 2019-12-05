@@ -2,21 +2,8 @@
 
 namespace Jobcloud\KafkaSchemaRegistryClient;
 
-use Jobcloud\KafkaSchemaRegistryClient\Exceptions\BackendDatastoreException;
-use Jobcloud\KafkaSchemaRegistryClient\Exceptions\ClientException;
-use Jobcloud\KafkaSchemaRegistryClient\Exceptions\CompatibilityException;
-use Jobcloud\KafkaSchemaRegistryClient\Exceptions\InvalidAvroSchemaException;
-use Jobcloud\KafkaSchemaRegistryClient\Exceptions\InvalidVersionException;
-use Jobcloud\KafkaSchemaRegistryClient\Exceptions\OperationTimeoutException;
-use Jobcloud\KafkaSchemaRegistryClient\Exceptions\PathNotFoundException;
-use Jobcloud\KafkaSchemaRegistryClient\Exceptions\RequestForwardException;
-use Jobcloud\KafkaSchemaRegistryClient\Exceptions\SubjectNotFoundException;
-use Jobcloud\KafkaSchemaRegistryClient\Exceptions\UnauthorizedException;
-use Jobcloud\KafkaSchemaRegistryClient\Exceptions\UnprocessableEntityException;
-use Jobcloud\KafkaSchemaRegistryClient\Exceptions\VersionNotFoundException;
 use Jobcloud\KafkaSchemaRegistryClient\Interfaces\ErrorHandlerInterface;
 use Jobcloud\KafkaSchemaRegistryClient\Interfaces\HttpClientInterface;
-use PHPUnit\Framework\MockObject\IncompatibleReturnValueException;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
@@ -141,9 +128,7 @@ class HttpClient implements HttpClientInterface
         $response = $this->client->sendRequest($this->createRequest($method, $uri, $body, $queryParams));
         $responseData = $this->parseJsonResponse($response);
 
-        if (false === isset($responseData['error_code'])) {
-            $this->errorHandler->handleResponseData($responseData['error_code'], $responseData['message']);
-        }
+        $this->errorHandler->handleFromResponseData($responseData);
 
         return $responseData;
     }
