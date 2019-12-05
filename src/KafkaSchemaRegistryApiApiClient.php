@@ -38,9 +38,7 @@ class KafkaSchemaRegistryApiApiClient implements KafkaSchemaRegistryApiClientInt
      */
     public function getAllSubjectVersions(string $subjectName): array
     {
-        return $this
-                ->registryClient
-                ->call('GET', sprintf('/subjects/%s/versions', $subjectName)) ?? [];
+        return $this->registryClient->call('GET', sprintf('/subjects/%s/versions', $subjectName)) ?? [];
     }
 
     /**
@@ -50,9 +48,27 @@ class KafkaSchemaRegistryApiApiClient implements KafkaSchemaRegistryApiClientInt
      */
     public function getSchemaByVersion(string $subjectName, string $version = self::VERSION_LATEST): array
     {
-        return $this
-                ->registryClient
-                ->call('GET', sprintf('/subjects/%s/versions/%s', $subjectName, $version)) ?? [];
+        return $this->registryClient->call('GET', sprintf('/subjects/%s/versions/%s', $subjectName, $version)) ?? [];
+    }
+
+    /**
+     * @param string $subjectName
+     * @param string $version
+     * @return bool
+     */
+    public function deleteSchema(string $subjectName, string $version = self::VERSION_LATEST): bool
+    {
+        $this->registryClient->call('DELETE', sprintf('/subjects/%s/versions/%s', $subjectName, $version));
+        return true;
+    }
+
+    /**
+     * @param int $id
+     * @return array
+     */
+    public function getSchemaById(int $id): array
+    {
+        return $this->registryClient->call('GET', sprintf('/schemas/ids/%s', $id)) ?? [];
     }
 
     /**
@@ -121,12 +137,7 @@ class KafkaSchemaRegistryApiApiClient implements KafkaSchemaRegistryApiClientInt
      */
     public function setSubjectCompatibilityLevel(string $subjectName, string $level = self::LEVEL_FULL): bool {
 
-        $this->registryClient->call(
-            'PUT',
-            sprintf('config/%s', $subjectName),
-            ['compatibility' => $level]
-        );
-
+        $this->registryClient->call('PUT', sprintf('config/%s', $subjectName), ['compatibility' => $level]);
         return true;
     }
 
@@ -136,7 +147,6 @@ class KafkaSchemaRegistryApiApiClient implements KafkaSchemaRegistryApiClientInt
     public function getDefaultCompatibilityLevel(): string {
 
         $results = $this->registryClient->call('GET', 'config');
-
         return $results['compatibilityLevel'];
     }
 
@@ -169,6 +179,16 @@ class KafkaSchemaRegistryApiApiClient implements KafkaSchemaRegistryApiClientInt
         } catch (SubjectNotFoundException $e) {
             return null;
         }
+    }
+
+    /**
+     * @param string $subjectName
+     * @param string $schema
+     * @return bool
+     */
+    public function doesSchemaExists(string $subjectName, string $schema): bool
+    {
+        return (bool) $this->getVersionForSchema($subjectName, $schema);
     }
 
     /**
@@ -207,6 +227,6 @@ class KafkaSchemaRegistryApiApiClient implements KafkaSchemaRegistryApiClientInt
      */
     private function prepareSchemaData(string $schema): array
     {
-        return ['schema' => $schema];
+        return ['schema' => json_encode(json_decode($schema, true))];
     }
 }

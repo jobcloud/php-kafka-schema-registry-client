@@ -9,7 +9,8 @@ Currently it supports:
 * Get list of subjects
 * Get list of schema versions for a subject
 * Delete Subject
-* Get Subject's Schema by version 
+* Get Subject's Schema by version
+* Get Schema by ID 
 * Register new Schema Version for a subject
 * Check Schema compatibility for schema version that exist for subject
 * Get Default Compatibility level
