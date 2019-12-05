@@ -35,7 +35,7 @@ class ErrorHandler implements ErrorHandlerInterface
      * @throws UnprocessableEntityException
      * @throws VersionNotFoundException
      */
-    public function handleFromResponseData(array $data): void
+    public function handleError(array $data): void
     {
 
         if (false === isset($data['error_code'])) {

@@ -16,8 +16,8 @@ use Psr\Http\Message\RequestFactoryInterface;
 class KafkaSchemaRegistryApiClientProvider implements ServiceProviderInterface
 {
 
-    public const ROOT = 'kafka_schema_registry';
-    public const USERNAME = 'username';
+    public const CONTAINER_KEY = 'kafka_schema_registry';
+    public const SETTING_KEY_USERNAME = 'username';
     public const PASSWORD = 'password';
     public const BASE_URL = 'base_url';
     public const CLIENT = 'client';
@@ -31,41 +31,43 @@ class KafkaSchemaRegistryApiClientProvider implements ServiceProviderInterface
     {
         $this->checkRequiredOffsets($container);
 
-        if (false === isset($container[self::ROOT][self::REQUEST_FACTORY])) {
-            $container[self::ROOT][self::REQUEST_FACTORY] = new Psr17Factory();
+        if (false === isset($container[self::CONTAINER_KEY][self::REQUEST_FACTORY])) {
+            $container[self::CONTAINER_KEY][self::REQUEST_FACTORY] = new Psr17Factory();
         }
 
-        if (false === isset($container[self::ROOT][self::CLIENT])) {
-            $container[self::ROOT][self::CLIENT] = new Curl($container[self::ROOT][self::REQUEST_FACTORY]);
+        if (false === isset($container[self::CONTAINER_KEY][self::CLIENT])) {
+            $container[self::CONTAINER_KEY][self::CLIENT] = new Curl(
+                $container[self::CONTAINER_KEY][self::REQUEST_FACTORY]
+            );
         }
 
-        if (false === isset($container[self::ROOT][self::ERROR_HANDLER])) {
-            $container[self::ROOT][self::ERROR_HANDLER] = new ErrorHandler();
+        if (false === isset($container[self::CONTAINER_KEY][self::ERROR_HANDLER])) {
+            $container[self::CONTAINER_KEY][self::ERROR_HANDLER] = new ErrorHandler();
         }
 
-        if (false === isset($container[self::ROOT][self::HTTP_CLIENT])) {
-            $container[self::ROOT][self::HTTP_CLIENT] = static function (Container $container) {
+        if (false === isset($container[self::CONTAINER_KEY][self::HTTP_CLIENT])) {
+            $container[self::CONTAINER_KEY][self::HTTP_CLIENT] = static function (Container $container) {
                 /** @var ClientInterface $client */
-                $client = $container[self::ROOT][self::CLIENT];
+                $client = $container[self::CONTAINER_KEY][self::CLIENT];
 
                 /** @var RequestFactoryInterface $psr17factory */
-                $requestFactory = $container[self::ROOT][self::REQUEST_FACTORY];
+                $requestFactory = $container[self::CONTAINER_KEY][self::REQUEST_FACTORY];
 
                 return new HttpClient(
                     $client,
                     $requestFactory,
-                    $container[self::ROOT][self::ERROR_HANDLER],
-                    $container[self::ROOT][self::BASE_URL],
-                    $container[self::ROOT][self::USERNAME] ?? null,
-                    $container[self::ROOT][self::PASSWORD] ?? null
+                    $container[self::CONTAINER_KEY][self::ERROR_HANDLER],
+                    $container[self::CONTAINER_KEY][self::BASE_URL],
+                    $container[self::CONTAINER_KEY][self::SETTING_KEY_USERNAME] ?? null,
+                    $container[self::CONTAINER_KEY][self::PASSWORD] ?? null
                 );
             };
         }
 
-        if (false === isset($container[self::ROOT][self::API_CLIENT])) {
-            $container[self::ROOT][self::API_CLIENT] = static function (Container $container) {
+        if (false === isset($container[self::CONTAINER_KEY][self::API_CLIENT])) {
+            $container[self::CONTAINER_KEY][self::API_CLIENT] = static function (Container $container) {
                 /** @var HttpClient $client */
-                $client = $container[self::ROOT][self::HTTP_CLIENT];
+                $client = $container[self::CONTAINER_KEY][self::HTTP_CLIENT];
 
                 return new KafkaSchemaRegistryApiApiClient($client);
             };
@@ -75,7 +77,7 @@ class KafkaSchemaRegistryApiClientProvider implements ServiceProviderInterface
     private function checkRequiredOffsets(Container $container)
     {
 
-        if (false === isset($container[self::ROOT][self::BASE_URL])) {
+        if (false === isset($container[self::CONTAINER_KEY][self::BASE_URL])) {
             throw new LogicException(
                 sprintf('Missing schema registry URL, please set it under "%s" container offset', self::BASE_URL)
             );

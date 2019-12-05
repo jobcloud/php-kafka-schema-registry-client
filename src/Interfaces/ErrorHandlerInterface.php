@@ -7,5 +7,5 @@ interface ErrorHandlerInterface
     /**
      * @param array $data
      */
-    public function handleFromResponseData(array $data): void;
+    public function handleError(array $data): void;
 }

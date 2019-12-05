@@ -61,6 +61,15 @@ $subjectName = 'some.subject.name';
 $results = $registryClientApi->getVersionForSchema($subjectName, $schema);
 ```
 
+If you are using Pimple Container in you App, you can use Service Provider:
+```php
+use Jobcloud\KafkaSchemaRegistryClient\Pimple\KafkaSchemaRegistryApiClientProvider;
+use Pimple\Container;
+
+$container = new Container();
+$container->register(new KafkaSchemaRegistryApiClientProvider());
+```
+
 ## External links?
 If you want to be so kind to extend this library, make a pull request, 
 and whatever functionality you want to implement, this is a API reference to follow: 

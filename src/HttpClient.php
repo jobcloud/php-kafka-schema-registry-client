@@ -59,7 +59,7 @@ class HttpClient implements HttpClientInterface
         ?string $password = null
     ) {
         $this->client = $client;
-        $this->baseUrl = trim($baseUrl, '/');
+        $this->baseUrl = $baseUrl;
         $this->username = $username;
         $this->password = $password;
         $this->requestFactory = $requestFactory;
@@ -92,7 +92,7 @@ class HttpClient implements HttpClientInterface
         $queryString = 0 !== count($queryParams) ? '?' . http_build_query($queryParams) : null;
 
         // Ensures that there is no trailing slashes or double slashes in endpoint URL
-        $url = $this->baseUrl . '/' . trim($uri, '/') . $queryString;
+        $url = $this->baseUrl . '/' . $uri . $queryString;
 
         $request = $this->requestFactory->createRequest($method, $url);
 
@@ -128,7 +128,7 @@ class HttpClient implements HttpClientInterface
         $response = $this->client->sendRequest($this->createRequest($method, $uri, $body, $queryParams));
         $responseData = $this->parseJsonResponse($response);
 
-        $this->errorHandler->handleFromResponseData($responseData);
+        $this->errorHandler->handleError($responseData);
 
         return $responseData;
     }
