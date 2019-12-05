@@ -67,7 +67,18 @@ use Jobcloud\KafkaSchemaRegistryClient\Pimple\KafkaSchemaRegistryApiClientProvid
 use Pimple\Container;
 
 $container = new Container();
+
+$container['kafka_schema_registry'] = [
+    'base_url' => 'http://your-registry-schema-server-url:9081',
+    'username' => 'your_username',
+    'password' => 'your_password',
+];
+
 $container->register(new KafkaSchemaRegistryApiClientProvider());
+
+$api = $container['kafka_schema_registry']['api_client']);
+
+$data = $api->getSubjects();
 ```
 
 ## External links?
