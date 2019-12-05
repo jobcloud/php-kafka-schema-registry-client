@@ -4,9 +4,6 @@ FROM php:7.4.0-cli-alpine3.10
 RUN apk --no-cache upgrade && \
     apk --no-cache add bash git sudo make
 
-RUN apk add librdkafka librdkafka-dev \
-        --update-cache --repository http://dl-3.alpinelinux.org/alpine/edge/community
-
 ARG HOST_USER_ID
 ARG HOST_USER
 
@@ -21,25 +18,11 @@ RUN echo "$HOST_USER:x:$HOST_USER_ID:82:Linux User,,,:/home/$HOST_USER:" >> /etc
     echo "ALL ALL=NOPASSWD: ALL" >> /etc/sudoers && \
     addgroup $HOST_USER www-data
 
-# SYS: add ssh config (for GitHub)
-COPY dev/php/files/.ssh/config /root/.ssh/config
-COPY dev/php/files/.ssh/config /home/$HOST_USER/.ssh/config
-RUN ln -s /run/secrets/ssh_host_key /home/$HOST_USER/.ssh/id_rsa && \
-    chown -R $HOST_USER:www-data /home/$HOST_USER && \
-    chmod 700 /home/$HOST_USER/.ssh && \
-    chmod 400 /home/$HOST_USER/.ssh/config /root/.ssh/config
-
 # COMPOSER: install binary
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer
 
 # COMPOSER: install dependencies
 RUN composer global require hirak/prestissimo
-
-# LOG && Permissions
-RUN mkdir -p /var/log/php && \
-    chown -R www-data:www-data /var/log/* && \
-    chmod g+w /var/log/php && \
-    chmod 777 /tmp
 
 USER $HOST_USER
 
