@@ -59,7 +59,7 @@ class HttpClient implements HttpClientInterface
         ?string $password = null
     ) {
         $this->client = $client;
-        $this->baseUrl = $baseUrl;
+        $this->baseUrl = trim($baseUrl, '/');
         $this->username = $username;
         $this->password = $password;
         $this->requestFactory = $requestFactory;
