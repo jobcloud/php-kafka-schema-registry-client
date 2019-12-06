@@ -84,7 +84,7 @@ class KafkaSchemaRegistryApiApiClient implements KafkaSchemaRegistryApiClientInt
                     'POST',
                     sprintf('subjects/%s/versions', $subjectName),
                     $this->createRequestBodyFromSchema($schema)
-                );
+                ) ?? [];
     }
 
     /**
@@ -111,7 +111,9 @@ class KafkaSchemaRegistryApiApiClient implements KafkaSchemaRegistryApiClientInt
             return true;
         }
 
-        return (bool) $results['is_compatible'];
+        /** @var bool $result */
+        $result = $results['is_compatible'];
+        return $result;
     }
 
     /**
@@ -188,7 +190,7 @@ class KafkaSchemaRegistryApiApiClient implements KafkaSchemaRegistryApiClientInt
      */
     public function isSchemaAlreadyRegistered(string $subjectName, string $schema): bool
     {
-        return (bool) $this->getVersionForSchema($subjectName, $schema);
+        return null !== $this->getVersionForSchema($subjectName, $schema);
     }
 
     /**
@@ -197,7 +199,7 @@ class KafkaSchemaRegistryApiApiClient implements KafkaSchemaRegistryApiClientInt
      */
     public function deleteSubject(string $subjectName): bool
     {
-        $this->httpClient->call('DELETE',  sprintf('subjects/%s', $subjectName));
+        $this->httpClient->call('DELETE', sprintf('subjects/%s', $subjectName));
         return true;
     }
 
