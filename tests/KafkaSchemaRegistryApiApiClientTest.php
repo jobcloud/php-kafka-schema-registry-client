@@ -4,6 +4,7 @@ namespace Jobcloud\KafkaSchemaRegistryClient\Tests;
 
 use Jobcloud\KafkaSchemaRegistryClient\Exception\SubjectNotFoundException;
 use Jobcloud\KafkaSchemaRegistryClient\HttpClient;
+use Jobcloud\KafkaSchemaRegistryClient\HttpClientInterface;
 use Jobcloud\KafkaSchemaRegistryClient\KafkaSchemaRegistryApiApiClient;
 use Jobcloud\KafkaSchemaRegistryClient\KafkaSchemaRegistryApiClientInterface;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -14,15 +15,22 @@ class KafkaSchemaRegistryApiApiClientTest extends TestCase
     private const TEST_SUBJECT_NAME = 'some-subject';
     private const TEST_SCHEMA = '{}';
     private const TEST_VERSION = 3;
-    
-    public function testGetSubjects(): void
+
+    /**
+     * @return MockObject|HttpClientInterface
+     */
+    private function getHttpClientMock(): MockObject
     {
-        /** @var MockObject|HttpClient $httpClientMock */
-        $httpClientMock = $this
+        return $this
             ->getMockBuilder(HttpClient::class)
             ->disableOriginalConstructor()
             ->onlyMethods(['call'])
-            ->getMock();
+            ->getMock();    
+    }
+    
+    public function testGetSubjects(): void
+    {
+        $httpClientMock = $this->getHttpClientMock();
 
         $httpClientMock->expects($this->once())->method('call')->with('GET', 'subjects');
 
@@ -32,12 +40,7 @@ class KafkaSchemaRegistryApiApiClientTest extends TestCase
 
     public function testGetAllSubjectVersions(): void
     {
-        /** @var MockObject|HttpClient $httpClientMock */
-        $httpClientMock = $this
-            ->getMockBuilder(HttpClient::class)
-            ->disableOriginalConstructor()
-            ->onlyMethods(['call'])
-            ->getMock();
+        $httpClientMock = $this->getHttpClientMock();
 
         $httpClientMock
             ->expects($this->once())
@@ -50,12 +53,7 @@ class KafkaSchemaRegistryApiApiClientTest extends TestCase
 
     public function testGetSchemaByVersion(): void
     {
-        /** @var MockObject|HttpClient $httpClientMock */
-        $httpClientMock = $this
-            ->getMockBuilder(HttpClient::class)
-            ->disableOriginalConstructor()
-            ->onlyMethods(['call'])
-            ->getMock();
+        $httpClientMock = $this->getHttpClientMock();
         
         $httpClientMock
             ->expects($this->once())
@@ -71,12 +69,7 @@ class KafkaSchemaRegistryApiApiClientTest extends TestCase
 
     public function testDeleteSchemaVersion(): void
     {
-        /** @var MockObject|HttpClient $httpClientMock */
-        $httpClientMock = $this
-            ->getMockBuilder(HttpClient::class)
-            ->disableOriginalConstructor()
-            ->onlyMethods(['call'])
-            ->getMock();
+        $httpClientMock = $this->getHttpClientMock();
 
         $httpClientMock
             ->expects($this->once())
@@ -92,12 +85,7 @@ class KafkaSchemaRegistryApiApiClientTest extends TestCase
 
     public function testGetSchemaById(): void
     {
-        /** @var MockObject|HttpClient $httpClientMock */
-        $httpClientMock = $this
-            ->getMockBuilder(HttpClient::class)
-            ->disableOriginalConstructor()
-            ->onlyMethods(['call'])
-            ->getMock();
+        $httpClientMock = $this->getHttpClientMock();
 
         $httpClientMock
             ->expects($this->once())
@@ -111,12 +99,7 @@ class KafkaSchemaRegistryApiApiClientTest extends TestCase
 
     public function testRegisterNewSchemaVersion(): void
     {
-        /** @var MockObject|HttpClient $httpClientMock */
-        $httpClientMock = $this
-            ->getMockBuilder(HttpClient::class)
-            ->disableOriginalConstructor()
-            ->onlyMethods(['call'])
-            ->getMock();
+        $httpClientMock = $this->getHttpClientMock();
 
         $httpClientMock
             ->expects($this->once())
@@ -130,12 +113,7 @@ class KafkaSchemaRegistryApiApiClientTest extends TestCase
 
     public function testCheckSchemaCompatibilityForVersionTrue(): void
     {
-        /** @var MockObject|HttpClient $httpClientMock */
-        $httpClientMock = $this
-            ->getMockBuilder(HttpClient::class)
-            ->disableOriginalConstructor()
-            ->onlyMethods(['call'])
-            ->getMock();
+        $httpClientMock = $this->getHttpClientMock();
 
         $httpClientMock
             ->expects($this->once())
@@ -154,12 +132,7 @@ class KafkaSchemaRegistryApiApiClientTest extends TestCase
 
     public function testCheckSchemaCompatibilityForVersionFalse(): void
     {
-        /** @var MockObject|HttpClient $httpClientMock */
-        $httpClientMock = $this
-            ->getMockBuilder(HttpClient::class)
-            ->disableOriginalConstructor()
-            ->onlyMethods(['call'])
-            ->getMock();
+        $httpClientMock = $this->getHttpClientMock();
 
         $httpClientMock
             ->expects($this->once())
@@ -178,12 +151,7 @@ class KafkaSchemaRegistryApiApiClientTest extends TestCase
 
     public function testCheckSchemaCompatibilityForVersionNotFound(): void
     {
-        /** @var MockObject|HttpClient $httpClientMock */
-        $httpClientMock = $this
-            ->getMockBuilder(HttpClient::class)
-            ->disableOriginalConstructor()
-            ->onlyMethods(['call'])
-            ->getMock();
+        $httpClientMock = $this->getHttpClientMock();
 
         $httpClientMock
             ->expects($this->once())
@@ -202,12 +170,7 @@ class KafkaSchemaRegistryApiApiClientTest extends TestCase
 
     public function testGetSubjectCompatibilityLevel(): void
     {
-        /** @var MockObject|HttpClient $httpClientMock */
-        $httpClientMock = $this
-            ->getMockBuilder(HttpClient::class)
-            ->disableOriginalConstructor()
-            ->onlyMethods(['call'])
-            ->getMock();
+        $httpClientMock = $this->getHttpClientMock();
 
         $httpClientMock
             ->expects($this->once())
@@ -225,12 +188,7 @@ class KafkaSchemaRegistryApiApiClientTest extends TestCase
 
     public function testGetDefaultCompatibiltyLeveWhenGetSubjectCompatibilityLevelThrowsException(): void
     {
-        /** @var MockObject|HttpClient $httpClientMock */
-        $httpClientMock = $this
-            ->getMockBuilder(HttpClient::class)
-            ->disableOriginalConstructor()
-            ->onlyMethods(['call'])
-            ->getMock();
+        $httpClientMock = $this->getHttpClientMock();
 
         $httpClientMock
             ->expects($this->at(0))
@@ -250,12 +208,7 @@ class KafkaSchemaRegistryApiApiClientTest extends TestCase
 
     public function testSetSubjectCompatibilityLevel(): void
     {
-        /** @var MockObject|HttpClient $httpClientMock */
-        $httpClientMock = $this
-            ->getMockBuilder(HttpClient::class)
-            ->disableOriginalConstructor()
-            ->onlyMethods(['call'])
-            ->getMock();
+        $httpClientMock = $this->getHttpClientMock();
 
         $httpClientMock
             ->expects($this->once())
@@ -277,12 +230,7 @@ class KafkaSchemaRegistryApiApiClientTest extends TestCase
 
     public function testGetDefaultCompatibilityLeve(): void
     {
-        /** @var MockObject|HttpClient $httpClientMock */
-        $httpClientMock = $this
-            ->getMockBuilder(HttpClient::class)
-            ->disableOriginalConstructor()
-            ->onlyMethods(['call'])
-            ->getMock();
+        $httpClientMock = $this->getHttpClientMock();
 
         $httpClientMock
             ->expects($this->once())
@@ -297,12 +245,7 @@ class KafkaSchemaRegistryApiApiClientTest extends TestCase
 
     public function testSetDefaultCompatibilityLeve(): void
     {
-        /** @var MockObject|HttpClient $httpClientMock */
-        $httpClientMock = $this
-            ->getMockBuilder(HttpClient::class)
-            ->disableOriginalConstructor()
-            ->onlyMethods(['call'])
-            ->getMock();
+        $httpClientMock = $this->getHttpClientMock();
 
         $httpClientMock
             ->expects($this->once())
@@ -316,12 +259,7 @@ class KafkaSchemaRegistryApiApiClientTest extends TestCase
 
     public function testGetVersionForSchema(): void
     {
-        /** @var MockObject|HttpClient $httpClientMock */
-        $httpClientMock = $this
-            ->getMockBuilder(HttpClient::class)
-            ->disableOriginalConstructor()
-            ->onlyMethods(['call'])
-            ->getMock();
+        $httpClientMock = $this->getHttpClientMock();
 
         $httpClientMock
             ->expects($this->once())
@@ -340,12 +278,7 @@ class KafkaSchemaRegistryApiApiClientTest extends TestCase
 
     public function testGetVersionForSchemaThrowsExceptionResultsAsNull(): void
     {
-        /** @var MockObject|HttpClient $httpClientMock */
-        $httpClientMock = $this
-            ->getMockBuilder(HttpClient::class)
-            ->disableOriginalConstructor()
-            ->onlyMethods(['call'])
-            ->getMock();
+        $httpClientMock = $this->getHttpClientMock();
 
         $httpClientMock
             ->expects($this->once())
@@ -364,12 +297,7 @@ class KafkaSchemaRegistryApiApiClientTest extends TestCase
 
     public function testSchemaExistsTrue(): void
     {
-        /** @var MockObject|HttpClient $httpClientMock */
-        $httpClientMock = $this
-            ->getMockBuilder(HttpClient::class)
-            ->disableOriginalConstructor()
-            ->onlyMethods(['call'])
-            ->getMock();
+        $httpClientMock = $this->getHttpClientMock();
 
         $httpClientMock
             ->expects($this->once())
@@ -388,12 +316,7 @@ class KafkaSchemaRegistryApiApiClientTest extends TestCase
 
     public function testSchemaExistsFalse(): void
     {
-        /** @var MockObject|HttpClient $httpClientMock */
-        $httpClientMock = $this
-            ->getMockBuilder(HttpClient::class)
-            ->disableOriginalConstructor()
-            ->onlyMethods(['call'])
-            ->getMock();
+        $httpClientMock = $this->getHttpClientMock();
 
         $httpClientMock
             ->expects($this->once())
@@ -412,12 +335,7 @@ class KafkaSchemaRegistryApiApiClientTest extends TestCase
 
     public function testDeleteSubject(): void
     {
-        /** @var MockObject|HttpClient $httpClientMock */
-        $httpClientMock = $this
-            ->getMockBuilder(HttpClient::class)
-            ->disableOriginalConstructor()
-            ->onlyMethods(['call'])
-            ->getMock();
+        $httpClientMock = $this->getHttpClientMock();
 
         $httpClientMock
             ->expects($this->once())
@@ -432,12 +350,7 @@ class KafkaSchemaRegistryApiApiClientTest extends TestCase
 
     public function testGetLatestSubjectVersion(): void
     {
-        /** @var MockObject|HttpClient $httpClientMock */
-        $httpClientMock = $this
-            ->getMockBuilder(HttpClient::class)
-            ->disableOriginalConstructor()
-            ->onlyMethods(['call'])
-            ->getMock();
+        $httpClientMock = $this->getHttpClientMock();
 
         $httpClientMock
             ->expects($this->once())
