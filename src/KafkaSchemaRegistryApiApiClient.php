@@ -48,7 +48,7 @@ class KafkaSchemaRegistryApiApiClient implements KafkaSchemaRegistryApiClientInt
     {
         return $this
                 ->httpClient
-                ->call('GET', sprintf('/subjects/%s/versions/%s', $subjectName, $version))['schema'] ?? [];
+                ->call('GET', sprintf('/subjects/%s/versions/%s', $subjectName, $version))['schema'];
     }
 
     /**
@@ -68,7 +68,7 @@ class KafkaSchemaRegistryApiApiClient implements KafkaSchemaRegistryApiClientInt
      */
     public function getSchemaById(int $id): string
     {
-        return $this->httpClient->call('GET', sprintf('/schemas/ids/%s', $id))['schema'] ?? [];
+        return $this->httpClient->call('GET', sprintf('/schemas/ids/%s', $id))['schema'];
     }
 
     /**
