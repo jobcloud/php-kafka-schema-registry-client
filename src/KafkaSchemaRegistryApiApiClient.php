@@ -36,7 +36,7 @@ class KafkaSchemaRegistryApiApiClient implements KafkaSchemaRegistryApiClientInt
      */
     public function getAllSubjectVersions(string $subjectName): array
     {
-        return $this->httpClient->call('GET', sprintf('/subjects/%s/versions', $subjectName)) ?? [];
+        return $this->httpClient->call('GET', sprintf('subjects/%s/versions', $subjectName)) ?? [];
     }
 
     /**
@@ -48,7 +48,7 @@ class KafkaSchemaRegistryApiApiClient implements KafkaSchemaRegistryApiClientInt
     {
         return $this
                 ->httpClient
-                ->call('GET', sprintf('/subjects/%s/versions/%s', $subjectName, $version))['schema'];
+                ->call('GET', sprintf('subjects/%s/versions/%s', $subjectName, $version))['schema'];
     }
 
     /**
@@ -58,7 +58,7 @@ class KafkaSchemaRegistryApiApiClient implements KafkaSchemaRegistryApiClientInt
      */
     public function deleteSchemaVersion(string $subjectName, string $version = self::VERSION_LATEST): bool
     {
-        $this->httpClient->call('DELETE', sprintf('/subjects/%s/versions/%s', $subjectName, $version));
+        $this->httpClient->call('DELETE', sprintf('subjects/%s/versions/%s', $subjectName, $version));
         return true;
     }
 
@@ -68,7 +68,7 @@ class KafkaSchemaRegistryApiApiClient implements KafkaSchemaRegistryApiClientInt
      */
     public function getSchemaById(int $id): string
     {
-        return $this->httpClient->call('GET', sprintf('/schemas/ids/%s', $id))['schema'];
+        return $this->httpClient->call('GET', sprintf('schemas/ids/%s', $id))['schema'];
     }
 
     /**
@@ -82,9 +82,9 @@ class KafkaSchemaRegistryApiApiClient implements KafkaSchemaRegistryApiClientInt
                 ->httpClient
                 ->call(
                     'POST',
-                    sprintf('/subjects/%s/versions', $subjectName),
+                    sprintf('subjects/%s/versions', $subjectName),
                     $this->createRequestBodyFromSchema($schema)
-                ) ?? [];
+                );
     }
 
     /**
@@ -104,7 +104,7 @@ class KafkaSchemaRegistryApiApiClient implements KafkaSchemaRegistryApiClientInt
                    ->httpClient
                    ->call(
                        'POST',
-                       sprintf('/compatibility/subjects/%s/versions/%s', $subjectName, $version),
+                       sprintf('compatibility/subjects/%s/versions/%s', $subjectName, $version),
                        $this->createRequestBodyFromSchema($schema)
                    ) ?? [];
         } catch (SubjectNotFoundException $e) {
@@ -122,7 +122,7 @@ class KafkaSchemaRegistryApiApiClient implements KafkaSchemaRegistryApiClientInt
     public function getSubjectCompatibilityLevel(string $subjectName): ?string
     {
         try {
-            $results = $this->httpClient->call('GET', sprintf('/config/%s', $subjectName));
+            $results = $this->httpClient->call('GET', sprintf('config/%s', $subjectName));
             return $results['compatibilityLevel'];
         } catch (SubjectNotFoundException $e) {
             return $this->getDefaultCompatibilityLevel();
@@ -171,7 +171,7 @@ class KafkaSchemaRegistryApiApiClient implements KafkaSchemaRegistryApiClientInt
                     ->httpClient
                     ->call(
                         'POST',
-                        sprintf('/subjects/%s', $subjectName),
+                        sprintf('subjects/%s', $subjectName),
                         $this->createRequestBodyFromSchema($schema)
                     ) ?? [];
 
@@ -193,16 +193,12 @@ class KafkaSchemaRegistryApiApiClient implements KafkaSchemaRegistryApiClientInt
 
     /**
      * @param string $subjectName
-     * @return array
+     * @return bool
      */
-    public function deleteSubject(string $subjectName): array
+    public function deleteSubject(string $subjectName): bool
     {
-        return $this
-            ->httpClient
-            ->call(
-                'DELETE',
-                sprintf('/subjects/%s', $subjectName)
-            ) ?? [];
+        $this->httpClient->call('DELETE',  sprintf('subjects/%s', $subjectName));
+        return true;
     }
 
     /**

@@ -97,9 +97,9 @@ interface KafkaSchemaRegistryApiClientInterface
 
     /**
      * @param string $subjectName
-     * @return array
+     * @return bool
      */
-    public function deleteSubject(string $subjectName): array;
+    public function deleteSubject(string $subjectName): bool;
 
     /**
      * @param string $subjectName
