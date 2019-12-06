@@ -1,5 +1,7 @@
 <?php
 
+namespace Jobcloud\KafkaSchemaRegistryClient\Tests;
+
 use Jobcloud\KafkaSchemaRegistryClient\ErrorHandler;
 use Jobcloud\KafkaSchemaRegistryClient\Exception\BackendDatastoreException;
 use Jobcloud\KafkaSchemaRegistryClient\Exception\ClientException;
@@ -95,7 +97,7 @@ class ErrorHandlerTest extends TestCase
 
         $errorHandler = new ErrorHandler();
 
-        $this->expectExceptionMessage($expectedException);
+        $this->expectException($expectedException);
         $this->expectExceptionMessage(self::TEST_MESSAGE);
 
         $errorHandler->handleError($responseMock);

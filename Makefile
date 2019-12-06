@@ -19,7 +19,7 @@ code-style:
 
 coverage:
 	mkdir -p build/logs/phpunit
-	${PHPDBG} && ./vendor/bin/coverage-check build/logs/coverage/coverage.xml 100
+	${PHPDBG} # && ./vendor/bin/coverage-check build/logs/phpunit/coverage/coverage.xml 100
 
 test:
 	${PHPUNIT}
@@ -37,8 +37,8 @@ static-analysis:
 infection-testing:
 	mkdir -p build/logs/infection
 	make coverage
-	cp -f build/logs/coverage/junit.xml build/logs/coverage/phpunit.junit.xml
-	${INFECTION} --coverage=build/logs/coverage --min-msi=65 --threads=`nproc`
+	cp -f build/logs/phpunit/junit.xml build/logs/phpunit/coverage/phpunit.junit.xml
+	${INFECTION} --coverage=build/logs/phpunit/coverage --min-msi=65 --threads=`nproc`
 
 install-dependencies:
 	composer install

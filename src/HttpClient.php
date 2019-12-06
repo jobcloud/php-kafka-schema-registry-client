@@ -70,7 +70,7 @@ class HttpClient implements HttpClientInterface
      * @param array $queryParams
      * @return RequestInterface
      */
-    protected function createRequest(
+    private function createRequest(
         string $method,
         string $uri,
         array $body = [],
@@ -87,7 +87,10 @@ class HttpClient implements HttpClientInterface
         if ([] !== $body) {
             $jsonData = json_encode($body, JSON_THROW_ON_ERROR);
 
-            $request = $request->withAddedHeader('Content-Length', (string) strlen($jsonData));
+            /** @var string $dataLength */
+            $dataLength = strlen($jsonData);
+
+            $request = $request->withAddedHeader('Content-Length', $dataLength);
             $request->getBody()->write($jsonData);
         }
 
@@ -117,6 +120,6 @@ class HttpClient implements HttpClientInterface
 
         $this->errorHandler->handleError($response);
 
-        return json_decode((string) $response->getBody(), true, 512, JSON_THROW_ON_ERROR);
+        return json_decode($response->getBody(), true, 512, JSON_THROW_ON_ERROR);
     }
 }

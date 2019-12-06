@@ -38,8 +38,7 @@ class ErrorHandler implements ErrorHandlerInterface
      */
     public function handleError(ResponseInterface $response): void
     {
-
-        $responseContent = json_decode((string) $response->getBody(), true, 512, JSON_THROW_ON_ERROR);
+        $responseContent = json_decode($response->getBody(), true, 512, JSON_THROW_ON_ERROR);
 
         if (false === isset($responseContent['error_code'])) {
             return;
