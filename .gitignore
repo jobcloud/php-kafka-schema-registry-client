@@ -1,0 +1,12 @@
+# Editor(s)
+.idea
+
+# Packages
+vendor/
+composer.lock
+composer.symlink
+
+# Builds & caches
+/build/
+.phpunit.result.cache
+
