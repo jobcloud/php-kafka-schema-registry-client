@@ -2,6 +2,7 @@
 
 namespace Jobcloud\KafkaSchemaRegistryClient\Tests;
 
+use Jobcloud\KafkaSchemaRegistryClient\Exception\SchemaNotFoundException;
 use Jobcloud\KafkaSchemaRegistryClient\Exception\SubjectNotFoundException;
 use Jobcloud\KafkaSchemaRegistryClient\HttpClient;
 use Jobcloud\KafkaSchemaRegistryClient\HttpClientInterface;
@@ -276,7 +277,7 @@ class KafkaSchemaRegistryApiApiClientTest extends TestCase
         $this->assertSame((string) self::TEST_VERSION, $result);
     }
 
-    public function testGetVersionForSchemaThrowsExceptionResultsAsNull(): void
+    public function testGetVersionForSchemaThrowsSubjectNotFoundExceptionResultsAsNull(): void
     {
         $httpClientMock = $this->getHttpClientMock();
 
@@ -289,6 +290,25 @@ class KafkaSchemaRegistryApiApiClientTest extends TestCase
                 ['schema' => '[]']
             )
             ->willThrowException(new SubjectNotFoundException());
+
+        $api = new KafkaSchemaRegistryApiApiClient($httpClientMock);
+        $result = $api->getVersionForSchema(self::TEST_SUBJECT_NAME, self::TEST_SCHEMA);
+        $this->assertNull($result);
+    }
+
+    public function testGetVersionForSchemaThrowsSchematNotFoundExceptionResultsAsNull(): void
+    {
+        $httpClientMock = $this->getHttpClientMock();
+
+        $httpClientMock
+            ->expects($this->once())
+            ->method('call')
+            ->with(
+                'POST',
+                sprintf('subjects/%s', self::TEST_SUBJECT_NAME),
+                ['schema' => '[]']
+            )
+            ->willThrowException(new SchemaNotFoundException());
 
         $api = new KafkaSchemaRegistryApiApiClient($httpClientMock);
         $result = $api->getVersionForSchema(self::TEST_SUBJECT_NAME, self::TEST_SCHEMA);

@@ -11,6 +11,7 @@ use Jobcloud\KafkaSchemaRegistryClient\Exception\InvalidVersionException;
 use Jobcloud\KafkaSchemaRegistryClient\Exception\OperationTimeoutException;
 use Jobcloud\KafkaSchemaRegistryClient\Exception\PathNotFoundException;
 use Jobcloud\KafkaSchemaRegistryClient\Exception\RequestForwardException;
+use Jobcloud\KafkaSchemaRegistryClient\Exception\SchemaNotFoundException;
 use Jobcloud\KafkaSchemaRegistryClient\Exception\SubjectNotFoundException;
 use Jobcloud\KafkaSchemaRegistryClient\Exception\UnauthorizedException;
 use Jobcloud\KafkaSchemaRegistryClient\Exception\UnprocessableEntityException;
@@ -64,6 +65,8 @@ class ErrorHandler implements ErrorHandlerInterface
                 throw new SubjectNotFoundException($message);
             case 40402:
                 throw new VersionNotFoundException($message);
+            case 40403:
+                throw new SchemaNotFoundException($message);
             case 409:
                 throw new IncoompatibileAvroSchemaException($message);
             case 422:
@@ -73,7 +76,7 @@ class ErrorHandler implements ErrorHandlerInterface
             case 401:
                 throw new UnauthorizedException($message);
             default:
-                throw new ClientException($message);
+                throw new ClientException($message, $code);
         }
     }
 }

@@ -4,6 +4,7 @@ namespace Jobcloud\KafkaSchemaRegistryClient;
 
 use Buzz\Exception\RequestException;
 use Exception;
+use Jobcloud\KafkaSchemaRegistryClient\Exception\SchemaNotFoundException;
 use Jobcloud\KafkaSchemaRegistryClient\Exception\SubjectNotFoundException;
 
 class KafkaSchemaRegistryApiApiClient implements KafkaSchemaRegistryApiClientInterface
@@ -179,6 +180,8 @@ class KafkaSchemaRegistryApiApiClient implements KafkaSchemaRegistryApiClientInt
 
             return (string) $results['version'];
         } catch (SubjectNotFoundException $e) {
+            return null;
+        } catch (SchemaNotFoundException $e) {
             return null;
         }
     }

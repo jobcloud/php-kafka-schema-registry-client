@@ -12,6 +12,7 @@ use Jobcloud\KafkaSchemaRegistryClient\Exception\InvalidVersionException;
 use Jobcloud\KafkaSchemaRegistryClient\Exception\OperationTimeoutException;
 use Jobcloud\KafkaSchemaRegistryClient\Exception\PathNotFoundException;
 use Jobcloud\KafkaSchemaRegistryClient\Exception\RequestForwardException;
+use Jobcloud\KafkaSchemaRegistryClient\Exception\SchemaNotFoundException;
 use Jobcloud\KafkaSchemaRegistryClient\Exception\SubjectNotFoundException;
 use Jobcloud\KafkaSchemaRegistryClient\Exception\UnauthorizedException;
 use Jobcloud\KafkaSchemaRegistryClient\Exception\UnprocessableEntityException;
@@ -59,6 +60,7 @@ class ErrorHandlerTest extends TestCase
             [42203, CompatibilityException::class],
             [40401, SubjectNotFoundException::class],
             [40402, VersionNotFoundException::class],
+            [40403, SchemaNotFoundException::class],
             [409, IncoompatibileAvroSchemaException::class],
             [422, UnprocessableEntityException::class],
             [404, PathNotFoundException::class],
