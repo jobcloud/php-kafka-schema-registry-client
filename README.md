@@ -35,9 +35,7 @@ composer require jobcloud/php-kafka-schema-registry-client
 <?php
 
 use Buzz\Client\Curl;
-use Jobcloud\KafkaSchemaRegistryClient\KafkaSchemaRegistryApiApiClient;
-use Jobcloud\KafkaSchemaRegistryClient\HttpClient;
-use Nyholm\Psr7\Factory\Psr17Factory;
+use Jobcloud\Kafka\SchemaRegistryClient\ErrorHandler;use Jobcloud\Kafka\SchemaRegistryClient\HttpClient;use Jobcloud\Kafka\SchemaRegistryClient\KafkaSchemaRegistryApiApiClient;use Nyholm\Psr7\Factory\Psr17Factory;
 
 require 'vendor/autoload.php';
 
@@ -49,6 +47,7 @@ $password = 'PASSWORD';
 $registryClient = new HttpClient(
     $client,
     $psr17Factory,
+    new ErrorHandler(),
     'http://your-registry-schema-server-url:9081',
     $username ?? null,
     $password ?? null
@@ -68,15 +67,15 @@ use Pimple\Container;
 
 $container = new Container();
 
-$container['kafka_schema_registry'] = [
-    'base_url' => 'http://your-registry-schema-server-url:9081',
+$container['kafka.schema.registry'] = [
+    'base.url' => 'http://your-registry-schema-server-url:9081',
     'username' => 'your_username',
     'password' => 'your_password',
 ];
 
 $container->register(new KafkaSchemaRegistryApiClientProvider());
 
-$api = $container['kafka_schema_registry']['api_client']);
+$api = $container['kafka.schema.registry.client.api']);
 
 $data = $api->getSubjects();
 ```

@@ -55,24 +55,26 @@ class KafkaSchemaRegistryApiApiClient implements KafkaSchemaRegistryApiClientInt
     /**
      * @param string $subjectName
      * @param string $version
-     * @return string
+     * @return array
      */
-    public function getSchemaDefinitionByVersion(string $subjectName, string $version = self::VERSION_LATEST): string
+    public function getSchemaDefinitionByVersion(string $subjectName, string $version = self::VERSION_LATEST): array
     {
-        return json_encode($this
+        return $this
             ->httpClient
-            ->call('GET', sprintf('subjects/%s/versions/%s/schema', $subjectName, $version)), JSON_THROW_ON_ERROR);
+            ->call(
+                'GET',
+                sprintf('subjects/%s/versions/%s/schema', $subjectName, $version)
+            ) ?? [];
     }
 
     /**
      * @param string $subjectName
      * @param string $version
-     * @return bool
+     * @return int|null
      */
-    public function deleteSchemaVersion(string $subjectName, string $version = self::VERSION_LATEST): bool
+    public function deleteSchemaVersion(string $subjectName, string $version = self::VERSION_LATEST): ?int
     {
-        $this->httpClient->call('DELETE', sprintf('subjects/%s/versions/%s', $subjectName, $version));
-        return true;
+        return $this->httpClient->call('DELETE', sprintf('subjects/%s/versions/%s', $subjectName, $version));
     }
 
     /**
@@ -208,12 +210,11 @@ class KafkaSchemaRegistryApiApiClient implements KafkaSchemaRegistryApiClientInt
 
     /**
      * @param string $subjectName
-     * @return bool
+     * @return array
      */
-    public function deleteSubject(string $subjectName): bool
+    public function deleteSubject(string $subjectName): array
     {
-        $this->httpClient->call('DELETE', sprintf('subjects/%s', $subjectName));
-        return true;
+        return $this->httpClient->call('DELETE', sprintf('subjects/%s', $subjectName)) ?? [];
     }
 
     /**

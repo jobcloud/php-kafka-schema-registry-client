@@ -14,5 +14,4 @@ services:
       - ../:/var/www/html
       - ~/.bash_aliases:/home/${USER}/.bash_aliases:rw
       - ~/.bash_history:/home/${USER}/.bash_history:rw
-    extra_hosts:
-      - "jobcloud-kafka-schema-registry:172.17.0.1"
+

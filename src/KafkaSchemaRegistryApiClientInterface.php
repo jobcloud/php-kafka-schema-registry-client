@@ -35,16 +35,16 @@ interface KafkaSchemaRegistryApiClientInterface
     /**
      * @param string $subjectName
      * @param string $version
-     * @return string
+     * @return array
      */
-    public function getSchemaDefinitionByVersion(string $subjectName, string $version = self::VERSION_LATEST): string;
+    public function getSchemaDefinitionByVersion(string $subjectName, string $version = self::VERSION_LATEST): array;
 
     /**
      * @param string $subjectName
      * @param string $version
-     * @return bool
+     * @return int|null
      */
-    public function deleteSchemaVersion(string $subjectName, string $version = self::VERSION_LATEST): bool;
+    public function deleteSchemaVersion(string $subjectName, string $version = self::VERSION_LATEST): ?int;
 
     /**
      * @param int $id
@@ -111,9 +111,9 @@ interface KafkaSchemaRegistryApiClientInterface
 
     /**
      * @param string $subjectName
-     * @return bool
+     * @return array
      */
-    public function deleteSubject(string $subjectName): bool;
+    public function deleteSubject(string $subjectName): array;
 
     /**
      * @param string $subjectName

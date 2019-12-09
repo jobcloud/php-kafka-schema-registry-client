@@ -4,7 +4,7 @@ namespace Jobcloud\Kafka\SchemaRegistryClient\Exception;
 
 use Exception;
 
-class IncoompatibileAvroSchemaException extends Exception
+class IncompatibileAvroSchemaException extends Exception
 {
 
 }

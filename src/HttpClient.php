@@ -86,8 +86,7 @@ class HttpClient implements HttpClientInterface
         if ([] !== $body) {
             $jsonData = json_encode($body, JSON_THROW_ON_ERROR);
 
-            /** @var string $dataLength */
-            $dataLength = strlen($jsonData);
+            $dataLength = (string) strlen($jsonData);
 
             $request = $request->withAddedHeader('Content-Length', $dataLength);
             $request->getBody()->write($jsonData);
@@ -110,10 +109,10 @@ class HttpClient implements HttpClientInterface
      * @param string $uri
      * @param array $body
      * @param array $queryParams
-     * @return array|null
+     * @return mixed
      * @throws ClientExceptionInterface
      */
-    public function call(string $method, string $uri, array $body = [], array $queryParams = []): ?array
+    public function call(string $method, string $uri, array $body = [], array $queryParams = [])
     {
         $response = $this->client->sendRequest($this->createRequest($method, $uri, $body, $queryParams));
 

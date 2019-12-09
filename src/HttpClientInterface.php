@@ -9,7 +9,7 @@ interface HttpClientInterface
      * @param string $uri
      * @param array $body
      * @param array $queryParams
-     * @return array|null
+     * @return mixed
      */
-    public function call(string $method, string $uri, array $body = [], array $queryParams = []): ?array;
+    public function call(string $method, string $uri, array $body = [], array $queryParams = []);
 }

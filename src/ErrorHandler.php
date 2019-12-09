@@ -5,7 +5,7 @@ namespace Jobcloud\Kafka\SchemaRegistryClient;
 use Jobcloud\Kafka\SchemaRegistryClient\Exception\BackendDatastoreException;
 use Jobcloud\Kafka\SchemaRegistryClient\Exception\ClientException;
 use Jobcloud\Kafka\SchemaRegistryClient\Exception\CompatibilityException;
-use Jobcloud\Kafka\SchemaRegistryClient\Exception\IncoompatibileAvroSchemaException;
+use Jobcloud\Kafka\SchemaRegistryClient\Exception\IncompatibileAvroSchemaException;
 use Jobcloud\Kafka\SchemaRegistryClient\Exception\InvalidAvroSchemaException;
 use Jobcloud\Kafka\SchemaRegistryClient\Exception\InvalidVersionException;
 use Jobcloud\Kafka\SchemaRegistryClient\Exception\OperationTimeoutException;
@@ -26,7 +26,7 @@ class ErrorHandler implements ErrorHandlerInterface
      * @throws BackendDatastoreException
      * @throws ClientException
      * @throws CompatibilityException
-     * @throws IncoompatibileAvroSchemaException
+     * @throws IncompatibileAvroSchemaException
      * @throws InvalidAvroSchemaException
      * @throws InvalidVersionException
      * @throws OperationTimeoutException
@@ -69,7 +69,7 @@ class ErrorHandler implements ErrorHandlerInterface
             case 40403:
                 throw new SchemaNotFoundException($message);
             case 409:
-                throw new IncoompatibileAvroSchemaException($message);
+                throw new IncompatibileAvroSchemaException($message);
             case 422:
                 throw new UnprocessableEntityException($message);
             case 404:

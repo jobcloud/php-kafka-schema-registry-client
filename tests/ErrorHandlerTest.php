@@ -6,7 +6,7 @@ use Jobcloud\Kafka\SchemaRegistryClient\ErrorHandler;
 use Jobcloud\Kafka\SchemaRegistryClient\Exception\BackendDatastoreException;
 use Jobcloud\Kafka\SchemaRegistryClient\Exception\ClientException;
 use Jobcloud\Kafka\SchemaRegistryClient\Exception\CompatibilityException;
-use Jobcloud\Kafka\SchemaRegistryClient\Exception\IncoompatibileAvroSchemaException;
+use Jobcloud\Kafka\SchemaRegistryClient\Exception\IncompatibileAvroSchemaException;
 use Jobcloud\Kafka\SchemaRegistryClient\Exception\InvalidAvroSchemaException;
 use Jobcloud\Kafka\SchemaRegistryClient\Exception\InvalidVersionException;
 use Jobcloud\Kafka\SchemaRegistryClient\Exception\OperationTimeoutException;
@@ -61,7 +61,7 @@ class ErrorHandlerTest extends TestCase
             [40401, SubjectNotFoundException::class],
             [40402, VersionNotFoundException::class],
             [40403, SchemaNotFoundException::class],
-            [409, IncoompatibileAvroSchemaException::class],
+            [409, IncompatibileAvroSchemaException::class],
             [422, UnprocessableEntityException::class],
             [404, PathNotFoundException::class],
             [401, UnauthorizedException::class],
@@ -90,7 +90,7 @@ class ErrorHandlerTest extends TestCase
      * @throws UnprocessableEntityException
      * @throws VersionNotFoundException
      * @throws ClientException
-     * @throws IncoompatibileAvroSchemaException
+     * @throws IncompatibileAvroSchemaException
      */
     public function testExceptionThrow(int $code, string $expectedException): void
     {

@@ -81,7 +81,7 @@ class KafkaSchemaRegistryApiApiClientTest extends TestCase
         $api = new KafkaSchemaRegistryApiApiClient($httpClientMock);
         $result = $api->getSchemaDefinitionByVersion(self::TEST_SUBJECT_NAME, self::TEST_VERSION);
 
-        $this->assertSame('{"a":"b"}', $result);
+        $this->assertSame(['a' => 'b'], $result);
     }
 
     public function testDeleteSchemaVersion(): void
@@ -92,12 +92,12 @@ class KafkaSchemaRegistryApiApiClientTest extends TestCase
             ->expects($this->once())
             ->method('call')
             ->with('DELETE', sprintf('subjects/%s/versions/%s', self::TEST_SUBJECT_NAME, self::TEST_VERSION))
-            ->willReturn(['schema' => '{}']);
+            ->willReturn(1);
 
         $api = new KafkaSchemaRegistryApiApiClient($httpClientMock);
         $result = $api->deleteSchemaVersion(self::TEST_SUBJECT_NAME, self::TEST_VERSION);
 
-        $this->assertTrue($result);
+        $this->assertSame(1, $result);
     }
 
     public function testGetSchemaById(): void
@@ -376,12 +376,13 @@ class KafkaSchemaRegistryApiApiClientTest extends TestCase
         $httpClientMock
             ->expects($this->once())
             ->method('call')
-            ->with('DELETE', sprintf('subjects/%s', self::TEST_SUBJECT_NAME));
+            ->with('DELETE', sprintf('subjects/%s', self::TEST_SUBJECT_NAME))
+            ->willReturn([1,2,3,4]);
 
         $api = new KafkaSchemaRegistryApiApiClient($httpClientMock);
         $result = $api->deleteSubject(self::TEST_SUBJECT_NAME);
 
-        $this->assertTrue($result);
+        $this->assertSame([1,2,3,4], $result);
     }
 
     public function testGetLatestSubjectVersion(): void
