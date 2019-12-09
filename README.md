@@ -35,7 +35,10 @@ composer require jobcloud/php-kafka-schema-registry-client
 <?php
 
 use Buzz\Client\Curl;
-use Jobcloud\Kafka\SchemaRegistryClient\ErrorHandler;use Jobcloud\Kafka\SchemaRegistryClient\HttpClient;use Jobcloud\Kafka\SchemaRegistryClient\KafkaSchemaRegistryApiApiClient;use Nyholm\Psr7\Factory\Psr17Factory;
+use Jobcloud\Kafka\SchemaRegistryClient\ErrorHandler;
+use Jobcloud\Kafka\SchemaRegistryClient\HttpClient;
+use Jobcloud\Kafka\SchemaRegistryClient\KafkaSchemaRegistryApiApiClient;
+use Nyholm\Psr7\Factory\Psr17Factory;
 
 require 'vendor/autoload.php';
 
@@ -62,7 +65,8 @@ $results = $registryClientApi->getVersionForSchema($subjectName, $schema);
 
 If you are using Pimple Container in you App, you can use Service Provider:
 ```php
-use Jobcloud\KafkaSchemaRegistryClient\ServiceProvider\KafkaSchemaRegistryApiClientProvider;
+
+use Jobcloud\Kafka\SchemaRegistryClient\ServiceProvider\KafkaSchemaRegistryApiClientProvider;
 use Pimple\Container;
 
 $container = new Container();
