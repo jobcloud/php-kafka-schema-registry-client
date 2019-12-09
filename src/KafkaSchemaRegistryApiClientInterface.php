@@ -97,6 +97,13 @@ interface KafkaSchemaRegistryApiClientInterface
 
     /**
      * @param string $subjectName
+     * @param string $schema
+     * @return bool
+     */
+    public function isSchemaAlreadyRegistered(string $subjectName, string $schema): bool;
+
+    /**
+     * @param string $subjectName
      * @return bool
      */
     public function deleteSubject(string $subjectName): bool;
