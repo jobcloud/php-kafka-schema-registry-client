@@ -1,11 +1,11 @@
 <?php
 
-namespace Jobcloud\KafkaSchemaRegistryClient\Tests;
+namespace Jobcloud\Kafka\SchemaRegistryClient\Tests;
 
 use Buzz\Client\Curl;
 use Exception;
-use Jobcloud\KafkaSchemaRegistryClient\ErrorHandler;
-use Jobcloud\KafkaSchemaRegistryClient\HttpClient;
+use Jobcloud\Kafka\SchemaRegistryClient\ErrorHandler;
+use Jobcloud\Kafka\SchemaRegistryClient\HttpClient;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\RequestInterface;

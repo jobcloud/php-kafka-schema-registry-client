@@ -5,8 +5,8 @@
     "keywords": ["kafka", "schema", "registry", "php"],
     "autoload": {
         "psr-4": {
-            "Jobcloud\\KafkaSchemaRegistryClient\\": "src/",
-            "Jobcloud\\KafkaSchemaRegistryClient\\Tests\\": "tests/"
+            "Jobcloud\\Kafka\\SchemaRegistryClient\\": "src/",
+            "Jobcloud\\Kafka\\SchemaRegistryClient\\Tests\\": "tests/"
         }
     },
     "authors": [

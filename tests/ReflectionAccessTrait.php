@@ -1,6 +1,6 @@
 <?php
 
-namespace Jobcloud\KafkaSchemaRegistryClient\Tests;
+namespace Jobcloud\Kafka\SchemaRegistryClient\Tests;
 
 use ReflectionClass;
 use ReflectionException;

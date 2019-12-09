@@ -1,6 +1,6 @@
 <?php
 
-namespace Jobcloud\KafkaSchemaRegistryClient;
+namespace Jobcloud\Kafka\SchemaRegistryClient;
 
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
@@ -79,7 +79,6 @@ class HttpClient implements HttpClientInterface
 
         $queryString = 0 !== count($queryParams) ? '?' . http_build_query($queryParams) : '';
 
-        // Ensures that there is no trailing slashes or double slashes in endpoint URL
         $url = $this->baseUrl . '/' . $uri . $queryString;
 
         $request = $this->requestFactory->createRequest($method, $url);

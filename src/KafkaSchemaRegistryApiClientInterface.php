@@ -1,6 +1,6 @@
 <?php
 
-namespace Jobcloud\KafkaSchemaRegistryClient;
+namespace Jobcloud\Kafka\SchemaRegistryClient;
 
 interface KafkaSchemaRegistryApiClientInterface
 {
@@ -28,9 +28,16 @@ interface KafkaSchemaRegistryApiClientInterface
     /**
      * @param string $subjectName
      * @param string $version
+     * @return array
+     */
+    public function getSchemaByVersion(string $subjectName, string $version = 'latest'): array;
+
+    /**
+     * @param string $subjectName
+     * @param string $version
      * @return string
      */
-    public function getSchemaByVersion(string $subjectName, string $version = 'latest'): string;
+    public function getSchemaDefinitionByVersion(string $subjectName, string $version = self::VERSION_LATEST): string;
 
     /**
      * @param string $subjectName

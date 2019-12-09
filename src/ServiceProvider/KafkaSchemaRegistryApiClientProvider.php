@@ -1,11 +1,11 @@
 <?php
 
-namespace Jobcloud\KafkaSchemaRegistryClient\ServiceProvider;
+namespace Jobcloud\Kafka\SchemaRegistryClient\ServiceProvider;
 
 use Buzz\Client\Curl;
-use Jobcloud\KafkaSchemaRegistryClient\ErrorHandler;
-use Jobcloud\KafkaSchemaRegistryClient\HttpClient;
-use Jobcloud\KafkaSchemaRegistryClient\KafkaSchemaRegistryApiApiClient;
+use Jobcloud\Kafka\SchemaRegistryClient\ErrorHandler;
+use Jobcloud\Kafka\SchemaRegistryClient\HttpClient;
+use Jobcloud\Kafka\SchemaRegistryClient\KafkaSchemaRegistryApiApiClient;
 use LogicException;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use Pimple\Container;
@@ -16,33 +16,41 @@ use Psr\Http\Message\RequestFactoryInterface;
 class KafkaSchemaRegistryApiClientProvider implements ServiceProviderInterface
 {
 
-    public const SETTINGS_KEY = 'kafka_schema_registry';
+    public const CONTAINER_KEY = 'kafka.schema.registry';
+
     public const SETTING_KEY_USERNAME = 'username';
-    public const SETTING_PASSWORD = 'password';
-    public const SETTING_BASE_URL = 'base_url';
-    public const CLIENT = '_client';
-    public const REQUEST_FACTORY = '_request_factory';
-    public const HTTP_CLIENT = '_http_client';
-    public const API_CLIENT = '_api_client';
-    public const ERROR_HANDLER = '_error_handler';
+    public const SETTING_KEY_PASSWORD = 'password';
+    public const SETTING_KEY_BASE_URL = 'base.url';
 
+    public const CLIENT = 'kafka.schema.registry.client';
+    public const REQUEST_FACTORY = 'kafka.schema.registry.request.factory';
+    public const HTTP_CLIENT = 'kafka.schema.registry.client.http';
+    public const API_CLIENT = 'kafka.schema.registry.client.api';
+    public const ERROR_HANDLER = 'kafka.schema.registry.error.handler';
 
+    /**
+     * @param Container $container
+     */
     public function register(Container $container)
     {
         $this->checkRequiredOffsets($container);
 
         if (false === isset($container[self::REQUEST_FACTORY])) {
-            $container[self::REQUEST_FACTORY] = new Psr17Factory();
+            $container[self::REQUEST_FACTORY] = static function (Container $container) {
+                return new Psr17Factory();
+            };
         }
 
         if (false === isset($container[self::CLIENT])) {
-            $container[self::CLIENT] = new Curl(
-                $container[self::REQUEST_FACTORY]
-            );
+            $container[self::CLIENT] = static function (Container $container) {
+                return new Curl($container[self::REQUEST_FACTORY]);
+            };
         }
 
         if (false === isset($container[self::ERROR_HANDLER])) {
-            $container[self::ERROR_HANDLER] = new ErrorHandler();
+            $container[self::ERROR_HANDLER] = static function () {
+                return new ErrorHandler();
+            };
         }
 
         if (false === isset($container[self::HTTP_CLIENT])) {
@@ -57,9 +65,9 @@ class KafkaSchemaRegistryApiClientProvider implements ServiceProviderInterface
                     $client,
                     $requestFactory,
                     $container[self::ERROR_HANDLER],
-                    $container[self::SETTINGS_KEY][self::SETTING_BASE_URL],
-                    $container[self::SETTINGS_KEY][self::SETTING_KEY_USERNAME] ?? null,
-                    $container[self::SETTINGS_KEY][self::SETTING_PASSWORD] ?? null
+                    $container[self::CONTAINER_KEY][self::SETTING_KEY_BASE_URL],
+                    $container[self::CONTAINER_KEY][self::SETTING_KEY_USERNAME] ?? null,
+                    $container[self::CONTAINER_KEY][self::SETTING_KEY_PASSWORD] ?? null
                 );
             };
         }
@@ -77,11 +85,11 @@ class KafkaSchemaRegistryApiClientProvider implements ServiceProviderInterface
     private function checkRequiredOffsets(Container $container)
     {
 
-        if (false === isset($container[self::SETTINGS_KEY][self::SETTING_BASE_URL])) {
+        if (false === isset($container[self::CONTAINER_KEY][self::SETTING_KEY_BASE_URL])) {
             throw new LogicException(
                 sprintf(
                     'Missing schema registry URL, please set it under "%s" container offset',
-                    self::SETTING_BASE_URL
+                    self::SETTING_KEY_BASE_URL
                 )
             );
         }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Jobcloud\KafkaSchemaRegistryClient\Exception;
+namespace Jobcloud\Kafka\SchemaRegistryClient\Exception;
 
 use Exception;
 

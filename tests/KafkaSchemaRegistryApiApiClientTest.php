@@ -1,13 +1,13 @@
 <?php
 
-namespace Jobcloud\KafkaSchemaRegistryClient\Tests;
+namespace Jobcloud\Kafka\SchemaRegistryClient\Tests;
 
-use Jobcloud\KafkaSchemaRegistryClient\Exception\SchemaNotFoundException;
-use Jobcloud\KafkaSchemaRegistryClient\Exception\SubjectNotFoundException;
-use Jobcloud\KafkaSchemaRegistryClient\HttpClient;
-use Jobcloud\KafkaSchemaRegistryClient\HttpClientInterface;
-use Jobcloud\KafkaSchemaRegistryClient\KafkaSchemaRegistryApiApiClient;
-use Jobcloud\KafkaSchemaRegistryClient\KafkaSchemaRegistryApiClientInterface;
+use Jobcloud\Kafka\SchemaRegistryClient\Exception\SchemaNotFoundException;
+use Jobcloud\Kafka\SchemaRegistryClient\Exception\SubjectNotFoundException;
+use Jobcloud\Kafka\SchemaRegistryClient\HttpClient;
+use Jobcloud\Kafka\SchemaRegistryClient\HttpClientInterface;
+use Jobcloud\Kafka\SchemaRegistryClient\KafkaSchemaRegistryApiApiClient;
+use Jobcloud\Kafka\SchemaRegistryClient\KafkaSchemaRegistryApiClientInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -65,7 +65,23 @@ class KafkaSchemaRegistryApiApiClientTest extends TestCase
         $api = new KafkaSchemaRegistryApiApiClient($httpClientMock);
         $result = $api->getSchemaByVersion(self::TEST_SUBJECT_NAME, self::TEST_VERSION);
 
-        $this->assertSame('{}', $result);
+        $this->assertSame(['schema' => '{}'], $result);
+    }
+
+    public function testGetSchemaDefinitionByVersion(): void
+    {
+        $httpClientMock = $this->getHttpClientMock();
+
+        $httpClientMock
+            ->expects($this->once())
+            ->method('call')
+            ->with('GET', sprintf('subjects/%s/versions/%s/schema', self::TEST_SUBJECT_NAME, self::TEST_VERSION))
+            ->willReturn(['a' => 'b']);
+
+        $api = new KafkaSchemaRegistryApiApiClient($httpClientMock);
+        $result = $api->getSchemaDefinitionByVersion(self::TEST_SUBJECT_NAME, self::TEST_VERSION);
+
+        $this->assertSame('{"a":"b"}', $result);
     }
 
     public function testDeleteSchemaVersion(): void

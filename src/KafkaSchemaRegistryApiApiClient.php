@@ -1,11 +1,11 @@
 <?php
 
-namespace Jobcloud\KafkaSchemaRegistryClient;
+namespace Jobcloud\Kafka\SchemaRegistryClient;
 
 use Buzz\Exception\RequestException;
 use Exception;
-use Jobcloud\KafkaSchemaRegistryClient\Exception\SchemaNotFoundException;
-use Jobcloud\KafkaSchemaRegistryClient\Exception\SubjectNotFoundException;
+use Jobcloud\Kafka\SchemaRegistryClient\Exception\SchemaNotFoundException;
+use Jobcloud\Kafka\SchemaRegistryClient\Exception\SubjectNotFoundException;
 
 class KafkaSchemaRegistryApiApiClient implements KafkaSchemaRegistryApiClientInterface
 {
@@ -43,13 +43,25 @@ class KafkaSchemaRegistryApiApiClient implements KafkaSchemaRegistryApiClientInt
     /**
      * @param string $subjectName
      * @param string $version
-     * @return string
+     * @return array
      */
-    public function getSchemaByVersion(string $subjectName, string $version = self::VERSION_LATEST): string
+    public function getSchemaByVersion(string $subjectName, string $version = self::VERSION_LATEST): array
     {
         return $this
                 ->httpClient
-                ->call('GET', sprintf('subjects/%s/versions/%s', $subjectName, $version))['schema'];
+                ->call('GET', sprintf('subjects/%s/versions/%s', $subjectName, $version)) ?? [];
+    }
+
+    /**
+     * @param string $subjectName
+     * @param string $version
+     * @return string
+     */
+    public function getSchemaDefinitionByVersion(string $subjectName, string $version = self::VERSION_LATEST): string
+    {
+        return json_encode($this
+            ->httpClient
+            ->call('GET', sprintf('subjects/%s/versions/%s/schema', $subjectName, $version)), JSON_THROW_ON_ERROR);
     }
 
     /**
@@ -112,9 +124,7 @@ class KafkaSchemaRegistryApiApiClient implements KafkaSchemaRegistryApiClientInt
             return true;
         }
 
-        /** @var bool $result */
-        $result = $results['is_compatible'];
-        return $result;
+        return $results['is_compatible'] === true;
     }
 
     /**

@@ -1,21 +1,21 @@
 <?php
 
-namespace Jobcloud\KafkaSchemaRegistryClient;
+namespace Jobcloud\Kafka\SchemaRegistryClient;
 
-use Jobcloud\KafkaSchemaRegistryClient\Exception\BackendDatastoreException;
-use Jobcloud\KafkaSchemaRegistryClient\Exception\ClientException;
-use Jobcloud\KafkaSchemaRegistryClient\Exception\CompatibilityException;
-use Jobcloud\KafkaSchemaRegistryClient\Exception\IncoompatibileAvroSchemaException;
-use Jobcloud\KafkaSchemaRegistryClient\Exception\InvalidAvroSchemaException;
-use Jobcloud\KafkaSchemaRegistryClient\Exception\InvalidVersionException;
-use Jobcloud\KafkaSchemaRegistryClient\Exception\OperationTimeoutException;
-use Jobcloud\KafkaSchemaRegistryClient\Exception\PathNotFoundException;
-use Jobcloud\KafkaSchemaRegistryClient\Exception\RequestForwardException;
-use Jobcloud\KafkaSchemaRegistryClient\Exception\SchemaNotFoundException;
-use Jobcloud\KafkaSchemaRegistryClient\Exception\SubjectNotFoundException;
-use Jobcloud\KafkaSchemaRegistryClient\Exception\UnauthorizedException;
-use Jobcloud\KafkaSchemaRegistryClient\Exception\UnprocessableEntityException;
-use Jobcloud\KafkaSchemaRegistryClient\Exception\VersionNotFoundException;
+use Jobcloud\Kafka\SchemaRegistryClient\Exception\BackendDatastoreException;
+use Jobcloud\Kafka\SchemaRegistryClient\Exception\ClientException;
+use Jobcloud\Kafka\SchemaRegistryClient\Exception\CompatibilityException;
+use Jobcloud\Kafka\SchemaRegistryClient\Exception\IncoompatibileAvroSchemaException;
+use Jobcloud\Kafka\SchemaRegistryClient\Exception\InvalidAvroSchemaException;
+use Jobcloud\Kafka\SchemaRegistryClient\Exception\InvalidVersionException;
+use Jobcloud\Kafka\SchemaRegistryClient\Exception\OperationTimeoutException;
+use Jobcloud\Kafka\SchemaRegistryClient\Exception\PathNotFoundException;
+use Jobcloud\Kafka\SchemaRegistryClient\Exception\RequestForwardException;
+use Jobcloud\Kafka\SchemaRegistryClient\Exception\SchemaNotFoundException;
+use Jobcloud\Kafka\SchemaRegistryClient\Exception\SubjectNotFoundException;
+use Jobcloud\Kafka\SchemaRegistryClient\Exception\UnauthorizedException;
+use Jobcloud\Kafka\SchemaRegistryClient\Exception\UnprocessableEntityException;
+use Jobcloud\Kafka\SchemaRegistryClient\Exception\VersionNotFoundException;
 use Psr\Http\Message\ResponseInterface;
 
 class ErrorHandler implements ErrorHandlerInterface
@@ -26,16 +26,17 @@ class ErrorHandler implements ErrorHandlerInterface
      * @throws BackendDatastoreException
      * @throws ClientException
      * @throws CompatibilityException
+     * @throws IncoompatibileAvroSchemaException
      * @throws InvalidAvroSchemaException
      * @throws InvalidVersionException
      * @throws OperationTimeoutException
      * @throws PathNotFoundException
      * @throws RequestForwardException
+     * @throws SchemaNotFoundException
      * @throws SubjectNotFoundException
      * @throws UnauthorizedException
      * @throws UnprocessableEntityException
      * @throws VersionNotFoundException
-     * @throws IncoompatibileAvroSchemaException
      */
     public function handleError(ResponseInterface $response): void
     {
