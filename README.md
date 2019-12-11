@@ -37,7 +37,7 @@ composer require jobcloud/php-kafka-schema-registry-client
 use Buzz\Client\Curl;
 use Jobcloud\Kafka\SchemaRegistryClient\ErrorHandler;
 use Jobcloud\Kafka\SchemaRegistryClient\HttpClient;
-use Jobcloud\Kafka\SchemaRegistryClient\KafkaSchemaRegistryApiApiClient;
+use Jobcloud\Kafka\SchemaRegistryClient\KafkaSchemaRegistryApiClient;
 use Nyholm\Psr7\Factory\Psr17Factory;
 
 require 'vendor/autoload.php';
@@ -57,7 +57,7 @@ $registryClient = new HttpClient(
 );
 
 $schema = '{"type":"record","name":"something","namespace":"whatever.you.want","fields":[{"name":"id","type":"string"}]}';
-$registryClientApi = new KafkaSchemaRegistryApiApiClient($registryClient);
+$registryClientApi = new KafkaSchemaRegistryApiClient($registryClient);
 $subjectName = 'some.subject.name';
 
 $results = $registryClientApi->getVersionForSchema($subjectName, $schema);

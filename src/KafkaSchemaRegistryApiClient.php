@@ -7,7 +7,7 @@ use Exception;
 use Jobcloud\Kafka\SchemaRegistryClient\Exception\SchemaNotFoundException;
 use Jobcloud\Kafka\SchemaRegistryClient\Exception\SubjectNotFoundException;
 
-class KafkaSchemaRegistryApiApiClient implements KafkaSchemaRegistryApiClientInterface
+class KafkaSchemaRegistryApiClient implements KafkaSchemaRegistryApiClientInterface
 {
     /**
      * @var HttpClientInterface
