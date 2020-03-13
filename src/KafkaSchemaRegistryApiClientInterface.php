@@ -120,6 +120,12 @@ interface KafkaSchemaRegistryApiClientInterface
     public function deleteSubject(string $subjectName): array;
 
     /**
+     * @param string $mode
+     * @return bool
+     */
+    public function setImportMode(string $mode): bool;
+
+    /**
      * @param string $subjectName
      * @return string|null
      */
