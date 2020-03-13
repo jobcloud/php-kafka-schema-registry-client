@@ -3,6 +3,7 @@
 namespace Jobcloud\Kafka\SchemaRegistryClient;
 
 use Jobcloud\Kafka\SchemaRegistryClient\Exception\BackendDatastoreException;
+use Jobcloud\Kafka\SchemaRegistryClient\Exception\ImportException;
 use Jobcloud\Kafka\SchemaRegistryClient\Exception\ClientException;
 use Jobcloud\Kafka\SchemaRegistryClient\Exception\CompatibilityException;
 use Jobcloud\Kafka\SchemaRegistryClient\Exception\IncompatibileAvroSchemaException;
@@ -37,6 +38,7 @@ class ErrorHandler implements ErrorHandlerInterface
      * @throws UnauthorizedException
      * @throws UnprocessableEntityException
      * @throws VersionNotFoundException
+     * @throws ImportException
      */
     public function handleError(ResponseInterface $response): void
     {
@@ -62,6 +64,8 @@ class ErrorHandler implements ErrorHandlerInterface
                 throw new InvalidVersionException($message);
             case 42203:
                 throw new CompatibilityException($message);
+            case 42205:
+                throw new ImportException($message);
             case 40401:
                 throw new SubjectNotFoundException($message);
             case 40402:
