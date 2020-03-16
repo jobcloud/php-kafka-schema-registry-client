@@ -432,9 +432,10 @@ class KafkaSchemaRegistryApiApiClientTest extends TestCase
                 'PUT',
                 'mode/',
                 ['mode' => 'ABC']
-            );
+            )->willReturn(['mode' => 'ABC']);
 
         $api = new KafkaSchemaRegistryApiClient($httpClientMock);
-        $api->setImportMode('ABC');
+        $result = $api->setImportMode('ABC');
+        self::assertTrue(true, $result);
     }
 }
