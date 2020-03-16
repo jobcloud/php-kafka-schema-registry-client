@@ -436,6 +436,6 @@ class KafkaSchemaRegistryApiApiClientTest extends TestCase
 
         $api = new KafkaSchemaRegistryApiClient($httpClientMock);
         $result = $api->setImportMode('ABC');
-        self::assertTrue(true, $result);
+        self::assertTrue($result);
     }
 }
