@@ -6,6 +6,7 @@ use Jobcloud\Kafka\SchemaRegistryClient\ErrorHandler;
 use Jobcloud\Kafka\SchemaRegistryClient\Exception\BackendDatastoreException;
 use Jobcloud\Kafka\SchemaRegistryClient\Exception\ClientException;
 use Jobcloud\Kafka\SchemaRegistryClient\Exception\CompatibilityException;
+use Jobcloud\Kafka\SchemaRegistryClient\Exception\ImportException;
 use Jobcloud\Kafka\SchemaRegistryClient\Exception\IncompatibileAvroSchemaException;
 use Jobcloud\Kafka\SchemaRegistryClient\Exception\InvalidAvroSchemaException;
 use Jobcloud\Kafka\SchemaRegistryClient\Exception\InvalidVersionException;
@@ -58,8 +59,10 @@ class ErrorHandlerTest extends TestCase
             [42201, InvalidAvroSchemaException::class],
             [42202, InvalidVersionException::class],
             [42203, CompatibilityException::class],
+            [42205, ImportException::class],
             [40401, SubjectNotFoundException::class],
             [40402, VersionNotFoundException::class],
+            [40403, SchemaNotFoundException::class],
             [40403, SchemaNotFoundException::class],
             [409, IncompatibileAvroSchemaException::class],
             [422, UnprocessableEntityException::class],
@@ -79,20 +82,22 @@ class ErrorHandlerTest extends TestCase
      * @param int $code
      * @param string $expectedException
      * @throws BackendDatastoreException
+     * @throws ClientException
      * @throws CompatibilityException
+     * @throws ImportException
+     * @throws IncompatibileAvroSchemaException
      * @throws InvalidAvroSchemaException
      * @throws InvalidVersionException
      * @throws OperationTimeoutException
      * @throws PathNotFoundException
      * @throws RequestForwardException
+     * @throws SchemaNotFoundException
      * @throws SubjectNotFoundException
      * @throws UnauthorizedException
      * @throws UnprocessableEntityException
      * @throws VersionNotFoundException
-     * @throws ClientException
-     * @throws IncompatibileAvroSchemaException
      */
-    public function testExceptionThrow(int $code, string $expectedException): void
+    public function testExceptionThrow(?int $code, string $expectedException): void
     {
         /** @var ResponseInterface|MockObject $responseMock */
         $responseMock = $this->makeResponseInterfaceMock($code, self::TEST_MESSAGE);

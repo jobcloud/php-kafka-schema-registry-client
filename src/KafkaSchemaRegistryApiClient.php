@@ -230,6 +230,16 @@ class KafkaSchemaRegistryApiClient implements KafkaSchemaRegistryApiClientInterf
     }
 
     /**
+     * @param string $mode
+     * @return bool
+     */
+    public function setImportMode(string $mode): bool
+    {
+        $result = $this->httpClient->call('PUT', 'mode/', ['mode' => $mode]);
+        return $result === ['mode' => $mode];
+    }
+
+    /**
      * @param string $schema
      * @return array
      */

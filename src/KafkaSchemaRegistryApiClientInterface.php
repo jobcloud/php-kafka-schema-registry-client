@@ -14,6 +14,10 @@ interface KafkaSchemaRegistryApiClientInterface
     public const LEVEL_FULL_TRANSITIVE = 'FULL_TRANSITIVE';
     public const LEVEL_NONE = 'NONE';
 
+    public const MODE_IMPORT = 'IMPORT';
+    public const MODE_READONLY = 'READONLY';
+    public const MODE_READWRITE = 'READWRITE';
+
     /**
      * @return array
      */
@@ -114,6 +118,12 @@ interface KafkaSchemaRegistryApiClientInterface
      * @return array
      */
     public function deleteSubject(string $subjectName): array;
+
+    /**
+     * @param string $mode
+     * @return bool
+     */
+    public function setImportMode(string $mode): bool;
 
     /**
      * @param string $subjectName

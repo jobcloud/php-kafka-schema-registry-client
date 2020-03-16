@@ -2,6 +2,7 @@
 
 namespace Jobcloud\Kafka\SchemaRegistryClient\Tests;
 
+use Jobcloud\Kafka\SchemaRegistryClient\Exception\ImportException;
 use Jobcloud\Kafka\SchemaRegistryClient\Exception\SchemaNotFoundException;
 use Jobcloud\Kafka\SchemaRegistryClient\Exception\SubjectNotFoundException;
 use Jobcloud\Kafka\SchemaRegistryClient\HttpClient;
@@ -398,5 +399,43 @@ class KafkaSchemaRegistryApiApiClientTest extends TestCase
         $api = new KafkaSchemaRegistryApiClient($httpClientMock);
         $result = $api->getLatestSubjectVersion(self::TEST_SUBJECT_NAME);
         $this->assertSame('6', $result);
+    }
+
+    public function testImportModeFail(): void
+    {
+        $httpClientMock = $this->getHttpClientMock();
+
+        $httpClientMock
+            ->expects($this->once())
+            ->method('call')
+            ->with(
+                'PUT',
+                'mode/',
+                ['mode' => 'ABC']
+            )
+            ->willThrowException(new ImportException());
+
+        $api = new KafkaSchemaRegistryApiClient($httpClientMock);
+
+        $this->expectException(ImportException::class);
+        $api->setImportMode('ABC');
+    }
+
+    public function testImportModeSuccess(): void
+    {
+        $httpClientMock = $this->getHttpClientMock();
+
+        $httpClientMock
+            ->expects($this->once())
+            ->method('call')
+            ->with(
+                'PUT',
+                'mode/',
+                ['mode' => 'ABC']
+            )->willReturn(['mode' => 'ABC']);
+
+        $api = new KafkaSchemaRegistryApiClient($httpClientMock);
+        $result = $api->setImportMode('ABC');
+        self::assertTrue($result);
     }
 }
