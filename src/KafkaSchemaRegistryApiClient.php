@@ -4,7 +4,6 @@ namespace Jobcloud\Kafka\SchemaRegistryClient;
 
 use Buzz\Exception\RequestException;
 use Exception;
-use Jobcloud\Kafka\SchemaRegistryClient\Exception\ImportException;
 use Jobcloud\Kafka\SchemaRegistryClient\Exception\SchemaNotFoundException;
 use Jobcloud\Kafka\SchemaRegistryClient\Exception\SubjectNotFoundException;
 
@@ -232,17 +231,11 @@ class KafkaSchemaRegistryApiClient implements KafkaSchemaRegistryApiClientInterf
 
     /**
      * @param string $mode
-     * @return bool
+     * @return void
      */
-    public function setImportMode(string $mode): bool
+    public function setImportMode(string $mode): void
     {
-        try {
-            $this->httpClient->call('PUT', 'mode/', ['mode' => $mode]);
-        } catch (ImportException $e) {
-            return false;
-        }
-
-        return true;
+        $this->httpClient->call('PUT', 'mode/', ['mode' => $mode]);
     }
 
     /**

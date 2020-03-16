@@ -123,7 +123,7 @@ interface KafkaSchemaRegistryApiClientInterface
      * @param string $mode
      * @return bool
      */
-    public function setImportMode(string $mode): bool;
+    public function setImportMode(string $mode): void;
 
     /**
      * @param string $subjectName

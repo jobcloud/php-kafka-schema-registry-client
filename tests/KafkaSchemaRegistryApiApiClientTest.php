@@ -401,7 +401,7 @@ class KafkaSchemaRegistryApiApiClientTest extends TestCase
         $this->assertSame('6', $result);
     }
 
-    public function testImportSchemaFail(): void
+    public function testImportModeFail(): void
     {
         $httpClientMock = $this->getHttpClientMock();
 
@@ -416,11 +416,12 @@ class KafkaSchemaRegistryApiApiClientTest extends TestCase
             ->willThrowException(new ImportException());
 
         $api = new KafkaSchemaRegistryApiClient($httpClientMock);
-        $result = $api->setImportMode('ABC');
-        self::assertFalse($result);
+
+        $this->expectException(ImportException::class);
+        $api->setImportMode('ABC');
     }
 
-    public function testImportSchemaSuccess(): void
+    public function testImportModeSuccess(): void
     {
         $httpClientMock = $this->getHttpClientMock();
 
@@ -434,7 +435,6 @@ class KafkaSchemaRegistryApiApiClientTest extends TestCase
             );
 
         $api = new KafkaSchemaRegistryApiClient($httpClientMock);
-        $result = $api->setImportMode('ABC');
-        self::assertTrue($result);
+        $api->setImportMode('ABC');
     }
 }
