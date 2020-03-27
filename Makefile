@@ -2,11 +2,11 @@
 .DEFAULT_GOAL := test
 
 PHPUNIT =  ./vendor/bin/phpunit -c ./phpunit.xml
-PHPDBG =  phpdbg -qrr ./vendor/bin/phpunit -c ./phpunit.xml
-PHPSTAN  = ./vendor/bin/phpstan
+PHPSTAN  = ./vendor/bin/phpstan --no-progress
 PHPCS = ./vendor/bin/phpcs --extensions=php -v
-PHPCBF = ./vendor/bin/phpcbf ./src --standard=PSR12
+PHPCBF = ./vendor/bin/phpcbf ./src
 INFECTION = ./vendor/bin/infection
+COVCHK = ./vendor/bin/coverage-check  
 
 clean:
 	rm -rf ./build ./vendor
@@ -15,11 +15,11 @@ fix-code-style:
 	${PHPCBF}
 
 code-style:
-	${PHPCS} --report-full --report-gitblame --standard=PSR12 ./src
+	mkdir -p build/logs/phpcs
+	${PHPCS}
 
 coverage:
-	mkdir -p build/logs/phpunit
-	${PHPDBG} # && ./vendor/bin/coverage-check build/logs/phpunit/coverage/coverage.xml 100
+	${PHPUNIT} # && ${COVCHK} build/logs/phpunit/coverage/coverage.xml 100
 
 test:
 	${PHPUNIT}
@@ -32,13 +32,13 @@ test-integration:
 
 static-analysis:
 	mkdir -p build/logs/phpstan
-	${PHPSTAN} analyse --no-progress
+	${PHPSTAN} analyse
 
 infection-testing:
 	mkdir -p build/logs/infection
 	make coverage
 	cp -f build/logs/phpunit/junit.xml build/logs/phpunit/coverage/phpunit.junit.xml
-	${INFECTION} --coverage=build/logs/phpunit/coverage --min-msi=65 --threads=`nproc`
+	${INFECTION} --coverage=build/logs/phpunit/coverage --min-msi=93 --threads=`nproc`
 
 install-dependencies:
 	composer install

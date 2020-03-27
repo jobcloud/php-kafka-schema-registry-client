@@ -1,29 +1,32 @@
-FROM php:7.4.0-cli-alpine3.10
+FROM php:7.3-cli-alpine3.10
+
+ARG HOST_USER_ID
 
 # SYS: Install required packages
 RUN apk --no-cache upgrade && \
-    apk --no-cache add bash git sudo make
+    apk --no-cache add bash git sudo autoconf gcc g++ make gettext make shadow
 
-ARG HOST_USER_ID
-ARG HOST_USER
+COPY dev/php/files/bin/ /usr/local/bin/
 
-#sadly apple users run into a problem since the AD user has a higher ID than 65k :(
-#RUN adduser -u $HOST_USER_ID -D -H $HOST_USER
-#so we do it oldschool
-RUN echo "$HOST_USER:x:$HOST_USER_ID:82:Linux User,,,:/home/$HOST_USER:" >> /etc/passwd && \
-    echo "$HOST_USER:!:$(($(date +%s) / 60 / 60 / 24)):0:99999:7:::" >> /etc/shadow && \
-    echo "$HOST_USER:x:$HOST_USER_ID:" >> /etc/group && \
-    mkdir /home/$HOST_USER && \
-    chown $HOST_USER:$HOST_USER /home/$HOST_USER && \
-    echo "ALL ALL=NOPASSWD: ALL" >> /etc/sudoers && \
-    addgroup $HOST_USER www-data
+# Set host user id if given, to avoid permission conflicts in dev
+RUN /bin/bash -c 'if [ -n "$HOST_USER_ID" ] && [ "$HOST_USER_ID" -lt 60000 ]; then \
+        usermod -u ${HOST_USER_ID} www-data; \
+    fi's
+
+RUN usermod -s /bin/bash www-data && \
+    echo 'www-data ALL=(ALL) NOPASSWD: ALL' > '/etc/sudoers.d/www-data'
+
+# PHP: Install php extensions
+RUN pecl channel-update pecl.php.net && \
+    pecl install pcov && \
+    php-ext-enable pcov
 
 # COMPOSER: install binary
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer
 
+USER www-data
+
 # COMPOSER: install dependencies
 RUN composer global require hirak/prestissimo
-
-USER $HOST_USER
 
 WORKDIR /var/www/html
