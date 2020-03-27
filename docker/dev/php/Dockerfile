@@ -11,7 +11,7 @@ COPY dev/php/files/bin/ /usr/local/bin/
 # Set host user id if given, to avoid permission conflicts in dev
 RUN /bin/bash -c 'if [ -n "$HOST_USER_ID" ] && [ "$HOST_USER_ID" -lt 60000 ]; then \
         usermod -u ${HOST_USER_ID} www-data; \
-    fi's
+    fi'
 
 RUN usermod -s /bin/bash www-data && \
     echo 'www-data ALL=(ALL) NOPASSWD: ALL' > '/etc/sudoers.d/www-data'
