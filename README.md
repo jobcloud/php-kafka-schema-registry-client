@@ -22,6 +22,7 @@ Currently it supports:
 * Set Compatibility level for subject
 * Get Version by providing schema for a subject
 * Get Subject's latest schema version
+* Setting the registry mode
 
 ## How to use it?
 ### Installation
