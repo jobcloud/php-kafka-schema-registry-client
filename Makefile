@@ -19,7 +19,7 @@ code-style:
 	${PHPCS}
 
 coverage:
-	${PHPUNIT} # && ${COVCHK} build/logs/phpunit/coverage/coverage.xml 100
+	${PHPUNIT} && ${COVCHK} build/logs/phpunit/coverage/coverage.xml 100
 
 test:
 	${PHPUNIT}

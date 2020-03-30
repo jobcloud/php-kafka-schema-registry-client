@@ -4,7 +4,7 @@ ARG HOST_USER_ID
 
 # SYS: Install required packages
 RUN apk --no-cache upgrade && \
-    apk --no-cache add bash git sudo autoconf gcc g++ make gettext make shadow
+     apk --no-cache add bash git sudo autoconf gcc g++ make make shadow
 
 COPY dev/php/files/bin/ /usr/local/bin/
 
