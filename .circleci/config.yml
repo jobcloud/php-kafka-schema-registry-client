@@ -1,8 +1,8 @@
 version: 2.1
 
 orbs:
-  ci-caching: jobcloud/ci-caching@0.5
-  ci-php: jobcloud/ci-php@0.5
+  ci-caching: jobcloud/ci-caching@0.12
+  ci-php: jobcloud/ci-php@0.29
 
 workflows:
   php-kafka-schema-registry-client:
@@ -32,6 +32,5 @@ workflows:
       - ci-php/infection-testing:
           dockerComposeFile: "./docker/docker-compose.yml"
           dependencyCheckSumFile: "./composer.json"
-          minMsi: 93
           requires:
             - ci-php/install-dependencies
