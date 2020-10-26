@@ -26,7 +26,4 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin -
 
 USER www-data
 
-# COMPOSER: install dependencies
-RUN composer global require hirak/prestissimo
-
 WORKDIR /var/www/html

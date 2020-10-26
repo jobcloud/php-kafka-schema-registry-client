@@ -8,6 +8,7 @@ interface ErrorHandlerInterface
 {
     /**
      * @param ResponseInterface $response
+     * @param string|null       $uri
      */
-    public function handleError(ResponseInterface $response): void;
+    public function handleError(ResponseInterface $response, string $uri = null): void;
 }

@@ -23,6 +23,7 @@ class ErrorHandler implements ErrorHandlerInterface
 {
     /**
      * @param ResponseInterface $response
+     * @param string|null       $uri
      * @return void
      * @throws BackendDatastoreException
      * @throws ClientException
@@ -40,7 +41,7 @@ class ErrorHandler implements ErrorHandlerInterface
      * @throws VersionNotFoundException
      * @throws ImportException
      */
-    public function handleError(ResponseInterface $response): void
+    public function handleError(ResponseInterface $response, string $uri = null): void
     {
         $responseContent = json_decode($response->getBody(), true, 512, JSON_THROW_ON_ERROR);
 
@@ -50,6 +51,10 @@ class ErrorHandler implements ErrorHandlerInterface
 
         $code = $responseContent['error_code'];
         $message = $responseContent['message'] ?? '';
+
+        if (null !== $uri) {
+            $message .= sprintf(' (%s)', $uri);
+        }
 
         switch ($code) {
             case 50001:
