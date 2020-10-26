@@ -110,6 +110,20 @@ class ErrorHandlerTest extends TestCase
         $errorHandler->handleError($responseMock);
     }
 
+    public function testExceptionThrowWithUri(): void
+    {
+        /** @var ResponseInterface|MockObject $responseMock */
+        $responseMock = $this->makeResponseInterfaceMock(50001, self::TEST_MESSAGE);
+
+        $errorHandler = new ErrorHandler();
+
+        $this->expectException(BackendDatastoreException::class);
+        $this->expectExceptionMessage(self::TEST_MESSAGE . sprintf(' (%s)', 'http://test.com'));
+
+        $errorHandler->handleError($responseMock, 'http://test.com');
+    }
+
+
     public function testNoExceptionIfNoErrorCode(): void
     {
         /** @var ResponseInterface|MockObject $responseMock */
