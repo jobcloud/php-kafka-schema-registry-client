@@ -114,9 +114,11 @@ class HttpClient implements HttpClientInterface
      */
     public function call(string $method, string $uri, array $body = [], array $queryParams = [])
     {
-        $response = $this->client->sendRequest($this->createRequest($method, $uri, $body, $queryParams));
+        $request = $this->createRequest($method, $uri, $body, $queryParams);
 
-        $this->errorHandler->handleError($response, $uri);
+        $response = $this->client->sendRequest($request);
+
+        $this->errorHandler->handleError($response, $uri, $request);
 
         return json_decode($response->getBody(), true, 512, JSON_THROW_ON_ERROR);
     }

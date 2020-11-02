@@ -20,9 +20,13 @@ use Jobcloud\Kafka\SchemaRegistryClient\Exception\UnprocessableEntityException;
 use Jobcloud\Kafka\SchemaRegistryClient\Exception\VersionNotFoundException;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
 
+/**
+ * @covers \Jobcloud\Kafka\SchemaRegistryClient\ErrorHandler
+ */
 class ErrorHandlerTest extends TestCase
 {
     private const TEST_MESSAGE = 'Test Message';
@@ -123,6 +127,22 @@ class ErrorHandlerTest extends TestCase
         $errorHandler->handleError($responseMock, 'http://test.com');
     }
 
+    public function testExceptionThrowWithRequest(): void
+    {
+        /** @var ResponseInterface|MockObject $responseMock */
+        $responseMock = $this->makeResponseInterfaceMock(50001, self::TEST_MESSAGE);
+        $requestMock = $this->getMockForAbstractClass(RequestInterface::class);
+        $streamMock = $this->getMockForAbstractClass(StreamInterface::class);
+        $streamMock->expects(self::once())->method('getContents')->willReturn('test body');
+        $requestMock->expects(self::once())->method('getBody')->willReturn($streamMock);
+
+        $errorHandler = new ErrorHandler();
+
+        $this->expectException(BackendDatastoreException::class);
+        $this->expectExceptionMessage(self::TEST_MESSAGE . sprintf(' (%s) with request body: %s', 'http://test.com', 'test body'));
+echo 'asdfasf';
+        $errorHandler->handleError($responseMock, 'http://test.com', $requestMock);
+    }
 
     public function testNoExceptionIfNoErrorCode(): void
     {

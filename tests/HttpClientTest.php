@@ -12,7 +12,9 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
 
-
+/**
+ * @covers \Jobcloud\Kafka\SchemaRegistryClient\HttpClient
+ */
 class HttpClientTest extends TestCase
 {
     use ReflectionAccessTrait;
