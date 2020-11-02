@@ -11,6 +11,9 @@ use PHPUnit\Framework\TestCase;
 use Pimple\Container;
 use Psr\Http\Message\RequestFactoryInterface;
 
+/**
+ * @covers \Jobcloud\Kafka\SchemaRegistryClient\ServiceProvider\KafkaSchemaRegistryApiClientProvider
+ */
 class KafkaSchemaRegistryApiClientProviderTest extends TestCase
 {
     use ReflectionAccessTrait;

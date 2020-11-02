@@ -17,13 +17,15 @@ use Jobcloud\Kafka\SchemaRegistryClient\Exception\SubjectNotFoundException;
 use Jobcloud\Kafka\SchemaRegistryClient\Exception\UnauthorizedException;
 use Jobcloud\Kafka\SchemaRegistryClient\Exception\UnprocessableEntityException;
 use Jobcloud\Kafka\SchemaRegistryClient\Exception\VersionNotFoundException;
+use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
 class ErrorHandler implements ErrorHandlerInterface
 {
     /**
-     * @param ResponseInterface $response
-     * @param string|null       $uri
+     * @param ResponseInterface     $response
+     * @param string|null           $uri
+     * @param RequestInterface|null $request
      * @return void
      * @throws BackendDatastoreException
      * @throws ClientException
@@ -41,7 +43,7 @@ class ErrorHandler implements ErrorHandlerInterface
      * @throws VersionNotFoundException
      * @throws ImportException
      */
-    public function handleError(ResponseInterface $response, string $uri = null): void
+    public function handleError(ResponseInterface $response, string $uri = null, RequestInterface $request = null): void
     {
         $responseContent = json_decode($response->getBody(), true, 512, JSON_THROW_ON_ERROR);
 
@@ -54,6 +56,10 @@ class ErrorHandler implements ErrorHandlerInterface
 
         if (null !== $uri) {
             $message .= sprintf(' (%s)', $uri);
+        }
+
+        if (null !== $request) {
+            $message .= sprintf(' with request body: %s', $request->getBody()->getContents());
         }
 
         switch ($code) {

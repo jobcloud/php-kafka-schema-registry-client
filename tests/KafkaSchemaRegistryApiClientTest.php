@@ -12,6 +12,9 @@ use Jobcloud\Kafka\SchemaRegistryClient\KafkaSchemaRegistryApiClientInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @covers \Jobcloud\Kafka\SchemaRegistryClient\KafkaSchemaRegistryApiClient
+ */
 class KafkaSchemaRegistryApiApiClientTest extends TestCase
 {
     private const TEST_SUBJECT_NAME = 'some-subject';
