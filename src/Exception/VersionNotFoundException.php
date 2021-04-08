@@ -2,9 +2,7 @@
 
 namespace Jobcloud\Kafka\SchemaRegistryClient\Exception;
 
-use Exception;
-
-class VersionNotFoundException extends Exception
+class VersionNotFoundException extends AbstractKafkaSchemaRegistryException
 {
 
 }

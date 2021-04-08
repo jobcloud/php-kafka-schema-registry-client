@@ -2,8 +2,7 @@
 
 namespace Jobcloud\Kafka\SchemaRegistryClient;
 
-use Buzz\Exception\RequestException;
-use Exception;
+use Psr\Http\Client\ClientExceptionInterface;
 use Jobcloud\Kafka\SchemaRegistryClient\Exception\SchemaNotFoundException;
 use Jobcloud\Kafka\SchemaRegistryClient\Exception\SubjectNotFoundException;
 
@@ -107,7 +106,7 @@ class KafkaSchemaRegistryApiClient implements KafkaSchemaRegistryApiClientInterf
      * @param string $subjectName
      * @param string $version
      * @return bool
-     * @throws Exception
+     * @throws ClientExceptionInterface
      */
     public function checkSchemaCompatibilityForVersion(
         string $subjectName,
@@ -132,7 +131,7 @@ class KafkaSchemaRegistryApiClient implements KafkaSchemaRegistryApiClientInterf
     /**
      * @param string $subjectName
      * @return string|null
-     * @throws Exception
+     * @throws ClientExceptionInterface
      */
     public function getSubjectCompatibilityLevel(string $subjectName): ?string
     {
@@ -220,7 +219,6 @@ class KafkaSchemaRegistryApiClient implements KafkaSchemaRegistryApiClientInterf
     /**
      * @param string $subjectName
      * @return string|null
-     * @throws RequestException
      */
     public function getLatestSubjectVersion(string $subjectName): ?string
     {

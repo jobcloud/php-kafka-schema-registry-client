@@ -2,10 +2,12 @@
 
 namespace Jobcloud\Kafka\SchemaRegistryClient;
 
+use Jobcloud\Kafka\SchemaRegistryClient\Exception\SchemaRegistryExceptionInterface;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\RequestInterface;
+use JsonException;
 
 class HttpClient implements HttpClientInterface
 {
@@ -69,6 +71,7 @@ class HttpClient implements HttpClientInterface
      * @param array $body
      * @param array $queryParams
      * @return RequestInterface
+     * @throws JsonException
      */
     private function createRequest(
         string $method,
@@ -111,6 +114,8 @@ class HttpClient implements HttpClientInterface
      * @param array $queryParams
      * @return mixed
      * @throws ClientExceptionInterface
+     * @throws SchemaRegistryExceptionInterface
+     * @throws JsonException
      */
     public function call(string $method, string $uri, array $body = [], array $queryParams = [])
     {
