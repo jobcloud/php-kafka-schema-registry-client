@@ -19,7 +19,7 @@
         "sort-packages": true
     },
     "require": {
-        "php": ">7.4",
+        "php": ">=7.4",
         "ext-json": "*",
         "pimple/pimple": "^3.2",
         "symfony/cache": "^5.0",
