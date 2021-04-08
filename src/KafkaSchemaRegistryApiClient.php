@@ -23,7 +23,7 @@ class KafkaSchemaRegistryApiClient implements KafkaSchemaRegistryApiClientInterf
     }
 
     /**
-     * @return array
+     * @return array<string,mixed>
      */
     public function getSubjects(): array
     {
@@ -32,7 +32,7 @@ class KafkaSchemaRegistryApiClient implements KafkaSchemaRegistryApiClientInterf
 
     /**
      * @param string $subjectName
-     * @return array
+     * @return array<string,mixed>
      */
     public function getAllSubjectVersions(string $subjectName): array
     {
@@ -42,7 +42,7 @@ class KafkaSchemaRegistryApiClient implements KafkaSchemaRegistryApiClientInterf
     /**
      * @param string $subjectName
      * @param string $version
-     * @return array
+     * @return array<string,mixed>
      */
     public function getSchemaByVersion(string $subjectName, string $version = self::VERSION_LATEST): array
     {
@@ -54,7 +54,7 @@ class KafkaSchemaRegistryApiClient implements KafkaSchemaRegistryApiClientInterf
     /**
      * @param string $subjectName
      * @param string $version
-     * @return array
+     * @return array<string,mixed>
      */
     public function getSchemaDefinitionByVersion(string $subjectName, string $version = self::VERSION_LATEST): array
     {
@@ -88,7 +88,7 @@ class KafkaSchemaRegistryApiClient implements KafkaSchemaRegistryApiClientInterf
     /**
      * @param string $schema
      * @param string $subjectName
-     * @return array
+     * @return array<string,mixed>
      */
     public function registerNewSchemaVersion(string $subjectName, string $schema): array
     {
@@ -209,7 +209,7 @@ class KafkaSchemaRegistryApiClient implements KafkaSchemaRegistryApiClientInterf
 
     /**
      * @param string $subjectName
-     * @return array
+     * @return array<string,mixed>
      */
     public function deleteSubject(string $subjectName): array
     {
@@ -239,7 +239,7 @@ class KafkaSchemaRegistryApiClient implements KafkaSchemaRegistryApiClientInterf
 
     /**
      * @param string $schema
-     * @return array
+     * @return array<string,mixed>
      */
     private function createRequestBodyFromSchema(string $schema): array
     {

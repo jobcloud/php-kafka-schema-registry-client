@@ -31,7 +31,7 @@ class KafkaSchemaRegistryApiClientProvider implements ServiceProviderInterface
     /**
      * @param Container $container
      */
-    public function register(Container $container)
+    public function register(Container $container): void
     {
         $this->checkRequiredOffsets($container);
 
@@ -58,7 +58,7 @@ class KafkaSchemaRegistryApiClientProvider implements ServiceProviderInterface
                 /** @var ClientInterface $client */
                 $client = $container[self::CLIENT];
 
-                /** @var RequestFactoryInterface $psr17factory */
+                /** @var RequestFactoryInterface $requestFactory */
                 $requestFactory = $container[self::REQUEST_FACTORY];
 
                 return new HttpClient(
@@ -82,7 +82,7 @@ class KafkaSchemaRegistryApiClientProvider implements ServiceProviderInterface
         }
     }
 
-    private function checkRequiredOffsets(Container $container)
+    private function checkRequiredOffsets(Container $container): void
     {
 
         if (false === isset($container[self::CONTAINER_KEY][self::SETTING_KEY_BASE_URL])) {

@@ -19,27 +19,27 @@ interface KafkaSchemaRegistryApiClientInterface
     public const MODE_READWRITE = 'READWRITE';
 
     /**
-     * @return array
+     * @return array<string,mixed>
      */
     public function getSubjects(): array;
 
     /**
      * @param string $subjectName
-     * @return array
+     * @return array<string,mixed>
      */
     public function getAllSubjectVersions(string $subjectName): array;
 
     /**
      * @param string $subjectName
      * @param string $version
-     * @return array
+     * @return array<string,mixed>
      */
     public function getSchemaByVersion(string $subjectName, string $version = 'latest'): array;
 
     /**
      * @param string $subjectName
      * @param string $version
-     * @return array
+     * @return array<string,mixed>
      */
     public function getSchemaDefinitionByVersion(string $subjectName, string $version = self::VERSION_LATEST): array;
 
@@ -59,7 +59,7 @@ interface KafkaSchemaRegistryApiClientInterface
     /**
      * @param string $subjectName
      * @param string $schema
-     * @return array
+     * @return array<string,mixed>
      */
     public function registerNewSchemaVersion(string $subjectName, string $schema): array;
 
@@ -115,7 +115,7 @@ interface KafkaSchemaRegistryApiClientInterface
 
     /**
      * @param string $subjectName
-     * @return array
+     * @return array<string,mixed>
      */
     public function deleteSubject(string $subjectName): array;
 

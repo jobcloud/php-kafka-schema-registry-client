@@ -68,8 +68,8 @@ class HttpClient implements HttpClientInterface
     /**
      * @param string $method
      * @param string $uri
-     * @param array $body
-     * @param array $queryParams
+     * @param array<string,mixed> $body
+     * @param array<string,mixed> $queryParams
      * @return RequestInterface
      * @throws JsonException
      */
@@ -110,8 +110,8 @@ class HttpClient implements HttpClientInterface
     /**
      * @param string $method
      * @param string $uri
-     * @param array $body
-     * @param array $queryParams
+     * @param array<string,mixed> $body
+     * @param array<string,mixed> $queryParams
      * @return mixed
      * @throws ClientExceptionInterface
      * @throws SchemaRegistryExceptionInterface
