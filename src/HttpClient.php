@@ -2,10 +2,12 @@
 
 namespace Jobcloud\Kafka\SchemaRegistryClient;
 
+use Jobcloud\Kafka\SchemaRegistryClient\Exception\SchemaRegistryExceptionInterface;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\RequestInterface;
+use JsonException;
 
 class HttpClient implements HttpClientInterface
 {
@@ -66,9 +68,10 @@ class HttpClient implements HttpClientInterface
     /**
      * @param string $method
      * @param string $uri
-     * @param array $body
-     * @param array $queryParams
+     * @param array<string,mixed> $body
+     * @param array<string,mixed> $queryParams
      * @return RequestInterface
+     * @throws JsonException
      */
     private function createRequest(
         string $method,
@@ -86,9 +89,9 @@ class HttpClient implements HttpClientInterface
         if ([] !== $body) {
             $jsonData = json_encode($body, JSON_THROW_ON_ERROR);
 
-            $dataLength = (string) strlen($jsonData);
+            $dataLength = strlen($jsonData);
 
-            $request = $request->withAddedHeader('Content-Length', $dataLength);
+            $request = $request->withAddedHeader('Content-Length', (string) $dataLength);
             $request->getBody()->write($jsonData);
         }
 
@@ -107,10 +110,12 @@ class HttpClient implements HttpClientInterface
     /**
      * @param string $method
      * @param string $uri
-     * @param array $body
-     * @param array $queryParams
+     * @param array<string,mixed> $body
+     * @param array<string,mixed> $queryParams
      * @return mixed
      * @throws ClientExceptionInterface
+     * @throws SchemaRegistryExceptionInterface
+     * @throws JsonException
      */
     public function call(string $method, string $uri, array $body = [], array $queryParams = [])
     {

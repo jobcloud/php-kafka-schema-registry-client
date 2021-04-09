@@ -22,15 +22,15 @@ class KafkaSchemaRegistryApiClientProviderTest extends TestCase
     {
         $container = new Container();
 
-        $this->assertArrayNotHasKey('kafka.schema.registry', $container);
-        $this->assertArrayNotHasKey('username', $container['kafka.schema.registry'] ?? []);
-        $this->assertArrayNotHasKey('password', $container['kafka.schema.registry'] ?? []);
-        $this->assertArrayNotHasKey('base.url', $container['kafka.schema.registry'] ?? []);
-        $this->assertArrayNotHasKey('kafka.schema.registry.client', $container);
-        $this->assertArrayNotHasKey('kafka.schema.registry.request.factory', $container);
-        $this->assertArrayNotHasKey('kafka.schema.registry.client.http', $container);
-        $this->assertArrayNotHasKey('kafka.schema.registry.client.api', $container);
-        $this->assertArrayNotHasKey('kafka.schema.registry.error.handler', $container);
+        self::assertArrayNotHasKey('kafka.schema.registry', $container);
+        self::assertArrayNotHasKey('username', $container['kafka.schema.registry'] ?? []);
+        self::assertArrayNotHasKey('password', $container['kafka.schema.registry'] ?? []);
+        self::assertArrayNotHasKey('base.url', $container['kafka.schema.registry'] ?? []);
+        self::assertArrayNotHasKey('kafka.schema.registry.client', $container);
+        self::assertArrayNotHasKey('kafka.schema.registry.request.factory', $container);
+        self::assertArrayNotHasKey('kafka.schema.registry.client.http', $container);
+        self::assertArrayNotHasKey('kafka.schema.registry.client.api', $container);
+        self::assertArrayNotHasKey('kafka.schema.registry.error.handler', $container);
 
         $container['kafka.schema.registry'] = [
             'base.url' => 'http://some-url',
@@ -40,23 +40,45 @@ class KafkaSchemaRegistryApiClientProviderTest extends TestCase
 
         $container->register(new KafkaSchemaRegistryApiClientProvider());
 
-        $this->assertArrayHasKey('kafka.schema.registry', $container);
-        $this->assertArrayHasKey('username', $container['kafka.schema.registry']);
-        $this->assertArrayHasKey('password', $container['kafka.schema.registry']);
-        $this->assertArrayHasKey('kafka.schema.registry.client', $container);
-        $this->assertArrayHasKey('kafka.schema.registry.request.factory', $container);
-        $this->assertArrayHasKey('kafka.schema.registry.client.http', $container);
-        $this->assertArrayHasKey('kafka.schema.registry.client.api', $container);
-        $this->assertArrayHasKey('kafka.schema.registry.error.handler', $container);
+        self::assertArrayHasKey('kafka.schema.registry', $container);
+        self::assertArrayHasKey('username', $container['kafka.schema.registry']);
+        self::assertArrayHasKey('password', $container['kafka.schema.registry']);
+        self::assertArrayHasKey('kafka.schema.registry.client', $container);
+        self::assertArrayHasKey('kafka.schema.registry.request.factory', $container);
+        self::assertArrayHasKey('kafka.schema.registry.client.http', $container);
+        self::assertArrayHasKey('kafka.schema.registry.client.api', $container);
+        self::assertArrayHasKey('kafka.schema.registry.error.handler', $container);
 
-        $this->assertInstanceOf(RequestFactoryInterface::class, $container['kafka.schema.registry.request.factory']);
-        $this->assertInstanceOf(HttpClientInterface::class, $container['kafka.schema.registry.client.http']);
-        $this->assertInstanceOf(ErrorHandlerInterface::class, $container['kafka.schema.registry.error.handler']);
-        $this->assertInstanceOf(
+        $client = $container['kafka.schema.registry.client.http'];
+
+        self::assertInstanceOf(RequestFactoryInterface::class, $container['kafka.schema.registry.request.factory']);
+        self::assertInstanceOf(HttpClientInterface::class, $client);
+        self::assertInstanceOf(ErrorHandlerInterface::class, $container['kafka.schema.registry.error.handler']);
+        self::assertInstanceOf(
             KafkaSchemaRegistryApiClientInterface::class,
             $container['kafka.schema.registry.client.api']
         );
+    }
 
+    public function testSuccessWithMissingAuth(): void
+    {
+        $container = new Container();
+
+        $container['kafka.schema.registry'] = [
+            'base.url' => 'http://some-url'
+        ];
+
+        $container->register(new KafkaSchemaRegistryApiClientProvider());
+
+        $client = $container['kafka.schema.registry.client.http'];
+
+        self::assertInstanceOf(HttpClientInterface::class, $client);
+        self::assertEquals(
+            $container['kafka.schema.registry']['password'],
+            self::getPropertyValue($client, 'password')
+        );
+        self::assertNull(self::getPropertyValue($client, 'username'));
+        self::assertNull(self::getPropertyValue($client, 'password'));
     }
 
     public function testFailOnMissingBaseUrlInContainer(): void
@@ -68,8 +90,8 @@ class KafkaSchemaRegistryApiClientProviderTest extends TestCase
             'password' => 'p1',
         ];
 
-        $this->expectException(LogicException::class);
-        $this->expectExceptionMessage('Missing schema registry URL, please set it under "base.url" container offset');
+        self::expectException(LogicException::class);
+        self::expectExceptionMessage('Missing schema registry URL, please set it under "base.url" container offset');
 
         $container->register(new KafkaSchemaRegistryApiClientProvider());
     }
@@ -85,14 +107,14 @@ class KafkaSchemaRegistryApiClientProviderTest extends TestCase
         ];
 
         $container->register(new KafkaSchemaRegistryApiClientProvider());
-        $this->assertSame(
+        self::assertSame(
             $container['kafka.schema.registry']['username'],
-            $this->getPropertyValue($container['kafka.schema.registry.client.http'], 'username')
+            self::getPropertyValue($container['kafka.schema.registry.client.http'], 'username')
         );
 
-        $this->assertSame(
+        self::assertSame(
             $container['kafka.schema.registry']['password'],
-            $this->getPropertyValue($container['kafka.schema.registry.client.http'], 'password')
+            self::getPropertyValue($container['kafka.schema.registry.client.http'], 'password')
         );
 
     }

@@ -2,9 +2,7 @@
 
 namespace Jobcloud\Kafka\SchemaRegistryClient\Exception;
 
-use Exception;
-
-class ImportException extends Exception
+class ImportException extends AbstractKafkaSchemaRegistryException
 {
 
 }

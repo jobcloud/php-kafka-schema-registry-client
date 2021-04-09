@@ -212,15 +212,18 @@ class KafkaSchemaRegistryApiApiClientTest extends TestCase
         $httpClientMock = $this->getHttpClientMock();
 
         $httpClientMock
-            ->expects($this->at(0))
+            ->expects(self::exactly(2))
             ->method('call')
-            ->with('GET', sprintf('config/%s', self::TEST_SUBJECT_NAME))
-            ->willThrowException(new SubjectNotFoundException());
-
-        $httpClientMock
-            ->expects($this->at(1))
-            ->method('call')
-            ->willReturn(['compatibilityLevel' => KafkaSchemaRegistryApiClientInterface::LEVEL_FULL]);
+            ->withConsecutive(
+                ['GET', sprintf('config/%s', self::TEST_SUBJECT_NAME)],
+                []
+            )
+            ->will(
+                $this->onConsecutiveCalls(
+                    $this->throwException(new SubjectNotFoundException()),
+                    ['compatibilityLevel' => KafkaSchemaRegistryApiClientInterface::LEVEL_FULL]
+                )
+            );
 
         $api = new KafkaSchemaRegistryApiClient($httpClientMock);
         $result = $api->getSubjectCompatibilityLevel(self::TEST_SUBJECT_NAME);

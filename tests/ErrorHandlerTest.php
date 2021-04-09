@@ -2,9 +2,9 @@
 
 namespace Jobcloud\Kafka\SchemaRegistryClient\Tests;
 
+use Buzz\Exception\ClientException;
 use Jobcloud\Kafka\SchemaRegistryClient\ErrorHandler;
 use Jobcloud\Kafka\SchemaRegistryClient\Exception\BackendDatastoreException;
-use Jobcloud\Kafka\SchemaRegistryClient\Exception\ClientException;
 use Jobcloud\Kafka\SchemaRegistryClient\Exception\CompatibilityException;
 use Jobcloud\Kafka\SchemaRegistryClient\Exception\ImportException;
 use Jobcloud\Kafka\SchemaRegistryClient\Exception\IncompatibileAvroSchemaException;
@@ -140,7 +140,7 @@ class ErrorHandlerTest extends TestCase
 
         $this->expectException(BackendDatastoreException::class);
         $this->expectExceptionMessage(self::TEST_MESSAGE . sprintf(' (%s) with request body: %s', 'http://test.com', 'test body'));
-echo 'asdfasf';
+
         $errorHandler->handleError($responseMock, 'http://test.com', $requestMock);
     }
 

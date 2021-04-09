@@ -2,9 +2,7 @@
 
 namespace Jobcloud\Kafka\SchemaRegistryClient\Exception;
 
-use Exception;
-
-class PathNotFoundException extends Exception
+class PathNotFoundException extends AbstractKafkaSchemaRegistryException
 {
 
 }

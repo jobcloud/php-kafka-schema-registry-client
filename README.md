@@ -2,10 +2,18 @@
 
 # Kafka Schema Registry API Client
 
-## What is it?
+## Description
 An API Client written in PHP to communicate with Kafka Schema Registry.
 
-## What it can do?
+## Installation
+```bash
+composer require jobcloud/php-kafka-schema-registry-client
+```
+
+## Requirements
+- php: >= 7.4
+
+## Supported API calls
 Currently it supports:
 
 * Get list of subjects
@@ -24,13 +32,7 @@ Currently it supports:
 * Get Subject's latest schema version
 * Setting the registry mode
 
-## How to use it?
-### Installation
-```bash
-composer require jobcloud/php-kafka-schema-registry-client
-```
-
-### Code example
+## Code example
 
 ```php
 <?php
@@ -85,7 +87,7 @@ $api = $container['kafka.schema.registry.client.api']);
 $data = $api->getSubjects();
 ```
 
-## External links?
-If you want to be so kind to extend this library, make a pull request, 
-and whatever functionality you want to implement, this is a API reference to follow: 
+## Contributing
+This is an open source project that welcomes pull requests and issues from anyone.  
+This is the API reference to follow for any new functionality: 
 https://docs.confluent.io/current/schema-registry/develop/api.html

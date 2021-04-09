@@ -2,9 +2,7 @@
 
 namespace Jobcloud\Kafka\SchemaRegistryClient\Exception;
 
-use Exception;
-
-class BackendDatastoreException extends Exception
+class BackendDatastoreException extends AbstractKafkaSchemaRegistryException
 {
 
 }
