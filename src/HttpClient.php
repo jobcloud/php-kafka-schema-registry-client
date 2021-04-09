@@ -91,7 +91,7 @@ class HttpClient implements HttpClientInterface
 
             $dataLength = strlen($jsonData);
 
-            $request = $request->withAddedHeader('Content-Length', $dataLength);
+            $request = $request->withAddedHeader('Content-Length', (string) $dataLength);
             $request->getBody()->write($jsonData);
         }
 
