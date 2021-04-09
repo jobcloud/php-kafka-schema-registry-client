@@ -228,7 +228,7 @@ class KafkaSchemaRegistryApiClient implements KafkaSchemaRegistryApiClientInterf
                         $this->createRequestBodyFromSchema($schema)
                     ) ?? [];
 
-            return (string) $results['version'];
+            return $results['version'];
         } catch (SubjectNotFoundException $e) {
             return null;
         } catch (SchemaNotFoundException $e) {

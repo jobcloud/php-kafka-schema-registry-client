@@ -71,7 +71,7 @@ interface KafkaSchemaRegistryApiClientInterface
 
     /**
      * @param int $id
-     * @return
+     * @return string
      * @throws ClientExceptionInterface
      * @throws SchemaRegistryExceptionInterface
      * @throws JsonException

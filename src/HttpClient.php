@@ -89,7 +89,7 @@ class HttpClient implements HttpClientInterface
         if ([] !== $body) {
             $jsonData = json_encode($body, JSON_THROW_ON_ERROR);
 
-            $dataLength = (string) strlen($jsonData);
+            $dataLength = strlen($jsonData);
 
             $request = $request->withAddedHeader('Content-Length', $dataLength);
             $request->getBody()->write($jsonData);

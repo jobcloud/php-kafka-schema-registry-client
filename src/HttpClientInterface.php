@@ -4,6 +4,7 @@ namespace Jobcloud\Kafka\SchemaRegistryClient;
 
 use Jobcloud\Kafka\SchemaRegistryClient\Exception\SchemaRegistryExceptionInterface;
 use Psr\Http\Client\ClientExceptionInterface;
+use JsonException;
 
 interface HttpClientInterface
 {
