@@ -2,7 +2,6 @@
 
 namespace Jobcloud\Kafka\SchemaRegistryClient\ServiceProvider;
 
-use Buzz\Client\AbstractClient;
 use Buzz\Client\Curl;
 use Jobcloud\Kafka\SchemaRegistryClient\ErrorHandler;
 use Jobcloud\Kafka\SchemaRegistryClient\ErrorHandlerInterface;
