@@ -7,6 +7,7 @@ use Jobcloud\Kafka\SchemaRegistryClient\HttpClientInterface;
 use Jobcloud\Kafka\SchemaRegistryClient\KafkaSchemaRegistryApiClientInterface;
 use Jobcloud\Kafka\SchemaRegistryClient\ServiceProvider\KafkaSchemaRegistryApiClientProvider;
 use LogicException;
+use phpmock\phpunit\PHPMock;
 use PHPUnit\Framework\TestCase;
 use Pimple\Container;
 use Psr\Http\Message\RequestFactoryInterface;
@@ -16,10 +17,17 @@ use Psr\Http\Message\RequestFactoryInterface;
  */
 class KafkaSchemaRegistryApiClientProviderTest extends TestCase
 {
+    use PHPMock;
     use ReflectionAccessTrait;
 
     public function testDefaultContainersAndServicesSetWithMinimalConfig(): void
     {
+        $classExists = $this->getFunctionMock('Jobcloud\Kafka\SchemaRegistryClient\ServiceProvider', 'class_exists');
+        $classExists->expects(self::exactly(2))->withConsecutive(
+            ['Nyholm\Psr7\Factory\Psr17Factory'],
+            ['Buzz\Client\Curl']
+        )->willReturn(true);
+
         $container = new Container();
 
         self::assertArrayNotHasKey('kafka.schema.registry', $container);
