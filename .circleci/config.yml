@@ -9,23 +9,27 @@ workflows:
     jobs:
       - ci-caching/build-docker-images
       - ci-php/install-dependencies:
-          sshFingerprint: "21:47:6e:90:17:a3:62:25:bf:4e:87:59:9b:94:eb:17"
+          dockerComposeFile: "./docker/docker-compose.yml"
           dependencyCheckSumFile: "./composer.json"
           requires:
             - ci-caching/build-docker-images
       - ci-php/coverage:
+          dockerComposeFile: "./docker/docker-compose.yml"
           dependencyCheckSumFile: "./composer.json"
           requires:
             - ci-php/install-dependencies
       - ci-php/infection-testing:
+          dockerComposeFile: "./docker/docker-compose.yml"
           dependencyCheckSumFile: "./composer.json"
           requires:
             - ci-php/install-dependencies
       - ci-php/code-style:
+          dockerComposeFile: "./docker/docker-compose.yml"
           dependencyCheckSumFile: "./composer.json"
           requires:
             - ci-php/install-dependencies
       - ci-php/static-analysis:
+          dockerComposeFile: "./docker/docker-compose.yml"
           dependencyCheckSumFile: "./composer.json"
           requires:
             - ci-php/install-dependencies
