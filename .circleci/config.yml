@@ -7,7 +7,8 @@ orbs:
 workflows:
   php-kafka-schema-registry-client:
     jobs:
-      - ci-caching/build-docker-images
+      - ci-caching/build-docker-images:
+          dockerComposeFile: "./docker/docker-compose.yml"
       - ci-php/install-dependencies:
           dockerComposeFile: "./docker/docker-compose.yml"
           dependencyCheckSumFile: "./composer.json"
