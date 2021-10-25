@@ -2,7 +2,8 @@ version: '3.2'
 services:
   php:
     build:
-      context: ./docker/dev/php
+      context: ./
+      dockerfile: dev/php/Dockerfile
       args:
         HOST_USER: ${USER}
         HOST_USER_ID: ${USER_ID}
