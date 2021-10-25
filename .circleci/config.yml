@@ -9,10 +9,8 @@ workflows:
     jobs:
       - ci-caching/build-docker-images:
           dockerComposeFile: "./docker/docker-compose.yml"
-          additionalCacheKey: "v2"
       - ci-php/install-dependencies:
           dockerComposeFile: "./docker/docker-compose.yml"
-          additionalCacheKey: "v2"
           dependencyCheckSumFile: "./composer.json"
           requires:
             - ci-caching/build-docker-images
