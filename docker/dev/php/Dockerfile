@@ -2,7 +2,7 @@ FROM php:7.4-cli-alpine3.13
 
 ARG HOST_USER_ID
 
-# SYS: Install required packages 
+# SYS: Install required packages
 RUN apk --no-cache upgrade && \
      apk --no-cache add bash git sudo autoconf gcc g++ make make shadow
 
