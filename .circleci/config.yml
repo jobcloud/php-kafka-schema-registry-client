@@ -19,17 +19,17 @@ workflows:
           dependencyCheckSumFile: "./composer.json"
           requires:
             - ci-php/install-dependencies
-      - ci-php/infection-testing:
-          dockerComposeFile: "./docker/docker-compose.yml"
-          dependencyCheckSumFile: "./composer.json"
-          requires:
-            - ci-php/install-dependencies
       - ci-php/code-style:
           dockerComposeFile: "./docker/docker-compose.yml"
           dependencyCheckSumFile: "./composer.json"
           requires:
             - ci-php/install-dependencies
       - ci-php/static-analysis:
+          dockerComposeFile: "./docker/docker-compose.yml"
+          dependencyCheckSumFile: "./composer.json"
+          requires:
+            - ci-php/install-dependencies
+      - ci-php/infection-testing:
           dockerComposeFile: "./docker/docker-compose.yml"
           dependencyCheckSumFile: "./composer.json"
           requires:
