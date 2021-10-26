@@ -1,6 +1,7 @@
 version: 2.1
 
 orbs:
+  ci-caching: jobcloud/ci-caching@dev:1a3be91
   ci-php: jobcloud/ci-php@dev:a3e019d
 
 workflows:
