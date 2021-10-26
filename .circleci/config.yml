@@ -1,18 +1,15 @@
 version: 2.1
 
 orbs:
-  ci-caching: jobcloud/ci-caching@2.1.0
-  ci-php: jobcloud/ci-php@1.1.0
+  ci-php: jobcloud/ci-php@dev:a3e019d
 
 workflows:
   php-kafka-schema-registry-client:
     jobs:
       - ci-caching/build-docker-images:
           dockerComposeFile: "./docker/docker-compose.yml"
-          additionalCacheKey: "v2"
       - ci-php/install-dependencies:
           dockerComposeFile: "./docker/docker-compose.yml"
-          dockerAdditionalCacheKey: "v2"
           dependencyCheckSumFile: "./composer.json"
           requires:
             - ci-caching/build-docker-images
