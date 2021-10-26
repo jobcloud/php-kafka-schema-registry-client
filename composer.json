@@ -1,7 +1,7 @@
 {
     "name": "jobcloud/php-kafka-schema-registry-client",
     "license": "MIT",
-    "description": "Kafka Schema Registry API Client ",
+    "description": "Kafka Schema Registry API Client",
     "keywords": ["kafka", "schema", "registry", "php"],
     "autoload": {
         "psr-4": {
