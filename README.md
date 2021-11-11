@@ -1,4 +1,4 @@
-[![CircleCI](https://circleci.com/gh/jobcloud/php-kafka-schema-registry-client/tree/master.svg?style=svg)](https://circleci.com/gh/jobcloud/php-kafka-schema-registry-client/tree/master)
+[![CircleCI](https://circleci.com/gh/jobcloud/php-kafka-schema-registry-client/tree/main.svg?style=svg)](https://circleci.com/gh/jobcloud/php-kafka-schema-registry-client/tree/main)
 
 # Kafka Schema Registry API Client
 
