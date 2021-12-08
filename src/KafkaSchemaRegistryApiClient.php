@@ -65,19 +65,19 @@ class KafkaSchemaRegistryApiClient implements KafkaSchemaRegistryApiClientInterf
     /**
      * @param string $subjectName
      * @param string $version
-     * @return array<string,mixed>
+     * @return mixed
      * @throws ClientExceptionInterface
      * @throws SchemaRegistryExceptionInterface
      * @throws JsonException
      */
-    public function getSchemaDefinitionByVersion(string $subjectName, string $version = self::VERSION_LATEST): array
+    public function getSchemaDefinitionByVersion(string $subjectName, string $version = self::VERSION_LATEST)
     {
         return $this
             ->httpClient
             ->call(
                 'GET',
                 sprintf('subjects/%s/versions/%s/schema', $subjectName, $version)
-            ) ?? [];
+            );
     }
 
     /**
