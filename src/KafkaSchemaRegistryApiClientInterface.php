@@ -52,7 +52,7 @@ interface KafkaSchemaRegistryApiClientInterface
     /**
      * @param string $subjectName
      * @param string $version
-     * @return mixed
+     * @return array<string, mixed>|string
      * @throws ClientExceptionInterface
      * @throws SchemaRegistryExceptionInterface
      * @throws JsonException
