@@ -30,9 +30,9 @@ class KafkaSchemaRegistryApiApiClientTest extends TestCase
             ->getMockBuilder(HttpClient::class)
             ->disableOriginalConstructor()
             ->onlyMethods(['call'])
-            ->getMock();    
+            ->getMock();
     }
-    
+
     public function testGetSubjects(): void
     {
         $httpClientMock = $this->getHttpClientMock();
@@ -59,7 +59,7 @@ class KafkaSchemaRegistryApiApiClientTest extends TestCase
     public function testGetSchemaByVersion(): void
     {
         $httpClientMock = $this->getHttpClientMock();
-        
+
         $httpClientMock
             ->expects($this->once())
             ->method('call')
@@ -72,7 +72,7 @@ class KafkaSchemaRegistryApiApiClientTest extends TestCase
         $this->assertSame(['schema' => '{}'], $result);
     }
 
-    public function testGetSchemaDefinitionByVersion(): void
+    public function testGetSchemaDefinitionByVersionForComplexSchema(): void
     {
         $httpClientMock = $this->getHttpClientMock();
 
@@ -86,6 +86,22 @@ class KafkaSchemaRegistryApiApiClientTest extends TestCase
         $result = $api->getSchemaDefinitionByVersion(self::TEST_SUBJECT_NAME, self::TEST_VERSION);
 
         $this->assertSame(['a' => 'b'], $result);
+    }
+
+    public function testGetSchemaDefinitionByVersionForOptimizedPrimitiveSchema(): void
+    {
+        $httpClientMock = $this->getHttpClientMock();
+
+        $httpClientMock
+            ->expects($this->once())
+            ->method('call')
+            ->with('GET', sprintf('subjects/%s/versions/%s/schema', self::TEST_SUBJECT_NAME, self::TEST_VERSION))
+            ->willReturn("string");
+
+        $api = new KafkaSchemaRegistryApiClient($httpClientMock);
+        $result = $api->getSchemaDefinitionByVersion(self::TEST_SUBJECT_NAME, self::TEST_VERSION);
+
+        $this->assertSame("string", $result);
     }
 
     public function testDeleteSchemaVersion(): void
@@ -248,7 +264,7 @@ class KafkaSchemaRegistryApiApiClientTest extends TestCase
             self::TEST_SUBJECT_NAME,
             KafkaSchemaRegistryApiClientInterface::LEVEL_FULL
         );
-        
+
         $this->assertTrue($result);
     }
 

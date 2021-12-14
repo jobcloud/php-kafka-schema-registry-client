@@ -22,11 +22,11 @@
         "psr/http-client": "^1.0.1"
     },
     "require-dev": {
-        "infection/infection": "^0.21",
+        "infection/infection": "^0.25",
         "kriswallsmith/buzz": "^1.0",
         "nyholm/psr7": "^1.2",
         "php-mock/php-mock-phpunit": "^2.6",
-        "phpstan/phpstan": "^0.12",
+        "phpstan/phpstan": "^1.2",
         "phpunit/phpunit": "^9.5",
         "pimple/pimple": "^3.2",
         "rregeer/phpunit-coverage-check": "^0.3.1",
