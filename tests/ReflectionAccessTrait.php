@@ -11,7 +11,6 @@ use ReflectionException;
  */
 trait ReflectionAccessTrait
 {
-
     /**
      * Set private/protected property.
      *

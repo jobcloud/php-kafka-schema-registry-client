@@ -6,5 +6,4 @@ use Exception;
 
 abstract class AbstractKafkaSchemaRegistryException extends Exception implements SchemaRegistryExceptionInterface
 {
-
 }

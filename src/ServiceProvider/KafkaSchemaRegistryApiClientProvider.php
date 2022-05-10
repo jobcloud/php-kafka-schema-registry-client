@@ -18,7 +18,6 @@ use Psr\Http\Message\RequestFactoryInterface;
 
 class KafkaSchemaRegistryApiClientProvider implements ServiceProviderInterface
 {
-
     public const CONTAINER_KEY = 'kafka.schema.registry';
 
     public const SETTING_KEY_USERNAME = 'username';
