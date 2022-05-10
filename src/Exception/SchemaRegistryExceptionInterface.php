@@ -6,5 +6,4 @@ use Psr\Http\Client\ClientExceptionInterface;
 
 interface SchemaRegistryExceptionInterface extends ClientExceptionInterface
 {
-
 }

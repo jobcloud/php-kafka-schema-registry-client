@@ -33,6 +33,9 @@
         "squizlabs/php_codesniffer": "^3.4.2"
     },
     "config": {
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "infection/extension-installer": true
+        }
     }
 }
