@@ -3,7 +3,6 @@
 
 # Packages
 vendor/
-composer.lock
 composer.symlink
 
 # Builds & caches

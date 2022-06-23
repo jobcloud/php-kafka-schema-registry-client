@@ -5,32 +5,22 @@ orbs:
   ci-php: jobcloud/ci-php@2.4.0
 
 workflows:
-  php-kafka-schema-registry-client:
+  version: 2
+  test-php-kafka-schema-registry-client:
     jobs:
-      - ci-caching/build-docker-images:
-          dockerComposeFile: "./docker/docker-compose.yml"
+      - ci-caching/build-docker-images
       - ci-php/install-dependencies:
-          dockerComposeFile: "./docker/docker-compose.yml"
-          dependencyCheckSumFile: "./composer.json"
           requires:
             - ci-caching/build-docker-images
       - ci-php/coverage:
-          dockerComposeFile: "./docker/docker-compose.yml"
-          dependencyCheckSumFile: "./composer.json"
           requires:
             - ci-php/install-dependencies
       - ci-php/code-style:
-          dockerComposeFile: "./docker/docker-compose.yml"
-          dependencyCheckSumFile: "./composer.json"
           requires:
             - ci-php/install-dependencies
       - ci-php/static-analysis:
-          dockerComposeFile: "./docker/docker-compose.yml"
-          dependencyCheckSumFile: "./composer.json"
           requires:
             - ci-php/install-dependencies
       - ci-php/infection-testing:
-          dockerComposeFile: "./docker/docker-compose.yml"
-          dependencyCheckSumFile: "./composer.json"
           requires:
             - ci-php/install-dependencies
