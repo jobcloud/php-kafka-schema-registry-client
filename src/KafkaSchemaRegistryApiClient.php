@@ -145,12 +145,12 @@ class KafkaSchemaRegistryApiClient implements KafkaSchemaRegistryApiClientInterf
                        'POST',
                        sprintf('compatibility/subjects/%s/versions/%s', $subjectName, $version),
                        $this->createRequestBodyFromSchema($schema)
-                   ) ?? [];
+                   );
         } catch (SubjectNotFoundException $e) {
             return true;
         }
 
-        return $results['is_compatible'] === true;
+        return ($results['is_compatible'] ?? false) === true;
     }
 
     /**
@@ -226,9 +226,9 @@ class KafkaSchemaRegistryApiClient implements KafkaSchemaRegistryApiClientInterf
                         'POST',
                         sprintf('subjects/%s', $subjectName),
                         $this->createRequestBodyFromSchema($schema)
-                    ) ?? [];
+                    );
 
-            return $results['version'];
+            return $results['version'] ?? null;
         } catch (SubjectNotFoundException $e) {
             return null;
         } catch (SchemaNotFoundException $e) {

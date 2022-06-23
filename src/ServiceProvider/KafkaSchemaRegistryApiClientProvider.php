@@ -68,8 +68,8 @@ class KafkaSchemaRegistryApiClientProvider implements ServiceProviderInterface
                     $requestFactory,
                     $container[self::ERROR_HANDLER],
                     $container[self::CONTAINER_KEY][self::SETTING_KEY_BASE_URL],
-                    $container[self::CONTAINER_KEY][self::SETTING_KEY_USERNAME],
-                    $container[self::CONTAINER_KEY][self::SETTING_KEY_PASSWORD]
+                    $container[self::CONTAINER_KEY][self::SETTING_KEY_USERNAME] ?? null,
+                    $container[self::CONTAINER_KEY][self::SETTING_KEY_PASSWORD] ?? null
                 );
             };
         }
