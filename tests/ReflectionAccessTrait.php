@@ -5,10 +5,6 @@ namespace Jobcloud\Kafka\SchemaRegistryClient\Tests;
 use ReflectionClass;
 use ReflectionException;
 
-/**
- * Trait ReflectionAccessTrait
- * @package Jobcloud\MarketplaceAdapterMessage\Tests
- */
 trait ReflectionAccessTrait
 {
     /**

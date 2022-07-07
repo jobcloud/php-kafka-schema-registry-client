@@ -30,9 +30,6 @@ class KafkaSchemaRegistryApiClientProvider implements ServiceProviderInterface
     public const API_CLIENT = 'kafka.schema.registry.client.api';
     public const ERROR_HANDLER = 'kafka.schema.registry.error.handler';
 
-    /**
-     * @param Container $container
-     */
     public function register(Container $container): void
     {
         $this->checkRequiredOffsets($container);

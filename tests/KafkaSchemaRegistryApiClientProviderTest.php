@@ -151,6 +151,5 @@ class KafkaSchemaRegistryApiClientProviderTest extends TestCase
             $container['kafka.schema.registry']['password'],
             self::getPropertyValue($container['kafka.schema.registry.client.http'], 'password')
         );
-
     }
 }

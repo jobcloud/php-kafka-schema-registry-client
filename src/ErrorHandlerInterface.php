@@ -11,8 +11,6 @@ use JsonException;
 interface ErrorHandlerInterface
 {
     /**
-     * @param ResponseInterface $response
-     * @param string|null       $uri
      * @throws ClientExceptionInterface
      * @throws SchemaRegistryExceptionInterface
      * @throws JsonException

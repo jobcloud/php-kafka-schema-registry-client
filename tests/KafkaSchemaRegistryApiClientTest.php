@@ -151,7 +151,11 @@ class KafkaSchemaRegistryApiClientTest extends TestCase
             ->willReturn([]);
 
         $api = new KafkaSchemaRegistryApiClient($httpClientMock);
-        $result = $api->checkSchemaCompatibilityForVersion(self::TEST_SUBJECT_NAME, self::TEST_SCHEMA, self::TEST_VERSION);
+        $result = $api->checkSchemaCompatibilityForVersion(
+            self::TEST_SUBJECT_NAME,
+            self::TEST_SCHEMA,
+            self::TEST_VERSION
+        );
 
         self::assertFalse($result);
     }
@@ -171,7 +175,11 @@ class KafkaSchemaRegistryApiClientTest extends TestCase
             ->willReturn(['is_compatible' => true]);
 
         $api = new KafkaSchemaRegistryApiClient($httpClientMock);
-        $result = $api->checkSchemaCompatibilityForVersion(self::TEST_SUBJECT_NAME, self::TEST_SCHEMA, self::TEST_VERSION);
+        $result = $api->checkSchemaCompatibilityForVersion(
+            self::TEST_SUBJECT_NAME,
+            self::TEST_SCHEMA,
+            self::TEST_VERSION
+        );
 
         self::assertTrue($result);
     }
@@ -191,7 +199,11 @@ class KafkaSchemaRegistryApiClientTest extends TestCase
             ->willReturn(['is_compatible' => false]);
 
         $api = new KafkaSchemaRegistryApiClient($httpClientMock);
-        $result = $api->checkSchemaCompatibilityForVersion(self::TEST_SUBJECT_NAME, self::TEST_SCHEMA, self::TEST_VERSION);
+        $result = $api->checkSchemaCompatibilityForVersion(
+            self::TEST_SUBJECT_NAME,
+            self::TEST_SCHEMA,
+            self::TEST_VERSION
+        );
 
         self::assertFalse($result);
     }
@@ -211,7 +223,11 @@ class KafkaSchemaRegistryApiClientTest extends TestCase
             ->willThrowException(new SubjectNotFoundException());
 
         $api = new KafkaSchemaRegistryApiClient($httpClientMock);
-        $result = $api->checkSchemaCompatibilityForVersion(self::TEST_SUBJECT_NAME, self::TEST_SCHEMA, self::TEST_VERSION);
+        $result = $api->checkSchemaCompatibilityForVersion(
+            self::TEST_SUBJECT_NAME,
+            self::TEST_SCHEMA,
+            self::TEST_VERSION
+        );
         self::assertTrue($result);
     }
 

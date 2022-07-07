@@ -1,8 +1,8 @@
 version: 2.1
 
 orbs:
-  ci-caching: jobcloud/ci-caching@3.1.1
-  ci-php: jobcloud/ci-php@2.4.0
+  ci-caching: jobcloud/ci-caching@3.1
+  ci-php: jobcloud/ci-php@2.4
 
 workflows:
   version: 2
@@ -10,17 +10,22 @@ workflows:
     jobs:
       - ci-caching/build-docker-images
       - ci-php/install-dependencies:
+          dependencyCheckSumFile: "./composer.json"
           requires:
             - ci-caching/build-docker-images
       - ci-php/coverage:
+          dependencyCheckSumFile: "./composer.json"
           requires:
             - ci-php/install-dependencies
       - ci-php/code-style:
+          dependencyCheckSumFile: "./composer.json"
           requires:
             - ci-php/install-dependencies
       - ci-php/static-analysis:
+          dependencyCheckSumFile: "./composer.json"
           requires:
             - ci-php/install-dependencies
       - ci-php/infection-testing:
+          dependencyCheckSumFile: "./composer.json"
           requires:
             - ci-php/install-dependencies

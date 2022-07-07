@@ -55,7 +55,8 @@ class ErrorHandlerTest extends TestCase
         return $responseMock;
     }
 
-    public function exceptionTestDataProvider(): array{
+    public function exceptionTestDataProvider(): array
+    {
         return [
             [50001, BackendDatastoreException::class],
             [50002, OperationTimeoutException::class],
@@ -83,8 +84,6 @@ class ErrorHandlerTest extends TestCase
     /**
      * @dataProvider exceptionTestDataProvider
      *
-     * @param int $code
-     * @param string $expectedException
      * @throws BackendDatastoreException
      * @throws ClientException
      * @throws CompatibilityException
@@ -139,7 +138,9 @@ class ErrorHandlerTest extends TestCase
         $errorHandler = new ErrorHandler();
 
         $this->expectException(BackendDatastoreException::class);
-        $this->expectExceptionMessage(self::TEST_MESSAGE . sprintf(' (%s) with request body: %s', 'http://test.com', 'test body'));
+        $this->expectExceptionMessage(
+            self::TEST_MESSAGE . sprintf(' (%s) with request body: %s', 'http://test.com', 'test body')
+        );
 
         $errorHandler->handleError($responseMock, 'http://test.com', $requestMock);
     }
