@@ -37,7 +37,6 @@ class KafkaSchemaRegistryApiClientProviderTest extends TestCase
         );
     }
 
-
     public function testDefaultContainersAndServicesSetWithMinimalConfig(): void
     {
         $this->classExistsMock->expects(self::exactly(2))->withConsecutive(
@@ -87,10 +86,13 @@ class KafkaSchemaRegistryApiClientProviderTest extends TestCase
 
     public function testSuccessWithMissingAuth(): void
     {
-        $this->classExistsMock->expects(self::exactly(2))->withConsecutive(
-            ['Nyholm\Psr7\Factory\Psr17Factory'],
-            ['Buzz\Client\Curl']
-        )->willReturn(true);
+        $this->classExistsMock
+            ->expects(self::exactly(2))
+            ->withConsecutive(
+                ['Nyholm\Psr7\Factory\Psr17Factory'],
+                ['Buzz\Client\Curl']
+            )
+            ->willReturn(true);
 
         $container = new Container();
 
@@ -103,10 +105,6 @@ class KafkaSchemaRegistryApiClientProviderTest extends TestCase
         $client = $container['kafka.schema.registry.client.http'];
 
         self::assertInstanceOf(HttpClientInterface::class, $client);
-        self::assertEquals(
-            $container['kafka.schema.registry']['password'],
-            self::getPropertyValue($client, 'password')
-        );
         self::assertNull(self::getPropertyValue($client, 'username'));
         self::assertNull(self::getPropertyValue($client, 'password'));
     }
@@ -153,6 +151,5 @@ class KafkaSchemaRegistryApiClientProviderTest extends TestCase
             $container['kafka.schema.registry']['password'],
             self::getPropertyValue($container['kafka.schema.registry.client.http'], 'password')
         );
-
     }
 }

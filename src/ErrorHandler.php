@@ -26,10 +26,6 @@ use JsonException;
 class ErrorHandler implements ErrorHandlerInterface
 {
     /**
-     * @param ResponseInterface     $response
-     * @param string|null           $uri
-     * @param RequestInterface|null $request
-     * @return void
      * @throws BackendDatastoreException
      * @throws ClientException
      * @throws CompatibilityException

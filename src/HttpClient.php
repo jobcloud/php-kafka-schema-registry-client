@@ -41,14 +41,6 @@ class HttpClient implements HttpClientInterface
      */
     private $errorHandler;
 
-    /**
-     * @param ClientInterface $client
-     * @param RequestFactoryInterface $requestFactory
-     * @param ErrorHandlerInterface $errorHandler
-     * @param string $baseUrl
-     * @param string|null $username
-     * @param string|null $password
-     */
     public function __construct(
         ClientInterface $client,
         RequestFactoryInterface $requestFactory,
@@ -66,11 +58,8 @@ class HttpClient implements HttpClientInterface
     }
 
     /**
-     * @param string $method
-     * @param string $uri
      * @param array<string,mixed> $body
      * @param array<string,mixed> $queryParams
-     * @return RequestInterface
      * @throws JsonException
      */
     private function createRequest(
@@ -108,8 +97,6 @@ class HttpClient implements HttpClientInterface
     }
 
     /**
-     * @param string $method
-     * @param string $uri
      * @param array<string,mixed> $body
      * @param array<string,mixed> $queryParams
      * @return mixed

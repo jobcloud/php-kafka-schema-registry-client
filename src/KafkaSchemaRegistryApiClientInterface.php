@@ -31,7 +31,6 @@ interface KafkaSchemaRegistryApiClientInterface
     public function getSubjects(): array;
 
     /**
-     * @param string $subjectName
      * @return array<string,mixed>
      * @throws ClientExceptionInterface
      * @throws SchemaRegistryExceptionInterface
@@ -40,8 +39,6 @@ interface KafkaSchemaRegistryApiClientInterface
     public function getAllSubjectVersions(string $subjectName): array;
 
     /**
-     * @param string $subjectName
-     * @param string $version
      * @return array<string,mixed>
      * @throws ClientExceptionInterface
      * @throws SchemaRegistryExceptionInterface
@@ -50,8 +47,6 @@ interface KafkaSchemaRegistryApiClientInterface
     public function getSchemaByVersion(string $subjectName, string $version = 'latest'): array;
 
     /**
-     * @param string $subjectName
-     * @param string $version
      * @return array<string, mixed>|string
      * @throws ClientExceptionInterface
      * @throws SchemaRegistryExceptionInterface
@@ -60,9 +55,6 @@ interface KafkaSchemaRegistryApiClientInterface
     public function getSchemaDefinitionByVersion(string $subjectName, string $version = self::VERSION_LATEST);
 
     /**
-     * @param string $subjectName
-     * @param string $version
-     * @return int|null
      * @throws ClientExceptionInterface
      * @throws SchemaRegistryExceptionInterface
      * @throws JsonException
@@ -70,8 +62,6 @@ interface KafkaSchemaRegistryApiClientInterface
     public function deleteSchemaVersion(string $subjectName, string $version = self::VERSION_LATEST): ?int;
 
     /**
-     * @param int $id
-     * @return string
      * @throws ClientExceptionInterface
      * @throws SchemaRegistryExceptionInterface
      * @throws JsonException
@@ -79,8 +69,6 @@ interface KafkaSchemaRegistryApiClientInterface
     public function getSchemaById(int $id): string;
 
     /**
-     * @param string $subjectName
-     * @param string $schema
      * @return array<string,mixed>
      * @throws ClientExceptionInterface
      * @throws SchemaRegistryExceptionInterface
@@ -89,10 +77,6 @@ interface KafkaSchemaRegistryApiClientInterface
     public function registerNewSchemaVersion(string $subjectName, string $schema): array;
 
     /**
-     * @param string $subjectName
-     * @param string $schema
-     * @param string $version
-     * @return bool
      * @throws ClientExceptionInterface
      * @throws SchemaRegistryExceptionInterface
      * @throws JsonException
@@ -104,8 +88,6 @@ interface KafkaSchemaRegistryApiClientInterface
     ): bool;
 
     /**
-     * @param string $subjectName
-     * @return string
      * @throws ClientExceptionInterface
      * @throws SchemaRegistryExceptionInterface
      * @throws JsonException
@@ -113,9 +95,6 @@ interface KafkaSchemaRegistryApiClientInterface
     public function getSubjectCompatibilityLevel(string $subjectName): ?string;
 
     /**
-     * @param string $subjectName
-     * @param string $level
-     * @return bool
      * @throws ClientExceptionInterface
      * @throws SchemaRegistryExceptionInterface
      * @throws JsonException
@@ -123,7 +102,6 @@ interface KafkaSchemaRegistryApiClientInterface
     public function setSubjectCompatibilityLevel(string $subjectName, string $level = self::LEVEL_FULL): bool;
 
     /**
-     * @return string
      * @throws ClientExceptionInterface
      * @throws SchemaRegistryExceptionInterface
      * @throws JsonException
@@ -131,8 +109,6 @@ interface KafkaSchemaRegistryApiClientInterface
     public function getDefaultCompatibilityLevel(): string;
 
     /**
-     * @param string $level
-     * @return bool
      * @throws ClientExceptionInterface
      * @throws SchemaRegistryExceptionInterface
      * @throws JsonException
@@ -140,9 +116,6 @@ interface KafkaSchemaRegistryApiClientInterface
     public function setDefaultCompatibilityLevel(string $level = self::LEVEL_FULL): bool;
 
     /**
-     * @param string $subjectName
-     * @param string $schema
-     * @return string|null
      * @throws ClientExceptionInterface
      * @throws SchemaRegistryExceptionInterface
      * @throws JsonException
@@ -150,9 +123,6 @@ interface KafkaSchemaRegistryApiClientInterface
     public function getVersionForSchema(string $subjectName, string $schema): ?string;
 
     /**
-     * @param string $subjectName
-     * @param string $schema
-     * @return bool
      * @throws ClientExceptionInterface
      * @throws SchemaRegistryExceptionInterface
      * @throws JsonException
@@ -160,7 +130,6 @@ interface KafkaSchemaRegistryApiClientInterface
     public function isSchemaAlreadyRegistered(string $subjectName, string $schema): bool;
 
     /**
-     * @param string $subjectName
      * @return array<string,mixed>
      * @throws ClientExceptionInterface
      * @throws SchemaRegistryExceptionInterface
@@ -169,8 +138,6 @@ interface KafkaSchemaRegistryApiClientInterface
     public function deleteSubject(string $subjectName): array;
 
     /**
-     * @param string $mode
-     * @return bool
      * @throws ClientExceptionInterface
      * @throws SchemaRegistryExceptionInterface
      * @throws JsonException
@@ -178,8 +145,6 @@ interface KafkaSchemaRegistryApiClientInterface
     public function setImportMode(string $mode): bool;
 
     /**
-     * @param string $subjectName
-     * @return string|null
      * @throws JsonException
      */
     public function getLatestSubjectVersion(string $subjectName): ?string;

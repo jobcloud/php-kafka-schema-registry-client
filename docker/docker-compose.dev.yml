@@ -1,0 +1,13 @@
+version: '3.2'
+
+services:
+  php:
+    hostname: kafka-schema-registry-client-php
+    container_name: kafka-schema-registry-client-php
+    build:
+      context: dev/php
+      args:
+        USER_ID: ${USER_ID}
+    volumes:
+      - ../:/var/www/html
+    tty: true

@@ -15,10 +15,6 @@ class KafkaSchemaRegistryApiClient implements KafkaSchemaRegistryApiClientInterf
      */
     private $httpClient;
 
-    /**
-     * KafkaSchemaRegistryApi constructor.
-     * @param HttpClientInterface $httpClient
-     */
     public function __construct(HttpClientInterface $httpClient)
     {
         $this->httpClient = $httpClient;
@@ -36,7 +32,6 @@ class KafkaSchemaRegistryApiClient implements KafkaSchemaRegistryApiClientInterf
     }
 
     /**
-     * @param string $subjectName
      * @return array<string,mixed>
      * @throws ClientExceptionInterface
      * @throws SchemaRegistryExceptionInterface
@@ -48,8 +43,6 @@ class KafkaSchemaRegistryApiClient implements KafkaSchemaRegistryApiClientInterf
     }
 
     /**
-     * @param string $subjectName
-     * @param string $version
      * @return array<string,mixed>
      * @throws ClientExceptionInterface
      * @throws SchemaRegistryExceptionInterface
@@ -63,8 +56,6 @@ class KafkaSchemaRegistryApiClient implements KafkaSchemaRegistryApiClientInterf
     }
 
     /**
-     * @param string $subjectName
-     * @param string $version
      * @return array<string, mixed>|string
      * @throws ClientExceptionInterface
      * @throws SchemaRegistryExceptionInterface
@@ -81,9 +72,6 @@ class KafkaSchemaRegistryApiClient implements KafkaSchemaRegistryApiClientInterf
     }
 
     /**
-     * @param string $subjectName
-     * @param string $version
-     * @return int|null
      * @throws ClientExceptionInterface
      * @throws SchemaRegistryExceptionInterface
      * @throws JsonException
@@ -94,8 +82,6 @@ class KafkaSchemaRegistryApiClient implements KafkaSchemaRegistryApiClientInterf
     }
 
     /**
-     * @param int $id
-     * @return string
      * @throws ClientExceptionInterface
      * @throws SchemaRegistryExceptionInterface
      * @throws JsonException
@@ -106,8 +92,6 @@ class KafkaSchemaRegistryApiClient implements KafkaSchemaRegistryApiClientInterf
     }
 
     /**
-     * @param string $schema
-     * @param string $subjectName
      * @return array<string,mixed>
      * @throws ClientExceptionInterface
      * @throws SchemaRegistryExceptionInterface
@@ -125,10 +109,6 @@ class KafkaSchemaRegistryApiClient implements KafkaSchemaRegistryApiClientInterf
     }
 
     /**
-     * @param string $schema
-     * @param string $subjectName
-     * @param string $version
-     * @return bool
      * @throws ClientExceptionInterface
      * @throws SchemaRegistryExceptionInterface
      * @throws JsonException
@@ -145,17 +125,15 @@ class KafkaSchemaRegistryApiClient implements KafkaSchemaRegistryApiClientInterf
                        'POST',
                        sprintf('compatibility/subjects/%s/versions/%s', $subjectName, $version),
                        $this->createRequestBodyFromSchema($schema)
-                   ) ?? [];
+                   );
         } catch (SubjectNotFoundException $e) {
             return true;
         }
 
-        return $results['is_compatible'] === true;
+        return ($results['is_compatible'] ?? false) === true;
     }
 
     /**
-     * @param string $subjectName
-     * @return string|null
      * @throws ClientExceptionInterface
      * @throws SchemaRegistryExceptionInterface
      * @throws JsonException
@@ -171,9 +149,6 @@ class KafkaSchemaRegistryApiClient implements KafkaSchemaRegistryApiClientInterf
     }
 
     /**
-     * @param string $subjectName
-     * @param string $level
-     * @return bool
      * @throws ClientExceptionInterface
      * @throws SchemaRegistryExceptionInterface
      * @throws JsonException
@@ -185,7 +160,6 @@ class KafkaSchemaRegistryApiClient implements KafkaSchemaRegistryApiClientInterf
     }
 
     /**
-     * @return string
      * @throws ClientExceptionInterface
      * @throws SchemaRegistryExceptionInterface
      * @throws JsonException
@@ -197,8 +171,6 @@ class KafkaSchemaRegistryApiClient implements KafkaSchemaRegistryApiClientInterf
     }
 
     /**
-     * @param string $level
-     * @return bool
      * @throws ClientExceptionInterface
      * @throws SchemaRegistryExceptionInterface
      * @throws JsonException
@@ -210,9 +182,6 @@ class KafkaSchemaRegistryApiClient implements KafkaSchemaRegistryApiClientInterf
     }
 
     /**
-     * @param string $subjectName
-     * @param string $schema
-     * @return string|null
      * @throws ClientExceptionInterface
      * @throws SchemaRegistryExceptionInterface
      * @throws JsonException
@@ -226,9 +195,9 @@ class KafkaSchemaRegistryApiClient implements KafkaSchemaRegistryApiClientInterf
                         'POST',
                         sprintf('subjects/%s', $subjectName),
                         $this->createRequestBodyFromSchema($schema)
-                    ) ?? [];
+                    );
 
-            return $results['version'];
+            return $results['version'] ?? null;
         } catch (SubjectNotFoundException $e) {
             return null;
         } catch (SchemaNotFoundException $e) {
@@ -237,9 +206,6 @@ class KafkaSchemaRegistryApiClient implements KafkaSchemaRegistryApiClientInterf
     }
 
     /**
-     * @param string $subjectName
-     * @param string $schema
-     * @return bool
      * @throws ClientExceptionInterface
      * @throws SchemaRegistryExceptionInterface
      * @throws JsonException
@@ -250,7 +216,6 @@ class KafkaSchemaRegistryApiClient implements KafkaSchemaRegistryApiClientInterf
     }
 
     /**
-     * @param string $subjectName
      * @return array<string,mixed>
      * @throws ClientExceptionInterface
      * @throws SchemaRegistryExceptionInterface
@@ -262,8 +227,6 @@ class KafkaSchemaRegistryApiClient implements KafkaSchemaRegistryApiClientInterf
     }
 
     /**
-     * @param string $subjectName
-     * @return string|null
      * @throws ClientExceptionInterface
      * @throws SchemaRegistryExceptionInterface
      * @throws JsonException
@@ -276,8 +239,6 @@ class KafkaSchemaRegistryApiClient implements KafkaSchemaRegistryApiClientInterf
     }
 
     /**
-     * @param string $mode
-     * @return bool
      * @throws ClientExceptionInterface
      * @throws SchemaRegistryExceptionInterface
      * @throws JsonException
@@ -289,7 +250,6 @@ class KafkaSchemaRegistryApiClient implements KafkaSchemaRegistryApiClientInterf
     }
 
     /**
-     * @param string $schema
      * @return array<string,mixed>
      * @throws JsonException
      */
