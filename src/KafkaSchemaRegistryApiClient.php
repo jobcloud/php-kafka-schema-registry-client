@@ -127,7 +127,7 @@ class KafkaSchemaRegistryApiClient implements KafkaSchemaRegistryApiClientInterf
                        sprintf('compatibility/subjects/%s/versions/%s', $subjectName, $version),
                        $this->createRequestBodyFromSchema($schema)
                    );
-        } catch (SubjectNotFoundException|VersionNotFoundException $e) {
+        } catch (SubjectNotFoundException | VersionNotFoundException $e) {
             if ($e instanceof VersionNotFoundException && self::VERSION_LATEST !== $version) {
                 throw $e;
             }
