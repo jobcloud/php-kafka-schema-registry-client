@@ -252,6 +252,33 @@ class KafkaSchemaRegistryApiClientTest extends TestCase
             self::TEST_SCHEMA,
             self::TEST_VERSION
         );
+        self::assertFalse($result);
+    }
+
+    public function testCheckSchemaCompatibilityForVersionNotFoundLatest(): void
+    {
+        $httpClientMock = $this->getHttpClientMock();
+
+        $httpClientMock
+            ->expects(self::once())
+            ->method('call')
+            ->with(
+                'POST',
+                sprintf(
+                    'compatibility/subjects/%s/versions/%s',
+                    self::TEST_SUBJECT_NAME,
+                    KafkaSchemaRegistryApiClient::VERSION_LATEST
+                ),
+                ['schema' => '[]']
+            )
+            ->willThrowException(new VersionNotFoundException());
+
+        $api = new KafkaSchemaRegistryApiClient($httpClientMock);
+        $result = $api->checkSchemaCompatibilityForVersion(
+            self::TEST_SUBJECT_NAME,
+            self::TEST_SCHEMA,
+            KafkaSchemaRegistryApiClient::VERSION_LATEST
+        );
         self::assertTrue($result);
     }
 
