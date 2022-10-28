@@ -5,6 +5,7 @@ namespace Jobcloud\Kafka\SchemaRegistryClient\Tests;
 use Jobcloud\Kafka\SchemaRegistryClient\Exception\ImportException;
 use Jobcloud\Kafka\SchemaRegistryClient\Exception\SchemaNotFoundException;
 use Jobcloud\Kafka\SchemaRegistryClient\Exception\SubjectNotFoundException;
+use Jobcloud\Kafka\SchemaRegistryClient\Exception\VersionNotFoundException;
 use Jobcloud\Kafka\SchemaRegistryClient\HttpClient;
 use Jobcloud\Kafka\SchemaRegistryClient\HttpClientInterface;
 use Jobcloud\Kafka\SchemaRegistryClient\KafkaSchemaRegistryApiClient;
@@ -208,7 +209,7 @@ class KafkaSchemaRegistryApiClientTest extends TestCase
         self::assertFalse($result);
     }
 
-    public function testCheckSchemaCompatibilityForVersionNotFound(): void
+    public function testCheckSchemaCompatibilityForSubjectNotFound(): void
     {
         $httpClientMock = $this->getHttpClientMock();
 
@@ -221,6 +222,29 @@ class KafkaSchemaRegistryApiClientTest extends TestCase
                 ['schema' => '[]']
             )
             ->willThrowException(new SubjectNotFoundException());
+
+        $api = new KafkaSchemaRegistryApiClient($httpClientMock);
+        $result = $api->checkSchemaCompatibilityForVersion(
+            self::TEST_SUBJECT_NAME,
+            self::TEST_SCHEMA,
+            self::TEST_VERSION
+        );
+        self::assertTrue($result);
+    }
+
+    public function testCheckSchemaCompatibilityForVersionNotFound(): void
+    {
+        $httpClientMock = $this->getHttpClientMock();
+
+        $httpClientMock
+            ->expects(self::once())
+            ->method('call')
+            ->with(
+                'POST',
+                sprintf('compatibility/subjects/%s/versions/%s', self::TEST_SUBJECT_NAME, self::TEST_VERSION),
+                ['schema' => '[]']
+            )
+            ->willThrowException(new VersionNotFoundException());
 
         $api = new KafkaSchemaRegistryApiClient($httpClientMock);
         $result = $api->checkSchemaCompatibilityForVersion(
