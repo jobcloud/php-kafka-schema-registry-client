@@ -3,6 +3,7 @@
 namespace Jobcloud\Kafka\SchemaRegistryClient;
 
 use Jobcloud\Kafka\SchemaRegistryClient\Exception\SchemaRegistryExceptionInterface;
+use Jobcloud\Kafka\SchemaRegistryClient\Exception\VersionNotFoundException;
 use Psr\Http\Client\ClientExceptionInterface;
 use Jobcloud\Kafka\SchemaRegistryClient\Exception\SchemaNotFoundException;
 use Jobcloud\Kafka\SchemaRegistryClient\Exception\SubjectNotFoundException;
@@ -111,7 +112,7 @@ class KafkaSchemaRegistryApiClient implements KafkaSchemaRegistryApiClientInterf
     /**
      * @throws ClientExceptionInterface
      * @throws SchemaRegistryExceptionInterface
-     * @throws JsonException
+     * @throws JsonException|VersionNotFoundException
      */
     public function checkSchemaCompatibilityForVersion(
         string $subjectName,
@@ -126,7 +127,11 @@ class KafkaSchemaRegistryApiClient implements KafkaSchemaRegistryApiClientInterf
                        sprintf('compatibility/subjects/%s/versions/%s', $subjectName, $version),
                        $this->createRequestBodyFromSchema($schema)
                    );
-        } catch (SubjectNotFoundException $e) {
+        } catch (SubjectNotFoundException|VersionNotFoundException $e) {
+            if ($e instanceof VersionNotFoundException && self::VERSION_LATEST !== $version) {
+                throw $e;
+            }
+
             return true;
         }
 
