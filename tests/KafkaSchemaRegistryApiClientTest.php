@@ -234,6 +234,7 @@ class KafkaSchemaRegistryApiClientTest extends TestCase
 
     public function testCheckSchemaCompatibilityForVersionNotFound(): void
     {
+        self::expectException(VersionNotFoundException::class);
         $httpClientMock = $this->getHttpClientMock();
 
         $httpClientMock
@@ -252,7 +253,6 @@ class KafkaSchemaRegistryApiClientTest extends TestCase
             self::TEST_SCHEMA,
             self::TEST_VERSION
         );
-        self::assertFalse($result);
     }
 
     public function testCheckSchemaCompatibilityForVersionNotFoundLatest(): void

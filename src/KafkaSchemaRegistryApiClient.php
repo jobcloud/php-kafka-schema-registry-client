@@ -112,7 +112,7 @@ class KafkaSchemaRegistryApiClient implements KafkaSchemaRegistryApiClientInterf
     /**
      * @throws ClientExceptionInterface
      * @throws SchemaRegistryExceptionInterface
-     * @throws JsonException
+     * @throws JsonException|VersionNotFoundException
      */
     public function checkSchemaCompatibilityForVersion(
         string $subjectName,
@@ -129,7 +129,7 @@ class KafkaSchemaRegistryApiClient implements KafkaSchemaRegistryApiClientInterf
                    );
         } catch (SubjectNotFoundException|VersionNotFoundException $e) {
             if ($e instanceof VersionNotFoundException && self::VERSION_LATEST !== $version) {
-                return false;
+                throw $e;
             }
 
             return true;
