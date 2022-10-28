@@ -3,6 +3,7 @@
 namespace Jobcloud\Kafka\SchemaRegistryClient;
 
 use Jobcloud\Kafka\SchemaRegistryClient\Exception\SchemaRegistryExceptionInterface;
+use Jobcloud\Kafka\SchemaRegistryClient\Exception\VersionNotFoundException;
 use Psr\Http\Client\ClientExceptionInterface;
 use Jobcloud\Kafka\SchemaRegistryClient\Exception\SchemaNotFoundException;
 use Jobcloud\Kafka\SchemaRegistryClient\Exception\SubjectNotFoundException;
@@ -126,7 +127,7 @@ class KafkaSchemaRegistryApiClient implements KafkaSchemaRegistryApiClientInterf
                        sprintf('compatibility/subjects/%s/versions/%s', $subjectName, $version),
                        $this->createRequestBodyFromSchema($schema)
                    );
-        } catch (SubjectNotFoundException $e) {
+        } catch (SubjectNotFoundException|VersionNotFoundException $e) {
             return true;
         }
 
