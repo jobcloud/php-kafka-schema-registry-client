@@ -39,7 +39,10 @@ class HttpClientTest extends TestCase
         $this->assertSame('', $response->getUri()->getQuery());
     }
 
-    public function testCreateRequestWithBody(): void
+    /**
+     * @dataProvider requestBodyDataProvider
+     **/
+    public function testCreateRequestWithBody(array $body, string $expectedEncodedBody): void
     {
         $httpClient = new HttpClient(
             new Curl(new Psr17Factory()),
@@ -48,15 +51,11 @@ class HttpClientTest extends TestCase
             'http://some-url/'
         );
 
-        $body = ['a' => 'b'];
-        $jsonEncodedBody = json_encode($body);
-
         /** @var RequestInterface $response */
         $response = $this->invokeMethod($httpClient, 'createRequest', ['GET', 'uri', $body]);
         $response->getBody()->rewind();
 
-        $this->assertSame('9', $response->getHeader('Content-Length')[0]);
-        $this->assertSame($jsonEncodedBody, $response->getBody()->read(9));
+        $this->assertSame($expectedEncodedBody, $response->getBody()->getContents());
     }
 
     public function testCreateRequestWithQueryString(): void
@@ -163,5 +162,14 @@ class HttpClientTest extends TestCase
 
         $this->expectException(Exception::class);
         $httpClient->call('GET', 'uri');
+    }
+
+    public function requestBodyDataProvider(): array
+    {
+        return [
+            [['a' => 'b'], '{"a":"b"}'],
+            [['a' => 0.0], '{"a":0.0}'],
+            [['a' => '{"b":0.0}'], '{"a":"{\"b\":0.0}"}'],
+        ];
     }
 }

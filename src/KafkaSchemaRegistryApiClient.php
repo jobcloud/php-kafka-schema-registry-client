@@ -260,6 +260,9 @@ class KafkaSchemaRegistryApiClient implements KafkaSchemaRegistryApiClientInterf
      */
     private function createRequestBodyFromSchema(string $schema): array
     {
-        return ['schema' => json_encode(json_decode($schema, true, 512, JSON_THROW_ON_ERROR), JSON_THROW_ON_ERROR)];
+        return ['schema' => json_encode(
+            json_decode($schema, true, 512, JSON_THROW_ON_ERROR),
+            JSON_THROW_ON_ERROR | JSON_PRESERVE_ZERO_FRACTION
+        )];
     }
 }

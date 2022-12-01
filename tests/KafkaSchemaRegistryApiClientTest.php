@@ -123,18 +123,21 @@ class KafkaSchemaRegistryApiClientTest extends TestCase
         $api->getSchemaById(1);
     }
 
-    public function testRegisterNewSchemaVersion(): void
+    /**
+     * @dataProvider schemaDataProvider
+     **/
+    public function testRegisterNewSchemaVersion(string $testSchema, string $expectedSchema): void
     {
         $httpClientMock = $this->getHttpClientMock();
 
         $httpClientMock
             ->expects(self::once())
             ->method('call')
-            ->with('POST', sprintf('subjects/%s/versions', self::TEST_SUBJECT_NAME), ['schema' => '[]'])
+            ->with('POST', sprintf('subjects/%s/versions', self::TEST_SUBJECT_NAME), ['schema' => $expectedSchema])
             ->willReturn([]);
 
         $api = new KafkaSchemaRegistryApiClient($httpClientMock);
-        $api->registerNewSchemaVersion(self::TEST_SUBJECT_NAME, self::TEST_SCHEMA);
+        $api->registerNewSchemaVersion(self::TEST_SUBJECT_NAME, $testSchema);
     }
 
     public function testCheckSchemaCompatibilityForVersionFalseOnEmptyResponse(): void
@@ -161,7 +164,10 @@ class KafkaSchemaRegistryApiClientTest extends TestCase
         self::assertFalse($result);
     }
 
-    public function testCheckSchemaCompatibilityForVersionTrue(): void
+    /**
+     * @dataProvider schemaDataProvider
+     **/
+    public function testCheckSchemaCompatibilityForVersionTrue(string $testSchema, string $expectedSchema): void
     {
         $httpClientMock = $this->getHttpClientMock();
 
@@ -171,14 +177,14 @@ class KafkaSchemaRegistryApiClientTest extends TestCase
             ->with(
                 'POST',
                 sprintf('compatibility/subjects/%s/versions/%s', self::TEST_SUBJECT_NAME, self::TEST_VERSION),
-                ['schema' => '[]']
+                ['schema' => $expectedSchema]
             )
             ->willReturn(['is_compatible' => true]);
 
         $api = new KafkaSchemaRegistryApiClient($httpClientMock);
         $result = $api->checkSchemaCompatibilityForVersion(
             self::TEST_SUBJECT_NAME,
-            self::TEST_SCHEMA,
+            $testSchema,
             self::TEST_VERSION
         );
 
@@ -378,7 +384,10 @@ class KafkaSchemaRegistryApiClientTest extends TestCase
         self::assertTrue($result);
     }
 
-    public function testGetVersionForSchema(): void
+    /**
+     * @dataProvider schemaDataProvider
+     **/
+    public function testGetVersionForSchema(string $testSchema, string $expectedSchema): void
     {
         $httpClientMock = $this->getHttpClientMock();
 
@@ -388,12 +397,12 @@ class KafkaSchemaRegistryApiClientTest extends TestCase
             ->with(
                 'POST',
                 sprintf('subjects/%s', self::TEST_SUBJECT_NAME),
-                ['schema' => '[]']
+                ['schema' => $expectedSchema]
             )
             ->willReturn(['version' => self::TEST_VERSION]);
 
         $api = new KafkaSchemaRegistryApiClient($httpClientMock);
-        $result = $api->getVersionForSchema(self::TEST_SUBJECT_NAME, self::TEST_SCHEMA);
+        $result = $api->getVersionForSchema(self::TEST_SUBJECT_NAME, $testSchema);
 
         self::assertSame((string) self::TEST_VERSION, $result);
     }
@@ -559,5 +568,14 @@ class KafkaSchemaRegistryApiClientTest extends TestCase
             ->disableOriginalConstructor()
             ->onlyMethods(['call'])
             ->getMock();
+    }
+
+    public function schemaDataProvider(): array
+    {
+        return [
+            'empty schema' => ['{}', '[]'],
+            'schema' => ['{"id": "string"}', '{"id":"string"}'],
+            'preserves zero fraction' => ['{"double":0.0}', '{"double":0.0}'],
+        ];
     }
 }
