@@ -76,7 +76,7 @@ class HttpClient implements HttpClientInterface
         $request = $this->requestFactory->createRequest($method, $url);
 
         if ([] !== $body) {
-            $jsonData = json_encode($body, JSON_THROW_ON_ERROR);
+            $jsonData = json_encode($body, JSON_THROW_ON_ERROR | JSON_PRESERVE_ZERO_FRACTION);
 
             $dataLength = strlen($jsonData);
 
