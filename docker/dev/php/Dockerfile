@@ -26,7 +26,7 @@ RUN pecl channel-update pecl.php.net && \
     php-ext-enable pcov
 
 # COMPOSER: install binary
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer --version=2.5.1
+COPY --from=composer:2.6 /usr/bin/composer /usr/bin/composer
 
 USER www-data
 
