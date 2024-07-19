@@ -47,6 +47,8 @@ class ErrorHandler implements ErrorHandlerInterface
      */
     public function handleError(ResponseInterface $response, string $uri = null, RequestInterface $request = null): void
     {
+        var_dump($response);
+        var_dump($response->getBody());
         $responseContent = json_decode($response->getBody(), true, 512, JSON_THROW_ON_ERROR);
 
         if (false === isset($responseContent['error_code'])) {
