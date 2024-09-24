@@ -11,7 +11,7 @@ composer require jobcloud/php-kafka-schema-registry-client
 ```
 
 ## Requirements
-- php: ^7.4|^8.0
+- php: ^8.0
 
 ## Supported API calls
 Currently it supports:
