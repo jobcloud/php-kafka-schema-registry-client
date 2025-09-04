@@ -45,7 +45,11 @@ class ErrorHandler implements ErrorHandlerInterface
      * @throws ClientExceptionInterface
      * @throws SchemaRegistryExceptionInterface
      */
-    public function handleError(ResponseInterface $response, ?string $uri = null, ?RequestInterface $request = null): void
+    public function handleError(
+        ResponseInterface $response,
+        ?string $uri = null,
+        ?RequestInterface $request = null
+    ): void
     {
         $responseContent = json_decode($response->getBody(), true, 512, JSON_THROW_ON_ERROR);
 
