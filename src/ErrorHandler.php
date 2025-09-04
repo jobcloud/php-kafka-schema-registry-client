@@ -4,8 +4,8 @@ namespace Jobcloud\Kafka\SchemaRegistryClient;
 
 use Buzz\Exception\ClientException;
 use Jobcloud\Kafka\SchemaRegistryClient\Exception\BackendDatastoreException;
-use Jobcloud\Kafka\SchemaRegistryClient\Exception\ImportException;
 use Jobcloud\Kafka\SchemaRegistryClient\Exception\CompatibilityException;
+use Jobcloud\Kafka\SchemaRegistryClient\Exception\ImportException;
 use Jobcloud\Kafka\SchemaRegistryClient\Exception\IncompatibileAvroSchemaException;
 use Jobcloud\Kafka\SchemaRegistryClient\Exception\InvalidAvroSchemaException;
 use Jobcloud\Kafka\SchemaRegistryClient\Exception\InvalidVersionException;
@@ -18,10 +18,10 @@ use Jobcloud\Kafka\SchemaRegistryClient\Exception\SubjectNotFoundException;
 use Jobcloud\Kafka\SchemaRegistryClient\Exception\UnauthorizedException;
 use Jobcloud\Kafka\SchemaRegistryClient\Exception\UnprocessableEntityException;
 use Jobcloud\Kafka\SchemaRegistryClient\Exception\VersionNotFoundException;
+use JsonException;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-use JsonException;
 
 class ErrorHandler implements ErrorHandlerInterface
 {
@@ -49,8 +49,7 @@ class ErrorHandler implements ErrorHandlerInterface
         ResponseInterface $response,
         ?string $uri = null,
         ?RequestInterface $request = null
-    ): void
-    {
+    ): void {
         $responseContent = json_decode($response->getBody(), true, 512, JSON_THROW_ON_ERROR);
 
         if (false === isset($responseContent['error_code'])) {
