@@ -17,7 +17,7 @@ interface ErrorHandlerInterface
      */
     public function handleError(
         ResponseInterface $response,
-        string $uri = null,
-        RequestInterface $request = null
+        ?string $uri = null,
+        ?RequestInterface $request = null
     ): void;
 }
