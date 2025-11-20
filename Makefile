@@ -1,4 +1,4 @@
-.PHONY: clean code-style coverage help test test-unit test-integration static-analysis infection-testing install-dependencies update-dependencies docker-test docker-coverage docker-static-analysis
+.PHONY: clean code-style coverage help test test-unit test-integration static-analysis infection-testing install-dependencies update-dependencies
 .DEFAULT_GOAL := test
 
 PHPUNIT =  ./vendor/bin/phpunit -c ./phpunit.xml
@@ -26,9 +26,6 @@ test:
 
 test-unit:
 	${PHPUNIT} --testsuite=Unit
-
-test-integration:
-	${PHPUNIT} --testsuite=Integration
 
 static-analysis:
 	mkdir -p build/logs/phpstan
