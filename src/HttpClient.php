@@ -12,12 +12,12 @@ use JsonException;
 class HttpClient implements HttpClientInterface
 {
     public function __construct(
-        private ClientInterface $client,
-        private RequestFactoryInterface $requestFactory,
-        private ErrorHandlerInterface $errorHandler,
-        private string $baseUrl,
-        private ?string $username = null,
-        private ?string $password = null
+        private readonly ClientInterface $client,
+        private readonly RequestFactoryInterface $requestFactory,
+        private readonly ErrorHandlerInterface $errorHandler,
+        private readonly string $baseUrl,
+        private readonly ?string $username = null,
+        private readonly ?string $password = null
     ) {
     }
 
