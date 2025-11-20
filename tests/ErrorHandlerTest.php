@@ -18,25 +18,22 @@ use Jobcloud\Kafka\SchemaRegistryClient\Exception\SubjectNotFoundException;
 use Jobcloud\Kafka\SchemaRegistryClient\Exception\UnauthorizedException;
 use Jobcloud\Kafka\SchemaRegistryClient\Exception\UnprocessableEntityException;
 use Jobcloud\Kafka\SchemaRegistryClient\Exception\VersionNotFoundException;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
 
-/**
- * @covers \Jobcloud\Kafka\SchemaRegistryClient\ErrorHandler
- */
+#[CoversClass(ErrorHandler::class)]
 class ErrorHandlerTest extends TestCase
 {
-    private const TEST_MESSAGE = 'Test Message';
+    private const string TEST_MESSAGE = 'Test Message';
 
-    private function makeResponseInterfaceMock(?string $code = null, ?string $message = null): MockObject
+    private function makeResponseInterfaceMock(?int $code = null, ?string $message = null): MockObject
     {
-        $streamMock = $this
-            ->getMockBuilder(StreamInterface::class)
-            ->onlyMethods(['__toString'])
-            ->getMockForAbstractClass();
+        $streamMock = $this->createMock(StreamInterface::class);
 
         $streamMock
             ->method('__toString')
@@ -45,17 +42,14 @@ class ErrorHandlerTest extends TestCase
                 'message' => $message,
             ]));
 
-        $responseMock = $this
-            ->getMockBuilder(ResponseInterface::class)
-            ->onlyMethods(['getBody'])
-            ->getMockForAbstractClass();
+        $responseMock = $this->createMock(ResponseInterface::class);
 
         $responseMock->method('getBody')->willReturn($streamMock);
 
         return $responseMock;
     }
 
-    public function exceptionTestDataProvider(): array
+    public static function exceptionTestDataProvider(): array
     {
         return [
             [50001, BackendDatastoreException::class],
@@ -82,8 +76,6 @@ class ErrorHandlerTest extends TestCase
     }
 
     /**
-     * @dataProvider exceptionTestDataProvider
-     *
      * @throws BackendDatastoreException
      * @throws ClientException
      * @throws CompatibilityException
@@ -100,6 +92,7 @@ class ErrorHandlerTest extends TestCase
      * @throws UnprocessableEntityException
      * @throws VersionNotFoundException
      */
+    #[DataProvider('exceptionTestDataProvider')]
     public function testExceptionThrow(?int $code, string $expectedException): void
     {
         /** @var ResponseInterface|MockObject $responseMock */
@@ -130,8 +123,8 @@ class ErrorHandlerTest extends TestCase
     {
         /** @var ResponseInterface|MockObject $responseMock */
         $responseMock = $this->makeResponseInterfaceMock(50001, self::TEST_MESSAGE);
-        $requestMock = $this->getMockForAbstractClass(RequestInterface::class);
-        $streamMock = $this->getMockForAbstractClass(StreamInterface::class);
+        $requestMock = $this->createMock(RequestInterface::class);
+        $streamMock = $this->createMock(StreamInterface::class);
         $streamMock->expects(self::once())->method('getContents')->willReturn('test body');
         $requestMock->expects(self::once())->method('getBody')->willReturn($streamMock);
 

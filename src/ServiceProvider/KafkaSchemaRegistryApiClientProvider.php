@@ -34,13 +34,13 @@ class KafkaSchemaRegistryApiClientProvider implements ServiceProviderInterface
     {
         $this->checkRequiredOffsets($container);
 
-        if (false === isset($container[self::REQUEST_FACTORY]) && class_exists('Nyholm\Psr7\Factory\Psr17Factory')) {
+        if (false === isset($container[self::REQUEST_FACTORY]) && class_exists(Psr17Factory::class)) {
             $container[self::REQUEST_FACTORY] = static function (): RequestFactoryInterface {
                 return new Psr17Factory();
             };
         }
 
-        if (false === isset($container[self::CLIENT]) && class_exists('Buzz\Client\Curl')) {
+        if (false === isset($container[self::CLIENT]) && class_exists(Curl::class)) {
             $container[self::CLIENT] = static function (Container $container): ClientInterface {
                 return new Curl($container[self::REQUEST_FACTORY]);
             };

@@ -1,12 +1,12 @@
-.PHONY: clean code-style coverage help test test-unit test-integration static-analysis infection-testing install-dependencies update-dependencies
+.PHONY: clean code-style coverage help test test-unit test-integration static-analysis infection-testing install-dependencies update-dependencies docker-test docker-coverage docker-static-analysis
 .DEFAULT_GOAL := test
 
 PHPUNIT =  ./vendor/bin/phpunit -c ./phpunit.xml
 PHPSTAN  = ./vendor/bin/phpstan --no-progress
-PHPCS = ./vendor/bin/phpcs --extensions=php -v
+PHPCS = ./vendor/bin/phpcs --extensions=php
 PHPCBF = ./vendor/bin/phpcbf
 INFECTION = ./vendor/bin/infection
-COVCHK = ./vendor/bin/coverage-check  
+COVCHK = ./vendor/bin/coverage-check
 
 clean:
 	rm -rf ./build ./vendor
@@ -52,7 +52,7 @@ help:
 	#
 	# Targets:
 	#   clean               Cleans the coverage and the vendor directory
-	#   code-style          Check codestyle using phpcs
+	#   code-style          Check code style using phpcs
 	#   coverage            Generate code coverage (html, clover)
 	#   help                You're looking at it!
 	#   test (default)      Run all the tests with phpunit
@@ -60,5 +60,5 @@ help:
 	#   test-integration    Run all the tests with phpunit
 	#   static-analysis     Run static analysis using phpstan
 	#   infection-testing   Run infection/mutation testing
-	#   install-dependencies Run composerupdate
+	#   install-dependencies Run composer install
 	#   update-dependencies  Run composer update

@@ -6,5 +6,5 @@ vendor/
 composer.lock
 
 # Builds & caches
-/build/
-.phpunit.result.cache
+build/
+.phpunit.cache/

@@ -15,9 +15,9 @@ trait ReflectionAccessTrait
      * @param mixed $newProperty New property value
      * @throws ReflectionException
      */
-    final public function setProperty(object $object, string $propertyName, $newProperty): void
+    final public function setProperty(object $object, string $propertyName, mixed $newProperty): void
     {
-        $reflection = new ReflectionClass(get_class($object));
+        $reflection = new ReflectionClass($object::class);
         $property = $reflection->getProperty($propertyName);
         $property->setAccessible(true);
 
@@ -29,12 +29,11 @@ trait ReflectionAccessTrait
      *
      * @param object &$object Instantiated object that we will run method on.
      * @param string $propertyName Property which value will be returned
-     * @return mixed
      * @throws ReflectionException
      */
-    final public function getPropertyValue(object $object, string $propertyName)
+    final public function getPropertyValue(object $object, string $propertyName): mixed
     {
-        $reflection = new ReflectionClass(get_class($object));
+        $reflection = new ReflectionClass($object::class);
         $property = $reflection->getProperty($propertyName);
         $property->setAccessible(true);
 
@@ -48,12 +47,11 @@ trait ReflectionAccessTrait
      * @param string $methodName Method name to call
      * @param array $parameters Array of parameters to pass into method.
      *
-     * @return mixed
      * @throws ReflectionException
      */
-    final public function invokeMethod(object $object, string $methodName, array $parameters = array())
+    final public function invokeMethod(object $object, string $methodName, array $parameters = []): mixed
     {
-        $reflection = new ReflectionClass(get_class($object));
+        $reflection = new ReflectionClass($object::class);
         $method = $reflection->getMethod($methodName);
         $method->setAccessible(true);
 

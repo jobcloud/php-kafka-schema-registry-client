@@ -2,21 +2,22 @@
 
 namespace Jobcloud\Kafka\SchemaRegistryClient\Tests;
 
+use Buzz\Client\Curl;
 use Jobcloud\Kafka\SchemaRegistryClient\ErrorHandlerInterface;
 use Jobcloud\Kafka\SchemaRegistryClient\HttpClientInterface;
 use Jobcloud\Kafka\SchemaRegistryClient\KafkaSchemaRegistryApiClientInterface;
 use Jobcloud\Kafka\SchemaRegistryClient\ServiceProvider\KafkaSchemaRegistryApiClientProvider;
 use LogicException;
+use Nyholm\Psr7\Factory\Psr17Factory;
 use phpmock\phpunit\MockObjectProxy;
 use phpmock\phpunit\PHPMock;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Pimple\Container;
 use Psr\Http\Message\RequestFactoryInterface;
 
-/**
- * @covers \Jobcloud\Kafka\SchemaRegistryClient\ServiceProvider\KafkaSchemaRegistryApiClientProvider
- */
+#[CoversClass(KafkaSchemaRegistryApiClientProvider::class)]
 class KafkaSchemaRegistryApiClientProviderTest extends TestCase
 {
     use PHPMock;
@@ -39,10 +40,12 @@ class KafkaSchemaRegistryApiClientProviderTest extends TestCase
 
     public function testDefaultContainersAndServicesSetWithMinimalConfig(): void
     {
-        $this->classExistsMock->expects(self::exactly(2))->withConsecutive(
-            ['Nyholm\Psr7\Factory\Psr17Factory'],
-            ['Buzz\Client\Curl']
-        )->willReturn(true);
+        $this->classExistsMock->expects(self::exactly(2))
+            ->with(self::logicalOr(
+                self::equalTo(Psr17Factory::class),
+                self::equalTo(Curl::class)
+            ))
+            ->willReturn(true);
 
         $container = new Container();
 
@@ -88,10 +91,10 @@ class KafkaSchemaRegistryApiClientProviderTest extends TestCase
     {
         $this->classExistsMock
             ->expects(self::exactly(2))
-            ->withConsecutive(
-                ['Nyholm\Psr7\Factory\Psr17Factory'],
-                ['Buzz\Client\Curl']
-            )
+            ->with(self::logicalOr(
+                self::equalTo(Psr17Factory::class),
+                self::equalTo(Curl::class)
+            ))
             ->willReturn(true);
 
         $container = new Container();
@@ -128,10 +131,12 @@ class KafkaSchemaRegistryApiClientProviderTest extends TestCase
 
     public function testUserNameAndPasswordFromSettingsArePassedToHttpClient(): void
     {
-        $this->classExistsMock->expects(self::exactly(2))->withConsecutive(
-            ['Nyholm\Psr7\Factory\Psr17Factory'],
-            ['Buzz\Client\Curl']
-        )->willReturn(true);
+        $this->classExistsMock->expects(self::exactly(2))
+            ->with(self::logicalOr(
+                self::equalTo(Psr17Factory::class),
+                self::equalTo(Curl::class)
+            ))
+            ->willReturn(true);
 
         $container = new Container();
 

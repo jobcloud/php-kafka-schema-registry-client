@@ -7,14 +7,14 @@ use Exception;
 use Jobcloud\Kafka\SchemaRegistryClient\ErrorHandler;
 use Jobcloud\Kafka\SchemaRegistryClient\HttpClient;
 use Nyholm\Psr7\Factory\Psr17Factory;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
 
-/**
- * @covers \Jobcloud\Kafka\SchemaRegistryClient\HttpClient
- */
+#[CoversClass(HttpClient::class)]
 class HttpClientTest extends TestCase
 {
     use ReflectionAccessTrait;
@@ -39,9 +39,7 @@ class HttpClientTest extends TestCase
         $this->assertSame('', $response->getUri()->getQuery());
     }
 
-    /**
-     * @dataProvider requestBodyDataProvider
-     **/
+    #[DataProvider('requestBodyDataProvider')]
     public function testCreateRequestWithBody(array $body, string $expectedEncodedBody): void
     {
         $httpClient = new HttpClient(
@@ -109,18 +107,11 @@ class HttpClientTest extends TestCase
 
     public function testCallMethod(): void
     {
-        $clientMock = $this
-            ->getMockBuilder(Curl::class)
-            ->disableOriginalConstructor()
-            ->onlyMethods(['sendRequest'])
-            ->getMock();
+        $clientMock = $this->createMock(Curl::class);
 
-        $responseMock = $this
-            ->getMockBuilder(ResponseInterface::class)
-            ->onlyMethods(['getBody'])
-            ->getMockForAbstractClass();
+        $responseMock = $this->createMock(ResponseInterface::class);
 
-        $stream = $this->getMockBuilder(StreamInterface::class)->onlyMethods(['__toString'])->getMockForAbstractClass();
+        $stream = $this->createMock(StreamInterface::class);
         $stream->method('__toString')->willReturn('[1,2,3]');
 
         $responseMock->method('getBody')->willReturn($stream);
@@ -140,19 +131,11 @@ class HttpClientTest extends TestCase
 
     public function testCallMethodWithThrownException(): void
     {
-        $clientMock = $this
-            ->getMockBuilder(Curl::class)
-            ->disableOriginalConstructor()
-            ->onlyMethods(['sendRequest'])
-            ->getMock();
+        $clientMock = $this->createMock(Curl::class);
 
+        $responseMock = $this->createMock(ResponseInterface::class);
 
-        $responseMock = $this
-            ->getMockBuilder(ResponseInterface::class)
-            ->onlyMethods(['getBody'])
-            ->getMockForAbstractClass();
-
-        $stream = $this->getMockBuilder(StreamInterface::class)->onlyMethods(['__toString'])->getMockForAbstractClass();
+        $stream = $this->createMock(StreamInterface::class);
 
         $stream->method('__toString')->willReturn('{"error_code": 404}');
         $responseMock->method('getBody')->willReturn($stream);
@@ -164,7 +147,7 @@ class HttpClientTest extends TestCase
         $httpClient->call('GET', 'uri');
     }
 
-    public function requestBodyDataProvider(): array
+    public static function requestBodyDataProvider(): array
     {
         return [
             [['a' => 'b'], '{"a":"b"}'],

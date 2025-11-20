@@ -11,14 +11,8 @@ use JsonException;
 
 class KafkaSchemaRegistryApiClient implements KafkaSchemaRegistryApiClientInterface
 {
-    /**
-     * @var HttpClientInterface
-     */
-    private $httpClient;
-
-    public function __construct(HttpClientInterface $httpClient)
+    public function __construct(private readonly HttpClientInterface $httpClient)
     {
-        $this->httpClient = $httpClient;
     }
 
     /**
@@ -148,7 +142,7 @@ class KafkaSchemaRegistryApiClient implements KafkaSchemaRegistryApiClientInterf
         try {
             $results = $this->httpClient->call('GET', sprintf('config/%s', $subjectName));
             return $results['compatibilityLevel'];
-        } catch (SubjectNotFoundException $e) {
+        } catch (SubjectNotFoundException) {
             return $this->getDefaultCompatibilityLevel();
         }
     }
@@ -203,9 +197,7 @@ class KafkaSchemaRegistryApiClient implements KafkaSchemaRegistryApiClientInterf
                     );
 
             return $results['version'] ?? null;
-        } catch (SubjectNotFoundException $e) {
-            return null;
-        } catch (SchemaNotFoundException $e) {
+        } catch (SubjectNotFoundException | SchemaNotFoundException) {
             return null;
         }
     }
