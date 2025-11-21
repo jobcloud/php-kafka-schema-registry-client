@@ -39,7 +39,8 @@ class KafkaSchemaRegistryApiClientProvider implements ServiceProviderInterface
         }
 
         if (false === isset($container[self::CLIENT]) && class_exists(Curl::class)) {
-            $container[self::CLIENT] = (static fn(Container $container): ClientInterface => new Curl($container[self::REQUEST_FACTORY]));
+            $container[self::CLIENT] = (static fn(Container $container): ClientInterface =>
+            new Curl($container[self::REQUEST_FACTORY]));
         }
 
         if (false === isset($container[self::ERROR_HANDLER])) {
