@@ -11,13 +11,14 @@ use LogicException;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use phpmock\phpunit\MockObjectProxy;
 use phpmock\phpunit\PHPMock;
-use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Pimple\Container;
 use Psr\Http\Message\RequestFactoryInterface;
 
-#[CoversClass(KafkaSchemaRegistryApiClientProvider::class)]
+/**
+ * @covers \Jobcloud\Kafka\SchemaRegistryClient\ServiceProvider\KafkaSchemaRegistryApiClientProvider
+ */
 class KafkaSchemaRegistryApiClientProviderTest extends TestCase
 {
     use PHPMock;
@@ -40,12 +41,10 @@ class KafkaSchemaRegistryApiClientProviderTest extends TestCase
 
     public function testDefaultContainersAndServicesSetWithMinimalConfig(): void
     {
-        $this->classExistsMock->expects(self::exactly(2))
-            ->with(self::logicalOr(
-                self::equalTo(Psr17Factory::class),
-                self::equalTo(Curl::class)
-            ))
-            ->willReturn(true);
+        $this->classExistsMock->expects(self::exactly(2))->withConsecutive(
+            [Psr17Factory::class],
+            [Curl::class]
+        )->willReturn(true);
 
         $container = new Container();
 
@@ -91,10 +90,10 @@ class KafkaSchemaRegistryApiClientProviderTest extends TestCase
     {
         $this->classExistsMock
             ->expects(self::exactly(2))
-            ->with(self::logicalOr(
-                self::equalTo(Psr17Factory::class),
-                self::equalTo(Curl::class)
-            ))
+            ->withConsecutive(
+                [Psr17Factory::class],
+                [Curl::class]
+            )
             ->willReturn(true);
 
         $container = new Container();
@@ -131,12 +130,10 @@ class KafkaSchemaRegistryApiClientProviderTest extends TestCase
 
     public function testUserNameAndPasswordFromSettingsArePassedToHttpClient(): void
     {
-        $this->classExistsMock->expects(self::exactly(2))
-            ->with(self::logicalOr(
-                self::equalTo(Psr17Factory::class),
-                self::equalTo(Curl::class)
-            ))
-            ->willReturn(true);
+        $this->classExistsMock->expects(self::exactly(2))->withConsecutive(
+            [Psr17Factory::class],
+            [Curl::class]
+        )->willReturn(true);
 
         $container = new Container();
 
