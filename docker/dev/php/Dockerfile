@@ -15,7 +15,7 @@ COPY files/php /phpIni
 RUN apk --no-cache upgrade --force-missing-repositories && \
      apk --no-cache add bash git sudo autoconf gcc g++ make make shadow
 
-# PHP: Install php extensions
+# PIE: Install PECL extensions
 RUN pie install pecl/pcov
 
 # Set host user id if given, to avoid permission conflicts in dev

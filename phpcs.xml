@@ -4,16 +4,14 @@
          xsi:noNamespaceSchemaLocation="https://schema.phpcodesniffer.com/4.0/phpcs.xsd">
     <file>src</file>
     <file>tests</file>
+    <rule ref="PSR12"/>
 
     <arg name="encoding" value="UTF-8"/>
     <arg name="basepath" value="."/>
     <arg name="extensions" value="php"/>
     <arg name="colors"/>
     <arg value="p"/>
-
     <arg name="report-gitblame"/>
     <arg name="report-full"/>
     <arg name="report-junit" value="./build/logs/phpcs/junit.xml"/>
-
-    <rule ref="PSR12"/>
 </ruleset>
