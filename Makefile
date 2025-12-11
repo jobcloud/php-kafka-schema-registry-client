@@ -1,4 +1,4 @@
-.PHONY: clean code-style coverage help test test-unit test-integration static-analysis infection-testing install-dependencies update-dependencies
+.PHONY: clean code-style coverage help test test-unit tatic-analysis infection-testing install-dependencies update-dependencies
 .DEFAULT_GOAL := test
 
 PHPUNIT =  ./vendor/bin/phpunit -c ./phpunit.xml
@@ -54,7 +54,6 @@ help:
 	#   help                You're looking at it!
 	#   test (default)      Run all the tests with phpunit
 	#   test-unit           Run all the tests with phpunit
-	#   test-integration    Run all the tests with phpunit
 	#   static-analysis     Run static analysis using phpstan
 	#   infection-testing   Run infection/mutation testing
 	#   install-dependencies Run composer install
