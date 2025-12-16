@@ -9,6 +9,7 @@ COPY --from=composer:2.9 /usr/bin/composer /usr/bin/composer
 ARG USER_ID
 
 COPY files/bin /usr/local/bin/
+COPY files/php /phpIni
 
 # SYS: Install required packages
 RUN apk --no-cache upgrade --force-missing-repositories && \
