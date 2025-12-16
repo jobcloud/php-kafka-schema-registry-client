@@ -12,7 +12,7 @@ COPY files/bin /usr/local/bin/
 COPY files/php /phpIni
 
 # SYS: Install required packages
-RUN apk --no-cache upgrade --force-missing-repositories && \
+RUN apk --no-cache upgrade && \
      apk --no-cache add bash git sudo autoconf gcc g++ make make shadow
 
 # PIE: Install PECL extensions
