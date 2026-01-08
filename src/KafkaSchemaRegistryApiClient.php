@@ -27,9 +27,15 @@ class KafkaSchemaRegistryApiClient implements KafkaSchemaRegistryApiClientInterf
      * @throws SchemaRegistryExceptionInterface
      * @throws JsonException
      */
-    public function getSubjects(): array
+    public function getSubjects(bool $deleted = false): array
     {
-        return $this->httpClient->call('GET', 'subjects') ?? [];
+        return $this->httpClient->call(
+            method: 'GET',
+            uri: 'subjects',
+            queryParams: [
+                'deleted' => $deleted
+            ],
+        ) ?? [];
     }
 
     /**
@@ -40,7 +46,10 @@ class KafkaSchemaRegistryApiClient implements KafkaSchemaRegistryApiClientInterf
      */
     public function getAllSubjectVersions(string $subjectName): array
     {
-        return $this->httpClient->call('GET', sprintf('subjects/%s/versions', $subjectName)) ?? [];
+        return $this->httpClient->call(
+            method: 'GET',
+            uri: sprintf('subjects/%s/versions', $subjectName),
+        ) ?? [];
     }
 
     /**
@@ -51,9 +60,10 @@ class KafkaSchemaRegistryApiClient implements KafkaSchemaRegistryApiClientInterf
      */
     public function getSchemaByVersion(string $subjectName, string $version = self::VERSION_LATEST): array
     {
-        return $this
-                ->httpClient
-                ->call('GET', sprintf('subjects/%s/versions/%s', $subjectName, $version)) ?? [];
+        return $this->httpClient->call(
+            method: 'GET',
+            uri: sprintf('subjects/%s/versions/%s', $subjectName, $version)
+        ) ?? [];
     }
 
     /**
@@ -64,12 +74,10 @@ class KafkaSchemaRegistryApiClient implements KafkaSchemaRegistryApiClientInterf
      */
     public function getSchemaDefinitionByVersion(string $subjectName, string $version = self::VERSION_LATEST)
     {
-        return $this
-            ->httpClient
-            ->call(
-                'GET',
-                sprintf('subjects/%s/versions/%s/schema', $subjectName, $version)
-            );
+        return $this->httpClient->call(
+            method: 'GET',
+            uri: sprintf('subjects/%s/versions/%s/schema', $subjectName, $version),
+        );
     }
 
     /**
@@ -79,7 +87,10 @@ class KafkaSchemaRegistryApiClient implements KafkaSchemaRegistryApiClientInterf
      */
     public function deleteSchemaVersion(string $subjectName, string $version = self::VERSION_LATEST): ?int
     {
-        return $this->httpClient->call('DELETE', sprintf('subjects/%s/versions/%s', $subjectName, $version));
+        return $this->httpClient->call(
+            method: 'DELETE',
+            uri: sprintf('subjects/%s/versions/%s', $subjectName, $version),
+        );
     }
 
     /**
@@ -89,7 +100,10 @@ class KafkaSchemaRegistryApiClient implements KafkaSchemaRegistryApiClientInterf
      */
     public function getSchemaById(int $id): string
     {
-        return $this->httpClient->call('GET', sprintf('schemas/ids/%s', $id))['schema'];
+        return $this->httpClient->call(
+            method: 'GET',
+            uri:sprintf('schemas/ids/%s', $id)
+        )['schema'];
     }
 
     /**
@@ -100,13 +114,11 @@ class KafkaSchemaRegistryApiClient implements KafkaSchemaRegistryApiClientInterf
      */
     public function registerNewSchemaVersion(string $subjectName, string $schema): array
     {
-        return $this
-                ->httpClient
-                ->call(
-                    'POST',
-                    sprintf('subjects/%s/versions', $subjectName),
-                    $this->createRequestBodyFromSchema($schema)
-                ) ?? [];
+        return $this->httpClient->call(
+            method: 'POST',
+            uri: sprintf('subjects/%s/versions', $subjectName),
+            body: $this->createRequestBodyFromSchema($schema)
+        ) ?? [];
     }
 
     /**
@@ -120,13 +132,11 @@ class KafkaSchemaRegistryApiClient implements KafkaSchemaRegistryApiClientInterf
         string $version = self::VERSION_LATEST
     ): bool {
         try {
-            $results = $this
-                   ->httpClient
-                   ->call(
-                       'POST',
-                       sprintf('compatibility/subjects/%s/versions/%s', $subjectName, $version),
-                       $this->createRequestBodyFromSchema($schema)
-                   );
+            $results = $this->httpClient->call(
+                method: 'POST',
+                uri: sprintf('compatibility/subjects/%s/versions/%s', $subjectName, $version),
+                body: $this->createRequestBodyFromSchema($schema)
+            );
         } catch (SubjectNotFoundException | VersionNotFoundException $e) {
             if ($e instanceof VersionNotFoundException && self::VERSION_LATEST !== $version) {
                 throw $e;
@@ -146,7 +156,11 @@ class KafkaSchemaRegistryApiClient implements KafkaSchemaRegistryApiClientInterf
     public function getSubjectCompatibilityLevel(string $subjectName): ?string
     {
         try {
-            $results = $this->httpClient->call('GET', sprintf('config/%s', $subjectName));
+            $results = $this->httpClient->call(
+                method: 'GET',
+                uri: sprintf('config/%s', $subjectName)
+            );
+
             return $results['compatibilityLevel'];
         } catch (SubjectNotFoundException $e) {
             return $this->getDefaultCompatibilityLevel();
@@ -160,7 +174,14 @@ class KafkaSchemaRegistryApiClient implements KafkaSchemaRegistryApiClientInterf
      */
     public function setSubjectCompatibilityLevel(string $subjectName, string $level = self::LEVEL_FULL): bool
     {
-        $this->httpClient->call('PUT', sprintf('config/%s', $subjectName), ['compatibility' => $level]);
+        $this->httpClient->call(
+            method: 'PUT',
+            uri: sprintf('config/%s', $subjectName),
+            body: [
+                'compatibility' => $level,
+            ],
+        );
+
         return true;
     }
 
@@ -171,7 +192,11 @@ class KafkaSchemaRegistryApiClient implements KafkaSchemaRegistryApiClientInterf
      */
     public function getDefaultCompatibilityLevel(): string
     {
-        $results = $this->httpClient->call('GET', 'config');
+        $results = $this->httpClient->call(
+            method: 'GET',
+            uri: 'config',
+        );
+
         return $results['compatibilityLevel'];
     }
 
@@ -182,7 +207,14 @@ class KafkaSchemaRegistryApiClient implements KafkaSchemaRegistryApiClientInterf
      */
     public function setDefaultCompatibilityLevel(string $level = self::LEVEL_FULL): bool
     {
-        $this->httpClient->call('PUT', 'config', ['compatibility' => $level]);
+        $this->httpClient->call(
+            method: 'PUT',
+            uri: 'config',
+            body: [
+                'compatibility' => $level,
+            ],
+        );
+
         return true;
     }
 
@@ -194,13 +226,11 @@ class KafkaSchemaRegistryApiClient implements KafkaSchemaRegistryApiClientInterf
     public function getVersionForSchema(string $subjectName, string $schema): ?string
     {
         try {
-            $results = $this
-                    ->httpClient
-                    ->call(
-                        'POST',
-                        sprintf('subjects/%s', $subjectName),
-                        $this->createRequestBodyFromSchema($schema)
-                    );
+            $results = $this->httpClient->call(
+                method: 'POST',
+                uri: sprintf('subjects/%s', $subjectName),
+                body: $this->createRequestBodyFromSchema($schema)
+            );
 
             return $results['version'] ?? null;
         } catch (SubjectNotFoundException $e) {
@@ -228,7 +258,10 @@ class KafkaSchemaRegistryApiClient implements KafkaSchemaRegistryApiClientInterf
      */
     public function deleteSubject(string $subjectName): array
     {
-        return $this->httpClient->call('DELETE', sprintf('subjects/%s', $subjectName)) ?? [];
+        return $this->httpClient->call(
+            method: 'DELETE',
+            uri: sprintf('subjects/%s', $subjectName)
+        ) ?? [];
     }
 
     /**
@@ -240,6 +273,7 @@ class KafkaSchemaRegistryApiClient implements KafkaSchemaRegistryApiClientInterf
     {
         $schemaVersions = $this->getAllSubjectVersions($subjectName);
         $lastKey = array_key_last($schemaVersions);
+
         return $schemaVersions[$lastKey];
     }
 
@@ -250,7 +284,14 @@ class KafkaSchemaRegistryApiClient implements KafkaSchemaRegistryApiClientInterf
      */
     public function setImportMode(string $mode): bool
     {
-        $result = $this->httpClient->call('PUT', 'mode/', ['mode' => $mode]);
+        $result = $this->httpClient->call(
+            method: 'PUT',
+            uri: 'mode/',
+            body: [
+                'mode' => $mode,
+            ],
+        );
+
         return $result === ['mode' => $mode];
     }
 
@@ -260,9 +301,16 @@ class KafkaSchemaRegistryApiClient implements KafkaSchemaRegistryApiClientInterf
      */
     private function createRequestBodyFromSchema(string $schema): array
     {
-        return ['schema' => json_encode(
-            json_decode($schema, true, 512, JSON_THROW_ON_ERROR),
-            JSON_THROW_ON_ERROR | JSON_PRESERVE_ZERO_FRACTION
-        )];
+        return [
+            'schema' => json_encode(
+                json_decode(
+                    $schema,
+                    true,
+                    512,
+                    JSON_THROW_ON_ERROR
+                ),
+                JSON_THROW_ON_ERROR | JSON_PRESERVE_ZERO_FRACTION
+            )
+        ];
     }
 }
