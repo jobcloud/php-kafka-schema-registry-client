@@ -27,13 +27,13 @@ class KafkaSchemaRegistryApiClient implements KafkaSchemaRegistryApiClientInterf
      * @throws SchemaRegistryExceptionInterface
      * @throws JsonException
      */
-    public function getSubjects(bool $deleted = false): array
+    public function getSubjects(bool $includeDeleted = false): array
     {
         return $this->httpClient->call(
             method: 'GET',
             uri: 'subjects',
             queryParams: [
-                'deleted' => $deleted
+                'deleted' => $includeDeleted
             ],
         ) ?? [];
     }

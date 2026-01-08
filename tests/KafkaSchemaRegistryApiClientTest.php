@@ -26,14 +26,14 @@ class KafkaSchemaRegistryApiClientTest extends TestCase
     {
         $httpClientMock = $this->getHttpClientMock();
 
-        $deletedSchemas = true;
+        $includeDeleted = true;
 
         $httpClientMock->expects(self::once())
             ->method('call')
-            ->with('GET', 'subjects', [], ['deleted' => $deletedSchemas]);
+            ->with('GET', 'subjects', [], ['deleted' => $includeDeleted]);
 
         $api = new KafkaSchemaRegistryApiClient($httpClientMock);
-        $api->getSubjects($deletedSchemas);
+        $api->getSubjects($includeDeleted);
     }
 
     public function testGetAllSubjectVersions(): void
