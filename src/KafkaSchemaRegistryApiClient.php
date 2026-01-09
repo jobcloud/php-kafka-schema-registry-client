@@ -39,7 +39,6 @@ class KafkaSchemaRegistryApiClient implements KafkaSchemaRegistryApiClientInterf
                 )
             );
         }
-        var_dump($includeDeleted);
 
         return $this->httpClient->call(
             method: 'GET',
