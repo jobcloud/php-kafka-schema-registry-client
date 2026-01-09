@@ -142,6 +142,7 @@ class KafkaSchemaRegistryApiClient implements KafkaSchemaRegistryApiClientInterf
         string $schema,
         string $version = self::VERSION_LATEST
     ): bool {
+        throw new \InvalidArgumentException('test');
         try {
             $results = $this->httpClient->call(
                 method: 'POST',
