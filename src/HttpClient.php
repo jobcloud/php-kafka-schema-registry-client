@@ -72,6 +72,7 @@ class HttpClient implements HttpClientInterface
         $queryString = 0 !== count($queryParams) ? '?' . http_build_query($queryParams) : '';
 
         $url = $this->baseUrl . '/' . $uri . $queryString;
+        var_dump($url);
 
         $request = $this->requestFactory->createRequest($method, $url);
 
