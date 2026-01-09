@@ -68,9 +68,7 @@ class HttpClient implements HttpClientInterface
         array $body = [],
         array $queryParams = []
     ): RequestInterface {
-
         $queryString = 0 !== count($queryParams) ? '?' . http_build_query($queryParams) : '';
-        var_dump($queryString);
 
         $url = $this->baseUrl . '/' . $uri . $queryString;
 

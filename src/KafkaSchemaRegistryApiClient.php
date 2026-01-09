@@ -33,7 +33,7 @@ class KafkaSchemaRegistryApiClient implements KafkaSchemaRegistryApiClientInterf
             method: 'GET',
             uri: 'subjects',
             queryParams: [
-                'deleted' => $includeDeleted
+                'deleted' => $includeDeleted === true ? 'true' : 'false'
             ],
         ) ?? [];
     }
