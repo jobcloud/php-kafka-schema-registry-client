@@ -38,7 +38,7 @@ class KafkaSchemaRegistryApiClientTest extends TestCase
     {
         $httpClientMock = $this->getHttpClientMock();
 
-        $includeDeleted = true;
+        $includeDeleted = 'true';
 
         $httpClientMock->expects(self::once())
             ->method('call')
