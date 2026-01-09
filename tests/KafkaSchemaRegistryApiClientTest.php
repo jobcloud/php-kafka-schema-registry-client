@@ -22,6 +22,18 @@ class KafkaSchemaRegistryApiClientTest extends TestCase
     private const TEST_SCHEMA = '{}';
     private const TEST_VERSION = 3;
 
+    public function testGetSubjectsThrowsInvalidArgumentException(): void
+    {
+        $httpClientMock = $this->getHttpClientMock();
+
+        $api = new KafkaSchemaRegistryApiClient($httpClientMock);
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Allowed values for \'includeDeleted\' parameter are: true, false.');
+
+        $api->getSubjects('invalid_value');
+    }
+
     public function testGetSubjects(): void
     {
         $httpClientMock = $this->getHttpClientMock();
