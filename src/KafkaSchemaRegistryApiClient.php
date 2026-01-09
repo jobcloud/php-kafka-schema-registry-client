@@ -29,6 +29,7 @@ class KafkaSchemaRegistryApiClient implements KafkaSchemaRegistryApiClientInterf
      */
     public function getSubjects(bool $includeDeleted = false): array
     {
+        var_dump($includeDeleted);
         return $this->httpClient->call(
             method: 'GET',
             uri: 'subjects',
