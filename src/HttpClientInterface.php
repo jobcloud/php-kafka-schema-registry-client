@@ -11,10 +11,9 @@ interface HttpClientInterface
     /**
      * @param array<string,mixed> $body
      * @param array<string,mixed> $queryParams
-     * @return mixed
      * @throws ClientExceptionInterface
      * @throws SchemaRegistryExceptionInterface
      * @throws JsonException
      */
-    public function call(string $method, string $uri, array $body = [], array $queryParams = []);
+    public function call(string $method, string $uri, array $body = [], array $queryParams = []): mixed;
 }

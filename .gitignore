@@ -8,3 +8,7 @@ composer.lock
 # Builds & caches
 /build/
 .phpunit.result.cache
+.phpunit.cache
+
+# Test artifacts
+test-results/
