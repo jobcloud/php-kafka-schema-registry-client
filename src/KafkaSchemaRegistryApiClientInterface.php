@@ -28,7 +28,7 @@ interface KafkaSchemaRegistryApiClientInterface
      * @throws SchemaRegistryExceptionInterface
      * @throws JsonException
      */
-    public function getSubjects(string $includeDeleted = 'false'): array;
+    public function getSubjects(bool $includeDeleted = false): array;
 
     /**
      * @return array<string,mixed>

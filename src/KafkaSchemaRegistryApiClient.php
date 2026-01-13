@@ -27,24 +27,13 @@ class KafkaSchemaRegistryApiClient implements KafkaSchemaRegistryApiClientInterf
      * @throws SchemaRegistryExceptionInterface
      * @throws JsonException
      */
-    public function getSubjects(string $includeDeleted = 'false'): array
+    public function getSubjects(bool $includeDeleted = false): array
     {
-        $allowedIncludeDeletedValues = ['true', 'false'];
-
-        if (false === \in_array($includeDeleted, $allowedIncludeDeletedValues, true)) {
-            throw new \InvalidArgumentException(
-                sprintf(
-                    'Allowed values for \'includeDeleted\' parameter are: %s.',
-                    implode(', ', $allowedIncludeDeletedValues)
-                )
-            );
-        }
-
         return $this->httpClient->call(
             method: 'GET',
             uri: 'subjects',
             queryParams: [
-                'deleted' => $includeDeleted,
+                'deleted' => true === $includeDeleted ? 'true' : 'false',
             ],
         ) ?? [];
     }
