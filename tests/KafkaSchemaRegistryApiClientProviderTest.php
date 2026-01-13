@@ -11,14 +11,13 @@ use LogicException;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use phpmock\phpunit\MockObjectProxy;
 use phpmock\phpunit\PHPMock;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Pimple\Container;
 use Psr\Http\Message\RequestFactoryInterface;
 
-/**
- * @covers \Jobcloud\Kafka\SchemaRegistryClient\ServiceProvider\KafkaSchemaRegistryApiClientProvider
- */
+#[CoversClass(KafkaSchemaRegistryApiClientProvider::class)]
 class KafkaSchemaRegistryApiClientProviderTest extends TestCase
 {
     use PHPMock;
@@ -41,10 +40,15 @@ class KafkaSchemaRegistryApiClientProviderTest extends TestCase
 
     public function testDefaultContainersAndServicesSetWithMinimalConfig(): void
     {
-        $this->classExistsMock->expects(self::exactly(2))->withConsecutive(
-            [Psr17Factory::class],
-            [Curl::class]
-        )->willReturn(true);
+        $expectedCalls = [Psr17Factory::class, Curl::class];
+        $callIndex = 0;
+
+        $this->classExistsMock
+            ->expects(self::exactly(2))
+            ->willReturnCallback(function ($className) use ($expectedCalls, &$callIndex) {
+                self::assertSame($expectedCalls[$callIndex++], $className);
+                return true;
+            });
 
         $container = new Container();
 
@@ -88,13 +92,15 @@ class KafkaSchemaRegistryApiClientProviderTest extends TestCase
 
     public function testSuccessWithMissingAuth(): void
     {
+        $expectedCalls = [Psr17Factory::class, Curl::class];
+        $callIndex = 0;
+
         $this->classExistsMock
             ->expects(self::exactly(2))
-            ->withConsecutive(
-                [Psr17Factory::class],
-                [Curl::class]
-            )
-            ->willReturn(true);
+            ->willReturnCallback(function ($className) use ($expectedCalls, &$callIndex) {
+                self::assertSame($expectedCalls[$callIndex++], $className);
+                return true;
+            });
 
         $container = new Container();
 
@@ -130,10 +136,15 @@ class KafkaSchemaRegistryApiClientProviderTest extends TestCase
 
     public function testUserNameAndPasswordFromSettingsArePassedToHttpClient(): void
     {
-        $this->classExistsMock->expects(self::exactly(2))->withConsecutive(
-            [Psr17Factory::class],
-            [Curl::class]
-        )->willReturn(true);
+        $expectedCalls = [Psr17Factory::class, Curl::class];
+        $callIndex = 0;
+
+        $this->classExistsMock
+            ->expects(self::exactly(2))
+            ->willReturnCallback(function ($className) use ($expectedCalls, &$callIndex) {
+                self::assertSame($expectedCalls[$callIndex++], $className);
+                return true;
+            });
 
         $container = new Container();
 

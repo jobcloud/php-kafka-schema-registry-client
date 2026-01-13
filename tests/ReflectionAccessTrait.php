@@ -30,7 +30,7 @@ trait ReflectionAccessTrait
     }
 
     /**
-     * @param array<string,mixed>
+     * @param array<string,mixed> $parameters
      * @throws ReflectionException
      */
     final public function invokeMethod(object $object, string $methodName, array $parameters = []): mixed

@@ -31,7 +31,7 @@
         "nyholm/psr7": "^1.5.1",
         "php-mock/php-mock-phpunit": "^2.6.0",
         "phpstan/phpstan": "^2.1",
-        "phpunit/phpunit": "^9.5.21",
+        "phpunit/phpunit": "^12.0",
         "pimple/pimple": "^3.5.0",
         "rregeer/phpunit-coverage-check": "^0.3.1",
         "squizlabs/php_codesniffer": "^4.0"

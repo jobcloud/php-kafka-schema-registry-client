@@ -10,12 +10,12 @@ use Jobcloud\Kafka\SchemaRegistryClient\HttpClient;
 use Jobcloud\Kafka\SchemaRegistryClient\HttpClientInterface;
 use Jobcloud\Kafka\SchemaRegistryClient\KafkaSchemaRegistryApiClient;
 use Jobcloud\Kafka\SchemaRegistryClient\KafkaSchemaRegistryApiClientInterface;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @covers \Jobcloud\Kafka\SchemaRegistryClient\KafkaSchemaRegistryApiClient
- */
+#[CoversClass(KafkaSchemaRegistryApiClient::class)]
 class KafkaSchemaRegistryApiClientTest extends TestCase
 {
     private const string TEST_SUBJECT_NAME = 'some-subject';
@@ -125,9 +125,7 @@ class KafkaSchemaRegistryApiClientTest extends TestCase
         $api->getSchemaById(1);
     }
 
-    /**
-     * @dataProvider schemaDataProvider
-     **/
+    #[DataProvider('schemaDataProvider')]
     public function testRegisterNewSchemaVersion(string $testSchema, string $expectedSchema): void
     {
         $httpClientMock = $this->getHttpClientMock();
@@ -166,9 +164,7 @@ class KafkaSchemaRegistryApiClientTest extends TestCase
         self::assertFalse($result);
     }
 
-    /**
-     * @dataProvider schemaDataProvider
-     **/
+    #[DataProvider('schemaDataProvider')]
     public function testCheckSchemaCompatibilityForVersionTrue(string $testSchema, string $expectedSchema): void
     {
         $httpClientMock = $this->getHttpClientMock();
@@ -308,23 +304,40 @@ class KafkaSchemaRegistryApiClientTest extends TestCase
         self::assertSame(KafkaSchemaRegistryApiClientInterface::LEVEL_FULL, $result);
     }
 
-    public function testGetDefaultCompatibiltyLeveWhenGetSubjectCompatibilityLevelThrowsException(): void
+    public function testGetDefaultCompatibilityLevelWhenGetSubjectCompatibilityLevelThrowsException(): void
     {
         $httpClientMock = $this->getHttpClientMock();
 
-        $httpClientMock
+        $expectedCalls = [
+                [
+                    'method' => 'GET',
+                    'uri' => sprintf('config/%s', self::TEST_SUBJECT_NAME),
+                    'throw' => true,
+                ],
+                [
+                    'method' => 'GET',
+                    'uri' => 'config',
+                    'return' => [
+                        'compatibilityLevel' => KafkaSchemaRegistryApiClientInterface::LEVEL_FULL,
+                    ],
+                ],
+            ];
+            $callIndex = 0;
+
+            $httpClientMock
             ->expects(self::exactly(2))
             ->method('call')
-            ->withConsecutive(
-                ['GET', sprintf('config/%s', self::TEST_SUBJECT_NAME)],
-                []
-            )
-            ->will(
-                $this->onConsecutiveCalls(
-                    $this->throwException(new SubjectNotFoundException()),
-                    ['compatibilityLevel' => KafkaSchemaRegistryApiClientInterface::LEVEL_FULL]
-                )
-            );
+            ->willReturnCallback(function (string $method, string $uri) use ($expectedCalls, &$callIndex) {
+                $expected = $expectedCalls[$callIndex++];
+                self::assertSame($expected['method'], $method);
+                self::assertSame($expected['uri'], $uri);
+
+                if (isset($expected['throw'])) {
+                    throw new SubjectNotFoundException();
+                }
+
+                return $expected['return'];
+            });
 
         $api = new KafkaSchemaRegistryApiClient($httpClientMock);
         $result = $api->getSubjectCompatibilityLevel(self::TEST_SUBJECT_NAME);
@@ -360,7 +373,7 @@ class KafkaSchemaRegistryApiClientTest extends TestCase
         $httpClientMock
             ->expects(self::once())
             ->method('call')
-            ->with('GET', sprintf('config'))
+            ->with('GET', 'config')
             ->willReturn(['compatibilityLevel' => KafkaSchemaRegistryApiClientInterface::LEVEL_FULL]);
 
         $api = new KafkaSchemaRegistryApiClient($httpClientMock);
@@ -384,9 +397,7 @@ class KafkaSchemaRegistryApiClientTest extends TestCase
         self::assertTrue($result);
     }
 
-    /**
-     * @dataProvider schemaDataProvider
-     **/
+    #[DataProvider('schemaDataProvider')]
     public function testGetVersionForSchema(string $testSchema, string $expectedSchema): void
     {
         $httpClientMock = $this->getHttpClientMock();

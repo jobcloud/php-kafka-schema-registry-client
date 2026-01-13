@@ -1,21 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.5/phpunit.xsd"
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/12.5/phpunit.xsd"
          backupGlobals="false"
-         backupStaticAttributes="false"
+         backupStaticProperties="false"
          colors="true"
-         convertErrorsToExceptions="true"
-         convertNoticesToExceptions="true"
-         convertWarningsToExceptions="true"
          processIsolation="false"
          stopOnFailure="false"
          bootstrap="vendor/autoload.php"
          executionOrder="random"
-         resolveDependencies="true">
+         resolveDependencies="true"
+         cacheDirectory=".phpunit.cache">
   <coverage>
-    <include>
-      <directory>src</directory>
-    </include>
     <report>
       <clover outputFile="build/logs/phpunit/coverage/coverage.xml"/>
       <html outputDirectory="build/logs/phpunit/coverage"/>
@@ -39,4 +34,9 @@
   <logging>
     <junit outputFile="build/logs/phpunit/junit.xml"/>
   </logging>
+  <source>
+    <include>
+      <directory>src</directory>
+    </include>
+  </source>
 </phpunit>
