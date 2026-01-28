@@ -11,50 +11,14 @@ use JsonException;
 
 class HttpClient implements HttpClientInterface
 {
-    /**
-     * @var ClientInterface
-     */
-    private $client;
-
-    /**
-     * @var string
-     */
-    private $baseUrl;
-
-    /**
-     * @var string|null
-     */
-    private $username;
-
-    /**
-     * @var string|null
-     */
-    private $password;
-
-    /**
-     * @var RequestFactoryInterface
-     */
-    private $requestFactory;
-
-    /**
-     * @var ErrorHandlerInterface
-     */
-    private $errorHandler;
-
     public function __construct(
-        ClientInterface $client,
-        RequestFactoryInterface $requestFactory,
-        ErrorHandlerInterface $errorHandler,
-        string $baseUrl,
-        ?string $username = null,
-        ?string $password = null
+        private readonly ClientInterface $client,
+        private readonly RequestFactoryInterface $requestFactory,
+        private readonly ErrorHandlerInterface $errorHandler,
+        private readonly string $baseUrl,
+        private readonly ?string $username = null,
+        private readonly ?string $password = null
     ) {
-        $this->client = $client;
-        $this->baseUrl = $baseUrl;
-        $this->username = $username;
-        $this->password = $password;
-        $this->requestFactory = $requestFactory;
-        $this->errorHandler = $errorHandler;
     }
 
     /**
@@ -98,12 +62,11 @@ class HttpClient implements HttpClientInterface
     /**
      * @param array<string,mixed> $body
      * @param array<string,mixed> $queryParams
-     * @return mixed
      * @throws ClientExceptionInterface
      * @throws SchemaRegistryExceptionInterface
      * @throws JsonException
      */
-    public function call(string $method, string $uri, array $body = [], array $queryParams = [])
+    public function call(string $method, string $uri, array $body = [], array $queryParams = []): mixed
     {
         $request = $this->createRequest($method, $uri, $body, $queryParams);
 
