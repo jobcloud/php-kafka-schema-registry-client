@@ -7,6 +7,8 @@ use Exception;
 use Jobcloud\Kafka\SchemaRegistryClient\ErrorHandler;
 use Jobcloud\Kafka\SchemaRegistryClient\HttpClient;
 use Nyholm\Psr7\Factory\Psr17Factory;
+use Nyholm\Psr7\Response;
+use Nyholm\Psr7\Stream;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
@@ -113,13 +115,21 @@ class HttpClientTest extends TestCase
             ->onlyMethods(['sendRequest'])
             ->getMock();
 
-        $responseMock = $this->createMock(ResponseInterface::class);
+        $responseMock = $this
+            ->getMockBuilder(Response::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['getBody'])
+            ->getMock();
 
-        $stream = $this->createMock(StreamInterface::class);
-        $stream->method('__toString')->willReturn('[1,2,3]');
+        $stream = $this
+            ->getMockBuilder(Stream::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['__toString'])
+            ->getMock();
+        $stream->expects(self::atLeastOnce())->method('__toString')->willReturn('[1,2,3]');
 
-        $responseMock->method('getBody')->willReturn($stream);
-        $clientMock->method('sendRequest')->willReturn($responseMock);
+        $responseMock->expects(self::atLeastOnce())->method('getBody')->willReturn($stream);
+        $clientMock->expects(self::once())->method('sendRequest')->willReturn($responseMock);
 
         $httpClient = new HttpClient(
             $clientMock,
@@ -141,14 +151,21 @@ class HttpClientTest extends TestCase
             ->onlyMethods(['sendRequest'])
             ->getMock();
 
+        $responseMock = $this
+            ->getMockBuilder(Response::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['getBody'])
+            ->getMock();
 
-        $responseMock = $this->createMock(ResponseInterface::class);
+        $stream = $this
+            ->getMockBuilder(Stream::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['__toString'])
+            ->getMock();
 
-        $stream = $this->createMock(StreamInterface::class);
-
-        $stream->method('__toString')->willReturn('{"error_code": 404}');
-        $responseMock->method('getBody')->willReturn($stream);
-        $clientMock->method('sendRequest')->willReturn($responseMock);
+        $stream->expects(self::atLeastOnce())->method('__toString')->willReturn('{"error_code": 404}');
+        $responseMock->expects(self::atLeastOnce())->method('getBody')->willReturn($stream);
+        $clientMock->expects(self::once())->method('sendRequest')->willReturn($responseMock);
 
         $httpClient = new HttpClient($clientMock, new Psr17Factory(), new ErrorHandler(), 'http://some-url');
 
