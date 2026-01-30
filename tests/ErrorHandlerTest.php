@@ -26,7 +26,6 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\StreamInterface;
 
 #[CoversClass(ErrorHandler::class)]
 class ErrorHandlerTest extends TestCase
@@ -136,16 +135,19 @@ class ErrorHandlerTest extends TestCase
     {
         /** @var ResponseInterface|MockObject $responseMock */
         $responseMock = $this->makeResponseInterfaceMock(50001, self::TEST_MESSAGE);
+
         $requestMock = $this
             ->getMockBuilder(Request::class)
             ->disableOriginalConstructor()
             ->onlyMethods(['getBody'])
             ->getMock();
+
         $streamMock = $this
             ->getMockBuilder(Stream::class)
             ->disableOriginalConstructor()
             ->onlyMethods(['getContents'])
             ->getMock();
+
         $streamMock->expects(self::once())->method('getContents')->willReturn('test body');
         $requestMock->expects(self::once())->method('getBody')->willReturn($streamMock);
 
