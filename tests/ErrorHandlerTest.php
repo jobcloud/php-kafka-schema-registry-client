@@ -18,14 +18,13 @@ use Jobcloud\Kafka\SchemaRegistryClient\Exception\SubjectNotFoundException;
 use Jobcloud\Kafka\SchemaRegistryClient\Exception\UnauthorizedException;
 use Jobcloud\Kafka\SchemaRegistryClient\Exception\UnprocessableEntityException;
 use Jobcloud\Kafka\SchemaRegistryClient\Exception\VersionNotFoundException;
-use Nyholm\Psr7\Request;
-use Nyholm\Psr7\Response;
-use Nyholm\Psr7\Stream;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamInterface;
 
 #[CoversClass(ErrorHandler::class)]
 class ErrorHandlerTest extends TestCase
@@ -34,11 +33,7 @@ class ErrorHandlerTest extends TestCase
 
     private function makeResponseInterfaceMock(?int $code = null, ?string $message = null): MockObject
     {
-        $streamMock = $this
-            ->getMockBuilder(Stream::class)
-            ->disableOriginalConstructor()
-            ->onlyMethods(['__toString'])
-            ->getMock();
+        $streamMock = $this->createMock(StreamInterface::class);
 
         $streamMock
             ->expects(self::atLeastOnce())
@@ -48,11 +43,7 @@ class ErrorHandlerTest extends TestCase
                 'message' => $message,
             ]));
 
-        $responseMock = $this
-            ->getMockBuilder(Response::class)
-            ->disableOriginalConstructor()
-            ->onlyMethods(['getBody'])
-            ->getMock();
+        $responseMock = $this->createMock(ResponseInterface::class);
 
         $responseMock->expects(self::atLeastOnce())
             ->method('getBody')
@@ -136,20 +127,16 @@ class ErrorHandlerTest extends TestCase
         /** @var ResponseInterface|MockObject $responseMock */
         $responseMock = $this->makeResponseInterfaceMock(50001, self::TEST_MESSAGE);
 
-        $requestMock = $this
-            ->getMockBuilder(Request::class)
-            ->disableOriginalConstructor()
-            ->onlyMethods(['getBody'])
-            ->getMock();
+        $requestMock = $this->createMock(RequestInterface::class);
+        $streamMock = $this->createMock(StreamInterface::class);
 
-        $streamMock = $this
-            ->getMockBuilder(Stream::class)
-            ->disableOriginalConstructor()
-            ->onlyMethods(['getContents'])
-            ->getMock();
+        $requestMock->expects(self::once())
+            ->method('getBody')
+            ->willReturn($streamMock);
 
-        $streamMock->expects(self::once())->method('getContents')->willReturn('test body');
-        $requestMock->expects(self::once())->method('getBody')->willReturn($streamMock);
+        $streamMock->expects(self::once())
+            ->method('getContents')
+            ->willReturn('test body');
 
         $errorHandler = new ErrorHandler();
 

@@ -6,7 +6,6 @@ use Jobcloud\Kafka\SchemaRegistryClient\Exception\ImportException;
 use Jobcloud\Kafka\SchemaRegistryClient\Exception\SchemaNotFoundException;
 use Jobcloud\Kafka\SchemaRegistryClient\Exception\SubjectNotFoundException;
 use Jobcloud\Kafka\SchemaRegistryClient\Exception\VersionNotFoundException;
-use Jobcloud\Kafka\SchemaRegistryClient\HttpClient;
 use Jobcloud\Kafka\SchemaRegistryClient\HttpClientInterface;
 use Jobcloud\Kafka\SchemaRegistryClient\KafkaSchemaRegistryApiClient;
 use Jobcloud\Kafka\SchemaRegistryClient\KafkaSchemaRegistryApiClientInterface;
@@ -574,11 +573,7 @@ class KafkaSchemaRegistryApiClientTest extends TestCase
      */
     private function getHttpClientMock(): MockObject
     {
-        return $this
-            ->getMockBuilder(HttpClient::class)
-            ->disableOriginalConstructor()
-            ->onlyMethods(['call'])
-            ->getMock();
+        return $this->createMock(HttpClientInterface::class);
     }
 
     public static function schemaDataProvider(): array
