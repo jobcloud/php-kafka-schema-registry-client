@@ -36,7 +36,7 @@ class ErrorHandlerTest extends TestCase
         $streamMock = $this->createMock(StreamInterface::class);
 
         $streamMock
-            ->expects(self::atLeastOnce())
+            ->expects(self::once())
             ->method('__toString')
             ->willReturn(json_encode([
                 'error_code' => $code,
@@ -45,7 +45,7 @@ class ErrorHandlerTest extends TestCase
 
         $responseMock = $this->createMock(ResponseInterface::class);
 
-        $responseMock->expects(self::atLeastOnce())
+        $responseMock->expects(self::once())
             ->method('getBody')
             ->willReturn($streamMock);
 

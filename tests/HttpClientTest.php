@@ -112,11 +112,11 @@ class HttpClientTest extends TestCase
         $responseMock = $this->createMock(ResponseInterface::class);
         $stream = $this->createMock(StreamInterface::class);
 
-        $stream->expects(self::atLeastOnce())
+        $stream->expects(self::exactly(2))
             ->method('__toString')
             ->willReturn('[1,2,3]');
 
-        $responseMock->expects(self::atLeastOnce())
+        $responseMock->expects(self::exactly(2))
             ->method('getBody')
             ->willReturn($stream);
 
@@ -142,11 +142,11 @@ class HttpClientTest extends TestCase
         $responseMock = $this->createMock(ResponseInterface::class);
         $stream = $this->createMock(StreamInterface::class);
 
-        $stream->expects(self::atLeastOnce())
+        $stream->expects(self::once())
             ->method('__toString')
             ->willReturn('{"error_code": 404}');
 
-        $responseMock->expects(self::atLeastOnce())
+        $responseMock->expects(self::once())
             ->method('getBody')
             ->willReturn($stream);
 
