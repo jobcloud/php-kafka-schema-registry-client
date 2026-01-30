@@ -35,7 +35,11 @@ class ErrorHandlerTest extends TestCase
 
     private function makeResponseInterfaceMock(?int $code = null, ?string $message = null): MockObject
     {
-        $streamMock = $this->createMock(StreamInterface::class);
+        $streamMock = $this
+            ->getMockBuilder(Stream::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['__toString'])
+            ->getMock();
 
         $streamMock
             ->expects(self::atLeastOnce())
