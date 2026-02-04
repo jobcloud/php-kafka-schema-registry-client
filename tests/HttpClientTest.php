@@ -2,19 +2,20 @@
 
 namespace Jobcloud\Kafka\SchemaRegistryClient\Tests;
 
+use Buzz\Client\BuzzClientInterface;
 use Buzz\Client\Curl;
 use Exception;
 use Jobcloud\Kafka\SchemaRegistryClient\ErrorHandler;
 use Jobcloud\Kafka\SchemaRegistryClient\HttpClient;
 use Nyholm\Psr7\Factory\Psr17Factory;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
 
-/**
- * @covers \Jobcloud\Kafka\SchemaRegistryClient\HttpClient
- */
+#[CoversClass(HttpClient::class)]
 class HttpClientTest extends TestCase
 {
     use ReflectionAccessTrait;
@@ -39,9 +40,7 @@ class HttpClientTest extends TestCase
         $this->assertSame('', $response->getUri()->getQuery());
     }
 
-    /**
-     * @dataProvider requestBodyDataProvider
-     **/
+    #[DataProvider('requestBodyDataProvider')]
     public function testCreateRequestWithBody(array $body, string $expectedEncodedBody): void
     {
         $httpClient = new HttpClient(
@@ -109,22 +108,21 @@ class HttpClientTest extends TestCase
 
     public function testCallMethod(): void
     {
-        $clientMock = $this
-            ->getMockBuilder(Curl::class)
-            ->disableOriginalConstructor()
-            ->onlyMethods(['sendRequest'])
-            ->getMock();
+        $clientMock = $this->createMock(BuzzClientInterface::class);
+        $responseMock = $this->createMock(ResponseInterface::class);
+        $stream = $this->createMock(StreamInterface::class);
 
-        $responseMock = $this
-            ->getMockBuilder(ResponseInterface::class)
-            ->onlyMethods(['getBody'])
-            ->getMockForAbstractClass();
+        $stream->expects(self::exactly(2))
+            ->method('__toString')
+            ->willReturn('[1,2,3]');
 
-        $stream = $this->getMockBuilder(StreamInterface::class)->onlyMethods(['__toString'])->getMockForAbstractClass();
-        $stream->method('__toString')->willReturn('[1,2,3]');
+        $responseMock->expects(self::exactly(2))
+            ->method('getBody')
+            ->willReturn($stream);
 
-        $responseMock->method('getBody')->willReturn($stream);
-        $clientMock->method('sendRequest')->willReturn($responseMock);
+        $clientMock->expects(self::once())
+            ->method('sendRequest')
+            ->willReturn($responseMock);
 
         $httpClient = new HttpClient(
             $clientMock,
@@ -140,23 +138,21 @@ class HttpClientTest extends TestCase
 
     public function testCallMethodWithThrownException(): void
     {
-        $clientMock = $this
-            ->getMockBuilder(Curl::class)
-            ->disableOriginalConstructor()
-            ->onlyMethods(['sendRequest'])
-            ->getMock();
+        $clientMock = $this->createMock(BuzzClientInterface::class);
+        $responseMock = $this->createMock(ResponseInterface::class);
+        $stream = $this->createMock(StreamInterface::class);
 
+        $stream->expects(self::once())
+            ->method('__toString')
+            ->willReturn('{"error_code": 404}');
 
-        $responseMock = $this
-            ->getMockBuilder(ResponseInterface::class)
-            ->onlyMethods(['getBody'])
-            ->getMockForAbstractClass();
+        $responseMock->expects(self::once())
+            ->method('getBody')
+            ->willReturn($stream);
 
-        $stream = $this->getMockBuilder(StreamInterface::class)->onlyMethods(['__toString'])->getMockForAbstractClass();
-
-        $stream->method('__toString')->willReturn('{"error_code": 404}');
-        $responseMock->method('getBody')->willReturn($stream);
-        $clientMock->method('sendRequest')->willReturn($responseMock);
+        $clientMock->expects(self::once())
+            ->method('sendRequest')
+            ->willReturn($responseMock);
 
         $httpClient = new HttpClient($clientMock, new Psr17Factory(), new ErrorHandler(), 'http://some-url');
 
@@ -164,7 +160,7 @@ class HttpClientTest extends TestCase
         $httpClient->call('GET', 'uri');
     }
 
-    public function requestBodyDataProvider(): array
+    public static function requestBodyDataProvider(): array
     {
         return [
             [['a' => 'b'], '{"a":"b"}'],

@@ -1,4 +1,3 @@
 parameters:
-  paths:
-    - src
-  level: 8
+    level: 8
+    paths: [ src ]
