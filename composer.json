@@ -26,7 +26,7 @@
         "psr/http-message": "^1.0.1 || ^2.0.0"
     },
     "require-dev": {
-        "infection/infection": "^0.31",
+        "infection/infection": "^0.32",
         "kriswallsmith/buzz": "^1.2.1",
         "nyholm/psr7": "^1.5.1",
         "php-mock/php-mock-phpunit": "^2.6.0",
